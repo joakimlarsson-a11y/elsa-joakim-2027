@@ -12,8 +12,8 @@ const config: Config = {
         sky: "#d9e8f0"
       },
       fontFamily: {
-        display: ["var(--font-display)"],
-        sans: ["var(--font-sans)"]
+        display: ["Georgia", "Times New Roman", "serif"],
+        sans: ["Trebuchet MS", "Arial", "sans-serif"]
       },
       boxShadow: {
         soft: "0 18px 50px rgba(45, 35, 87, 0.12)"

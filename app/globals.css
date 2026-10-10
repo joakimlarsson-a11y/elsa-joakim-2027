@@ -18,7 +18,7 @@ body {
   margin: 0;
   background: #fbfaff;
   color: #1d2140;
-  font-family: var(--font-sans), sans-serif;
+  font-family: "Trebuchet MS", Arial, sans-serif;
 }
 
 ::selection {
