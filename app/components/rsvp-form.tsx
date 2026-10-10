@@ -7,19 +7,25 @@ type Status = "idle" | "loading" | "success" | "error";
 export default function RSVPForm() {
   const [status, setStatus] = useState<Status>("idle");
   const [error, setError] = useState("");
+  const [hasCoGuest, setHasCoGuest] = useState(false);
 
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setStatus("loading");
     setError("");
     const form = event.currentTarget;
-    const data = Object.fromEntries(new FormData(form).entries());
+    const data: Record<string, FormDataEntryValue> = Object.fromEntries(new FormData(form).entries());
+    if (!hasCoGuest) {
+      delete data.co_name;
+      delete data.co_allergies;
+    }
     try {
       const response = await fetch("/api/rsvp", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(data) });
       const result = await response.json();
       if (!response.ok) throw new Error(result.error || "Något gick fel.");
       setStatus("success");
       form.reset();
+      setHasCoGuest(false);
     } catch (submitError) {
       setStatus("error");
       setError(submitError instanceof Error ? submitError.message : "Något gick fel. Försök igen.");
@@ -31,6 +37,7 @@ export default function RSVPForm() {
   return (
     <form onSubmit={submit} className="space-y-8 rounded-2xl bg-mist p-6 sm:p-10">
       <fieldset className="space-y-5"><legend className="font-display text-3xl">Om dig</legend><div className="grid gap-5 sm:grid-cols-2"><label className="block text-sm font-semibold">Namn<input required name="name" type="text" autoComplete="name" className="mt-2 w-full rounded-lg border border-ink/20 bg-white px-4 py-3 font-normal" /></label><label className="block text-sm font-semibold">E-post<input required name="email" type="email" autoComplete="email" className="mt-2 w-full rounded-lg border border-ink/20 bg-white px-4 py-3 font-normal" /></label></div><label className="block text-sm font-semibold">Medföljande gäster (namn)<span className="ml-2 font-normal text-ink/55">valfritt</span><input name="guests" type="text" className="mt-2 w-full rounded-lg border border-ink/20 bg-white px-4 py-3 font-normal" /></label></fieldset>
+      <fieldset className="space-y-5"><legend className="font-display text-3xl">Medsökande gäst</legend>{hasCoGuest ? <div className="space-y-5 rounded-lg border border-ink/20 bg-white/60 p-4"><label className="block text-sm font-semibold">Namn på medsökande<input required name="co_name" type="text" className="mt-2 w-full rounded-lg border border-ink/20 bg-white px-4 py-3 font-normal" /></label><label className="block text-sm font-semibold">Allergier eller specialkost<span className="ml-2 font-normal text-ink/55">valfritt</span><input name="co_allergies" type="text" className="mt-2 w-full rounded-lg border border-ink/20 bg-white px-4 py-3 font-normal" /></label><button type="button" onClick={() => setHasCoGuest(false)} className="text-sm font-semibold text-plum underline">Ta bort medsökande gäst</button></div> : <button type="button" onClick={() => setHasCoGuest(true)} className="rounded-full border border-plum px-6 py-3 font-semibold text-plum">+ Lägg till medsökande gäst</button>}</fieldset>
       <fieldset className="space-y-4"><legend className="font-display text-3xl">Deltagande</legend><div className="flex flex-wrap gap-3"><label className="flex min-h-12 cursor-pointer items-center gap-3 rounded-lg border border-ink/20 bg-white px-4"><input required name="attendance" type="radio" value="Kommer" />Kommer gärna</label><label className="flex min-h-12 cursor-pointer items-center gap-3 rounded-lg border border-ink/20 bg-white px-4"><input required name="attendance" type="radio" value="Kan ej komma" />Kan tyvärr inte komma</label></div></fieldset>
       <fieldset className="space-y-5"><legend className="font-display text-3xl">Busstransport</legend><div className="flex gap-3"><label className="flex min-h-12 cursor-pointer items-center gap-3 rounded-lg border border-ink/20 bg-white px-4"><input required name="bus" type="radio" value="Ja" />Ja tack</label><label className="flex min-h-12 cursor-pointer items-center gap-3 rounded-lg border border-ink/20 bg-white px-4"><input required name="bus" type="radio" value="Nej" />Nej tack</label></div><label className="block max-w-xs text-sm font-semibold">Antal bussplatser<span className="ml-2 font-normal text-ink/55">om du åker med</span><input name="bus_seats" type="number" min="0" max="20" defaultValue="0" className="mt-2 w-full rounded-lg border border-ink/20 bg-white px-4 py-3 font-normal" /></label></fieldset>
       <label className="block text-sm font-semibold">Allergier eller specialkost<span className="ml-2 font-normal text-ink/55">valfritt</span><textarea name="allergies" rows={3} className="mt-2 w-full rounded-lg border border-ink/20 bg-white px-4 py-3 font-normal" /></label>

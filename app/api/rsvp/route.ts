@@ -10,6 +10,8 @@ type RSVPBody = {
   bus?: string;
   bus_seats?: string;
   allergies?: string;
+  co_name?: string;
+  co_allergies?: string;
 };
 
 function clean(value: unknown, maxLength = 1000) {
@@ -29,6 +31,8 @@ export async function POST(request: Request) {
     const attendance = clean(body.attendance, 30);
     const bus = clean(body.bus, 10);
     const allergies = clean(body.allergies, 1000);
+    const coName = clean(body.co_name, 120);
+    const coAllergies = clean(body.co_allergies, 1000);
     const busSeats = Number.parseInt(clean(body.bus_seats, 2) || "0", 10);
 
     if (!name || !email || !email.includes("@") || !["Kommer", "Kan ej komma"].includes(attendance) || !["Ja", "Nej"].includes(bus)) {
@@ -47,16 +51,30 @@ export async function POST(request: Request) {
     }
 
     const supabase = createClient(supabaseUrl, serviceRoleKey, { auth: { persistSession: false } });
-    const { error: databaseError } = await supabase.from("rsvps").insert({
-      name,
-      email,
-      guests: guests || null,
-      attendance,
-      bus,
-      bus_seats: busSeats,
-      allergies: allergies || null,
-      created_at: new Date().toISOString()
-    });
+    const { error: databaseError } = await supabase.from("rsvps").insert([
+      {
+        name,
+        email,
+        guests: guests || null,
+        attendance,
+        bus,
+        bus_seats: busSeats,
+        allergies: allergies || null,
+        created_at: new Date().toISOString()
+      },
+      ...(coName
+        ? [{
+            name: coName,
+            email,
+            guests: `Medsökande till ${name}`,
+            attendance,
+            bus,
+            bus_seats: 0,
+            allergies: coAllergies || null,
+            created_at: new Date().toISOString()
+          }]
+        : [])
+    ]);
     if (databaseError) {
       console.error("Supabase RSVP insert failed:", databaseError);
       return NextResponse.json({ error: "Vi kunde inte spara ditt svar. Försök igen." }, { status: 500 });
@@ -73,7 +91,7 @@ export async function POST(request: Request) {
         <h1 style="font-family:Georgia,serif;font-size:42px;font-weight:500">Tack, ${safeName}!</h1>
         <p>Vi har tagit emot din OSA och längtar efter att fira med dig.</p>
         <div style="background:#f5f3fa;border-radius:12px;padding:20px;margin:24px 0">
-          <strong>Din anmälan</strong><p style="margin-bottom:0">Deltagande: ${escapeHtml(attendance)}<br>Busstransport: ${escapeHtml(bus)} (${busSeats} plats(er))${guests ? `<br>Medföljande: ${escapeHtml(guests)}` : ""}${allergies ? `<br>Specialkost: ${escapeHtml(allergies)}` : ""}</p>
+          <strong>Din anmälan</strong><p style="margin-bottom:0">Deltagande: ${escapeHtml(attendance)}<br>Busstransport: ${escapeHtml(bus)} (${busSeats} plats(er))${coName ? `<br>Medsökande gäst: ${escapeHtml(coName)}` : ""}${guests ? `<br>Medföljande: ${escapeHtml(guests)}` : ""}${allergies ? `<br>Specialkost: ${escapeHtml(allergies)}` : ""}</p>
         </div>
         <p><strong>Praktiskt:</strong> Vigseln börjar 14:00 i Ölmevalla Kyrka. Buss till Långedrags Värdshus avgår 16:00, mingel börjar 16:30 och middag 18:30.</p>
         <p>Varmt välkommen!<br>Elsa & Joakim</p>
