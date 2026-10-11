@@ -1,14 +1,13 @@
 "use client";
 
 import { FormEvent, useEffect, useRef, useState } from "react";
+import { inputClass, radioClass } from "./form-styles";
 
 type Status = "idle" | "loading" | "success" | "error";
 type Bus = "" | "Ja" | "Nej";
 type Person = { id: number; name: string; email: string; allergies: string; bus: Bus };
 
 const MAX_PERSONS = 10;
-const inputClass = "mt-2 w-full rounded-lg border border-ink/20 bg-white px-4 py-3 font-normal";
-const radioClass = "flex min-h-12 cursor-pointer items-center gap-3 rounded-lg border border-ink/20 bg-white px-4";
 
 const emptyPerson = (id: number): Person => ({ id, name: "", email: "", allergies: "", bus: "" });
 
