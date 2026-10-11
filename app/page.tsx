@@ -4,10 +4,8 @@ import Countdown from "./components/countdown";
 import RSVPForm from "./components/rsvp-form";
 import ScrollReveal from "./components/scroll-reveal";
 
-const heroImage =
-  "https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=2000&q=85";
-const toastImage =
-  "https://images.unsplash.com/photo-1583939003579-730e3918a45a?auto=format&fit=crop&w=900&q=85";
+const heroImage = "/photos/hero-vigsel.jpg";
+const toastImage = "/photos/jenny.jpg";
 
 const introPhotos = [
   { src: "/photos/selfie.jpg", alt: "Elsa och Joakim lutar huvudena mot varandra och ler" },
@@ -21,7 +19,6 @@ const storyPhotos = [
   { src: "/photos/bubbel.jpg", alt: "Elsa och Joakim skålar i bubbel på klipporna vid havet" },
   { src: "/photos/midsommar.jpg", alt: "Elsa och Joakim med blomsterkransar på midsommar" },
   { src: "/photos/hyrox.jpg", alt: "Elsa och Joakim spänner musklerna efter målgång på Hyrox" },
-  { src: "/photos/vigsel.jpg", alt: "Elsa och Joakim sedda bakifrån i en ljusupplyst festsal" },
   { src: "/photos/skal.jpg", alt: "Elsa och Joakim med champagneglas i svartvitt" },
   { src: "/photos/smoking.jpg", alt: "Elsa och Joakim med sin son, klädda i festkläder" }
 ];
@@ -46,7 +43,7 @@ const faqs = [
   { q: "Jag vill hålla tal eller ordna ett spex — vem kontaktar jag?", a: "Hör av dig till vår toastmadame Jenny Bergdahl i god tid, så hjälper hon dig att planera in det under kvällen." },
   { q: "Jag har allergier eller äter specialkost.", a: "Skriv det i OSA-formuläret, både för dig och eventuell medföljande gäst, så ser vi till att köket vet om det." },
   { q: "Önskar ni er några presenter?", a: "Er närvaro är den finaste presenten. Den som ändå vill får gärna bidra till vår bröllopsresa." },
-  { q: "Jag har en annan fråga.", a: "Kontakta Jenny Bergdahl via telefon eller e-post — kontaktuppgifterna hittar du under Toastmadame." }
+  { q: "Jag har en annan fråga.", a: "Kontakta Jenny Bergdahl via e-post — adressen hittar du under Toastmadame." }
 ];
 
 function delay(ms: number) {
@@ -62,7 +59,7 @@ export default function Home() {
     <main>
       <ScrollReveal />
       <section className="relative isolate min-h-[720px] overflow-hidden bg-ink text-white">
-        <Image src={heroImage} alt="Ett brudpar som promenerar hand i hand i kvällsljus" fill priority sizes="100vw" className="hero-zoom object-cover object-center opacity-60" />
+        <Image src={heroImage} alt="Elsa och Joakim håller hand, sedda bakifrån i en ljusupplyst festsal" fill priority sizes="100vw" className="hero-zoom object-cover object-[center_18%] opacity-60" />
         <div className="absolute inset-0 -z-10 bg-gradient-to-b from-[#1d2140]/45 via-[#1d2140]/45 to-[#1d2140]" />
         <div className="grain absolute inset-0 -z-10 opacity-40" />
         <nav className="relative mx-auto flex max-w-6xl items-center justify-between px-6 py-7 lg:px-10" aria-label="Huvudnavigation">
@@ -134,10 +131,16 @@ export default function Home() {
       </section>
 
       <section id="boende" className="scroll-mt-8 bg-mist px-6 py-24 lg:px-10 lg:py-32" aria-labelledby="stay-title">
-        <div data-reveal="up" className="mx-auto max-w-6xl">
-          <p className="eyebrow text-plum">För er som kommer långväga</p>
-          <h2 id="stay-title" className="mt-4 font-display text-6xl text-ink">Boende</h2>
-          <p className="mt-6 max-w-xl text-lg leading-8 text-ink/75">Brudparet kommer att sova på Clarion Hotell Draken. Det är helt frivilligt att lösa boende själva.</p>
+        <div className="mx-auto grid max-w-6xl items-center gap-12 lg:grid-cols-[1fr_1.2fr] lg:gap-16">
+          <div data-reveal="up">
+            <p className="eyebrow text-plum">För er som kommer långväga</p>
+            <h2 id="stay-title" className="mt-4 font-display text-6xl text-ink">Boende</h2>
+            <p className="mt-6 max-w-xl text-lg leading-8 text-ink/75">Brudparet kommer att sova på Clarion Hotell Draken. Det är helt frivilligt att lösa boende själva.</p>
+            <a className="mt-8 inline-flex items-center gap-2 font-semibold text-plum underline decoration-lavender underline-offset-4 hover:decoration-plum" href="https://www.strawberry.se/hotell/sverige/goteborg/clarion-hotel-draken/" target="_blank" rel="noreferrer">Läs mer och boka på Strawberry <ArrowIcon /></a>
+          </div>
+          <div data-reveal="curtain" style={delay(150)} className="relative aspect-[16/10] overflow-hidden rounded-[2rem] shadow-soft">
+            <Image src="/photos/draken.jpg" alt="Clarion Hotel Draken, ett högt hotell med guldskimrande fasad vid Göta älv i solnedgång" fill sizes="(min-width: 1152px) 620px, (min-width: 1024px) 55vw, 100vw" className="object-cover object-[70%_center]" />
+          </div>
         </div>
       </section>
 
@@ -157,8 +160,8 @@ export default function Home() {
 
       <section className="bg-ink px-6 py-24 text-white lg:px-10 lg:py-32" aria-labelledby="toast-title">
         <div className="mx-auto grid max-w-6xl items-center gap-12 lg:grid-cols-[18rem_1fr] lg:gap-16">
-          <div data-reveal="curtain" className="relative mx-auto aspect-[4/5] w-full max-w-[18rem] overflow-hidden rounded-[2rem] lg:mx-0"><Image src={toastImage} alt="Jenny Bergdahl ler mot kameran" fill sizes="288px" className="object-cover" /></div>
-          <div data-reveal="right" style={delay(200)}><p className="eyebrow text-lavender">Kvällens tryggaste punkt</p><h2 id="toast-title" className="mt-4 font-display text-6xl">Toastmadame</h2><p className="mt-6 font-display text-4xl text-lavender">Jenny Bergdahl</p><p className="mt-6 max-w-md leading-7 text-white/75">Vill du hålla tal, överraska eller har du en fråga om dagen? Hör av dig till Jenny så hjälper hon dig rätt.</p><div className="mt-8 flex flex-col gap-3 text-lg"><a className="underline decoration-lavender underline-offset-4 hover:text-lavender" href="tel:+46701234567">070–123 45 67</a><a className="underline decoration-lavender underline-offset-4 hover:text-lavender" href="mailto:jenny@elsaochjoakim.se">jenny@elsaochjoakim.se</a></div></div>
+          <div data-reveal="curtain" className="relative mx-auto aspect-[4/5] w-full max-w-[18rem] overflow-hidden rounded-[2rem] lg:mx-0"><Image src={toastImage} alt="Jenny Bergdahl i blommig klänning och glasögon, leende" fill sizes="288px" className="object-cover object-top" /></div>
+          <div data-reveal="right" style={delay(200)}><p className="eyebrow text-lavender">Kvällens tryggaste punkt</p><h2 id="toast-title" className="mt-4 font-display text-6xl">Toastmadame</h2><p className="mt-6 font-display text-4xl text-lavender">Jenny Bergdahl</p><p className="mt-6 max-w-md leading-7 text-white/75">Vill du hålla tal, överraska eller har du en fråga om dagen? Hör av dig till Jenny så hjälper hon dig rätt.</p><div className="mt-8 flex flex-col gap-3 text-lg"><a className="underline decoration-lavender underline-offset-4 hover:text-lavender" href="mailto:jenny@elsaochjoakim.se">jenny@elsaochjoakim.se</a></div></div>
         </div>
       </section>
 
