@@ -2,17 +2,11 @@ import { NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import { Resend } from "resend";
 
-type RSVPBody = {
-  name?: string;
-  email?: string;
-  guests?: string;
-  attendance?: string;
-  bus?: string;
-  bus_seats?: string;
-  allergies?: string;
-  co_name?: string;
-  co_allergies?: string;
-};
+type PersonInput = { name?: unknown; email?: unknown; allergies?: unknown; bus?: unknown };
+type RSVPBody = { persons?: unknown };
+type Person = { name: string; email: string; allergies: string; bus: "Ja" | "Nej" };
+
+const MAX_PERSONS = 10;
 
 function clean(value: unknown, maxLength = 1000) {
   return typeof value === "string" ? value.trim().slice(0, maxLength) : "";
@@ -25,22 +19,22 @@ function escapeHtml(value: string) {
 export async function POST(request: Request) {
   try {
     const body = (await request.json()) as RSVPBody;
-    const name = clean(body.name, 120);
-    const email = clean(body.email, 200).toLowerCase();
-    const guests = clean(body.guests, 500);
-    const attendance = clean(body.attendance, 30);
-    const bus = clean(body.bus, 10);
-    const allergies = clean(body.allergies, 1000);
-    const coName = clean(body.co_name, 120);
-    const coAllergies = clean(body.co_allergies, 1000);
-    const busSeats = Number.parseInt(clean(body.bus_seats, 2) || "0", 10);
-
-    if (!name || !email || !email.includes("@") || !["Kommer", "Kan ej komma"].includes(attendance) || !["Ja", "Nej"].includes(bus)) {
+    if (!Array.isArray(body.persons) || body.persons.length === 0 || body.persons.length > MAX_PERSONS) {
       return NextResponse.json({ error: "Kontrollera att alla obligatoriska fält är ifyllda." }, { status: 400 });
     }
-    if (!Number.isInteger(busSeats) || busSeats < 0 || busSeats > 20) {
-      return NextResponse.json({ error: "Ange ett giltigt antal bussplatser." }, { status: 400 });
+
+    const persons: Person[] = [];
+    for (const raw of body.persons as PersonInput[]) {
+      const name = clean(raw?.name, 120);
+      const email = clean(raw?.email, 200).toLowerCase();
+      const allergies = clean(raw?.allergies, 1000);
+      const bus = clean(raw?.bus, 10);
+      if (!name || !email || !email.includes("@") || (bus !== "Ja" && bus !== "Nej")) {
+        return NextResponse.json({ error: "Kontrollera att namn, e-post och busstransport är ifyllda för alla personer." }, { status: 400 });
+      }
+      persons.push({ name, email, allergies, bus });
     }
+    const [primary] = persons;
 
     const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
     const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
@@ -51,47 +45,39 @@ export async function POST(request: Request) {
     }
 
     const supabase = createClient(supabaseUrl, serviceRoleKey, { auth: { persistSession: false } });
-    const { error: databaseError } = await supabase.from("rsvps").insert([
-      {
-        name,
-        email,
-        guests: guests || null,
-        attendance,
-        bus,
-        bus_seats: busSeats,
-        allergies: allergies || null,
-        created_at: new Date().toISOString()
-      },
-      ...(coName
-        ? [{
-            name: coName,
-            email,
-            guests: `Medsökande till ${name}`,
-            attendance,
-            bus,
-            bus_seats: 0,
-            allergies: coAllergies || null,
-            created_at: new Date().toISOString()
-          }]
-        : [])
-    ]);
+    const createdAt = new Date().toISOString();
+    const { error: databaseError } = await supabase.from("rsvps").insert(
+      persons.map((person, index) => ({
+        name: person.name,
+        email: person.email,
+        guests: index === 0 ? null : `I sällskap med ${primary.name}`,
+        attendance: "Kommer",
+        bus: person.bus,
+        bus_seats: person.bus === "Ja" ? 1 : 0,
+        allergies: person.allergies || null,
+        created_at: createdAt
+      }))
+    );
     if (databaseError) {
       console.error("Supabase RSVP insert failed:", databaseError);
       return NextResponse.json({ error: "Vi kunde inte spara ditt svar. Försök igen." }, { status: 500 });
     }
 
     const resend = new Resend(resendKey);
-    const safeName = escapeHtml(name);
+    const safeName = escapeHtml(primary.name);
+    const summary = persons
+      .map((person) => `<li><strong>${escapeHtml(person.name)}</strong> (${escapeHtml(person.email)})<br>Busstransport: ${person.bus}${person.allergies ? `<br>Specialkost: ${escapeHtml(person.allergies)}` : ""}</li>`)
+      .join("");
     await resend.emails.send({
       from: "Elsa & Joakim <onboarding@resend.dev>",
-      to: email,
+      to: primary.email,
       subject: "Tack för din OSA – Elsa & Joakim",
       html: `<div style="font-family:Arial,sans-serif;max-width:600px;margin:auto;color:#1d2140;line-height:1.6">
         <p style="letter-spacing:2px;text-transform:uppercase;color:#44336d;font-size:12px">19 juni 2027</p>
         <h1 style="font-family:Georgia,serif;font-size:42px;font-weight:500">Tack, ${safeName}!</h1>
         <p>Vi har tagit emot din OSA och längtar efter att fira med dig.</p>
         <div style="background:#f5f3fa;border-radius:12px;padding:20px;margin:24px 0">
-          <strong>Din anmälan</strong><p style="margin-bottom:0">Deltagande: ${escapeHtml(attendance)}<br>Busstransport: ${escapeHtml(bus)} (${busSeats} plats(er))${coName ? `<br>Medsökande gäst: ${escapeHtml(coName)}` : ""}${guests ? `<br>Medföljande: ${escapeHtml(guests)}` : ""}${allergies ? `<br>Specialkost: ${escapeHtml(allergies)}` : ""}</p>
+          <strong>Er anmälan</strong><ul style="margin-bottom:0;padding-left:20px">${summary}</ul>
         </div>
         <p><strong>Praktiskt:</strong> Vigseln börjar 14:00 i Ölmevalla Kyrka. Buss till Långedrags Värdshus avgår 16:00, mingel börjar 16:30 och middag 18:30.</p>
         <p>Varmt välkommen!<br>Elsa & Joakim</p>
