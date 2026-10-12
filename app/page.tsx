@@ -1,7 +1,8 @@
 import type { CSSProperties } from "react";
 import type { Metadata } from "next";
 import Image from "next/image";
-import { firstNames, mapLink, SCHEDULE, soloFirstName, TOASTMADAME_EMAIL, VENUES, WEDDING } from "@/lib/site";
+import { mapLink, SCHEDULE, TOASTMADAME_EMAIL, VENUES, WEDDING } from "@/lib/site";
+import { heroCopy } from "@/lib/invitation-copy";
 import ExternalLink from "./components/external-link";
 import MobileNav from "./components/mobile-nav";
 import RSVPForm from "./components/rsvp-form";
@@ -76,17 +77,13 @@ export default async function Home({ searchParams }: HomeProps) {
   const token = typeof rawToken === "string" ? rawToken.trim() : "";
   const invitation = token ? await loadInvitation(token) : null;
   const guestNames = invitation?.guests.map((guest) => guest.name) ?? [];
-  const solo = invitation ? Boolean(soloFirstName(guestNames)) : false;
-  const names = invitation ? firstNames(guestNames) ?? invitation.group_name : null;
   const responded = invitation?.status === "responded";
 
   const now = new Date();
   const thankYou = now >= new Date(WEDDING.thankYouFrom);
   const days = daysLeft(now);
 
-  const youAll = solo ? "du" : "ni";
-  const ctaLabel = responded ? `${solo ? "Du" : "Ni"} har svarat. Ändra svaret` : solo ? "Svara på inbjudan" : names ? `Svara för ${names}` : "OSA här";
-  const salutation = thankYou ? (names ? `Tack, ${names}!` : "Tack för att ni firade med oss!") : names ? `Kära ${names},` : null;
+  const { solo, names, youAll, salutation, intro, ctaLabel } = heroCopy({ guestNames, groupName: invitation?.group_name ?? "", responded, thankYou });
 
   return (
     <main className="overflow-x-clip">
@@ -120,7 +117,7 @@ export default async function Home({ searchParams }: HomeProps) {
               <p>Den 19 juni 2027 förnyade vi våra löften i Ölmevalla Kyrka och dansade in i natten på Långedrag. Tack för att {names ? youAll : "ni"} var där.</p>
             ) : (
               <>
-                <p>Vi förnyar våra löften i Ölmevalla Kyrka och firar sedan vid havet på Långedrags Värdshus. {names ? `Vi vill så gärna att ${youAll} är med.` : "Varmt välkomna!"}</p>
+                <p>{intro}</p>
                 {invitation?.personal_note && <p className="!mt-5 border-l border-dusk/60 pl-5 font-accent text-2xl leading-snug text-dusk">{invitation.personal_note}</p>}
               </>
             )}

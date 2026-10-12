@@ -78,6 +78,14 @@ export function clean(value: unknown, maxLength = 1000) {
   return typeof value === "string" ? value.trim().slice(0, maxLength) : "";
 }
 
+/** Gästnamn från fritext, separerade med komma eller radbrytning. */
+export function parseGuestNames(value: unknown) {
+  return (typeof value === "string" ? value : "")
+    .split(/[,\n]/)
+    .map((name) => name.trim().slice(0, 120))
+    .filter(Boolean);
+}
+
 export function isEmail(value: string) {
   return value.length <= 200 && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
 }

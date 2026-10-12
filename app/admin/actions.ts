@@ -4,7 +4,7 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { requireAdmin } from "@/lib/admin";
 import { requestOrigin } from "@/lib/origin";
-import { clean, invitationLink, invitationMessage, isEmail, UUID_PATTERN } from "@/lib/site";
+import { clean, invitationLink, invitationMessage, isEmail, parseGuestNames, UUID_PATTERN } from "@/lib/site";
 import { createServiceClient, createSessionClient } from "@/lib/supabase/server";
 
 const MAX_GUESTS = 30;
@@ -24,10 +24,7 @@ export async function createInvitation(input: { groupName?: unknown; email?: unk
   const groupName = clean(input.groupName, 200);
   const email = clean(input.email, 200).toLowerCase();
   const personalNote = clean(input.personalNote, 500);
-  const names = (typeof input.guestNames === "string" ? input.guestNames : "")
-    .split(/[,\n]/)
-    .map((name) => name.trim().slice(0, 120))
-    .filter(Boolean);
+  const names = parseGuestNames(input.guestNames);
 
   if (!groupName) return { ok: false, error: "Ange ett sällskapsnamn." };
   if (email && !isEmail(email)) return { ok: false, error: "Kontrollera e-postadressen." };

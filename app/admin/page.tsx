@@ -4,6 +4,7 @@ import { getAdmin } from "@/lib/admin";
 import { requestOrigin } from "@/lib/origin";
 import { invitationLink, invitationMessage } from "@/lib/site";
 import { createServiceClient } from "@/lib/supabase/server";
+import ExternalLink from "../components/external-link";
 import { signOut } from "./actions";
 import CopyButtons from "./components/copy-buttons";
 import DeleteGuestButton from "./components/delete-guest-button";
@@ -197,7 +198,7 @@ export default async function AdminPage({ searchParams }: { searchParams: Promis
           <h2 id="new-title" className="font-display text-4xl text-ink">Nytt sällskap</h2>
           <p className="mt-4 leading-7 text-ink/70">Efter att sällskapet sparats kopierar ni länken eller ett färdigt meddelande och skickar det själva via SMS, Messenger eller liknande. Sällskapet markeras som skickat när ni kopierar.</p>
         </div>
-        <NewInvitationForm />
+        <NewInvitationForm origin={origin} />
       </section>
 
       <section aria-labelledby="list-title" className="mt-16">
@@ -240,6 +241,7 @@ export default async function AdminPage({ searchParams }: { searchParams: Promis
                     <td className="p-4"><span className={`inline-block whitespace-nowrap rounded-full px-3 py-1 text-xs font-semibold ${STATUS_CLASS[invitation.status]}`}>{STATUS_LABEL[invitation.status]}</span></td>
                     <td className="space-y-3 p-4">
                       <CopyButtons id={invitation.id} status={invitation.status} link={invitationLink(origin, invitation.token)} message={invitationMessage(origin, invitation.group_name, invitation.guests.map((guest) => guest.name), invitation.token)} />
+                      <ExternalLink href={invitationLink(origin, invitation.token)} className="inline-block text-sm font-semibold text-sea underline">Visa inbjudan<span className="sr-only"> för {invitation.group_name}</span></ExternalLink>
                       <InvitationControls id={invitation.id} groupName={invitation.group_name} status={invitation.status} email={invitation.email} personalNote={invitation.personal_note} />
                     </td>
                   </tr>
