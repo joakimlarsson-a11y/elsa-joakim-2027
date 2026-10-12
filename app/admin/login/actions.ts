@@ -1,5 +1,6 @@
 "use server";
 
+import { headers } from "next/headers";
 import { isAdminEmail } from "@/lib/admin";
 import { clean, isEmail, SITE_URL } from "@/lib/site";
 import { createSessionClient } from "@/lib/supabase/server";
@@ -14,10 +15,14 @@ export async function sendMagicLink(rawEmail: unknown): Promise<LoginResult> {
   if (!isAdminEmail(email)) return { ok: true };
 
   try {
+    const h = await headers();
+    const host = h.get("x-forwarded-host") ?? h.get("host");
+    const proto = h.get("x-forwarded-proto") ?? (host?.startsWith("localhost") ? "http" : "https");
+    const origin = host ? `${proto}://${host}` : SITE_URL;
     const supabase = await createSessionClient();
     const { error } = await supabase.auth.signInWithOtp({
       email,
-      options: { emailRedirectTo: `${SITE_URL}/auth/callback` }
+      options: { emailRedirectTo: `${origin}/auth/callback` }
     });
     if (error) {
       console.error("signInWithOtp failed:", error);
