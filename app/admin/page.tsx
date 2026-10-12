@@ -25,6 +25,7 @@ type InvitationRow = {
   token: string;
   group_name: string;
   email: string | null;
+  personal_note: string | null;
   status: "pending" | "sent" | "responded";
   created_at: string;
   guests: Guest[];
@@ -68,21 +69,21 @@ function adminHref(filter: FilterKey, guestFilter: GuestFilterKey, hash: string)
 
 function AnswerLabel({ attending }: { attending: boolean | null }) {
   return (
-    <span className={attending === true ? "text-plum" : attending === false ? "text-red-800" : "text-ink/60"}>
+    <span className={attending === true ? "text-sea" : attending === false ? "text-red-800" : "text-ink/60"}>
       {attending === true ? "Ja" : attending === false ? "Nej" : "Väntar"}
     </span>
   );
 }
 
-const pillClass = (active: boolean) => `rounded-full px-4 py-2 text-sm font-semibold ${active ? "bg-plum text-white" : "border border-plum text-plum"}`;
+const pillClass = (active: boolean) => `rounded-full px-4 py-2 text-sm font-semibold ${active ? "bg-sea text-white" : "border border-sea text-sea"}`;
 
 const STATUS_LABEL: Record<InvitationRow["status"], string> = { pending: "Ej skickad", sent: "Skickad", responded: "Svarat" };
-const STATUS_CLASS: Record<InvitationRow["status"], string> = { pending: "bg-white text-ink/70 border border-ink/20", sent: "bg-lavender text-plum", responded: "bg-sky text-ink" };
+const STATUS_CLASS: Record<InvitationRow["status"], string> = { pending: "bg-white text-ink/70 border border-ink/20", sent: "bg-dusk text-sea", responded: "bg-foam text-ink" };
 
 function StatCard({ label, value, hint }: { label: string; value: number; hint?: string }) {
   return (
     <div className="rounded-2xl bg-white p-5 shadow-soft">
-      <p className="eyebrow text-plum">{label}</p>
+      <p className="eyebrow text-sea">{label}</p>
       <p className="mt-2 font-display text-5xl text-ink">{value}</p>
       {hint && <p className="mt-1 text-xs text-ink/60">{hint}</p>}
     </div>
@@ -97,7 +98,7 @@ export default async function AdminPage({ searchParams }: { searchParams: Promis
       <main className="mx-auto max-w-md px-6 py-24">
         <h1 className="font-display text-5xl text-ink">Ingen behörighet</h1>
         <p className="mt-5 leading-7 text-ink/70">{admin.email} är inte godkänd som administratör.</p>
-        <form action={signOut} className="mt-8"><button type="submit" className="rounded-full border border-plum px-6 py-3 font-semibold text-plum">Logga ut</button></form>
+        <form action={signOut} className="mt-8"><button type="submit" className="rounded-full border border-sea px-6 py-3 font-semibold text-sea">Logga ut</button></form>
       </main>
     );
   }
@@ -109,7 +110,7 @@ export default async function AdminPage({ searchParams }: { searchParams: Promis
 
   const { data, error } = await admin.supabase
     .from("invitations")
-    .select("id, token, group_name, email, status, created_at, guests(id, name, attending, dietary_info, needs_bus, message)")
+    .select("id, token, group_name, email, personal_note, status, created_at, guests(id, name, attending, dietary_info, needs_bus, message)")
     .order("created_at", { ascending: false });
   if (error) console.error("Load invitations failed:", error);
   const invitations = (data ?? []) as InvitationRow[];
@@ -172,12 +173,12 @@ export default async function AdminPage({ searchParams }: { searchParams: Promis
     <main className="mx-auto max-w-6xl px-6 py-12 lg:px-10">
       <header className="flex flex-wrap items-end justify-between gap-4">
         <div>
-          <p className="eyebrow text-plum">Elsa & Joakim · Admin</p>
+          <p className="eyebrow text-sea">Elsa & Joakim · Admin</p>
           <h1 className="mt-3 font-display text-5xl text-ink">Gäster & OSA</h1>
         </div>
         <div className="flex items-center gap-4 text-sm text-ink/70">
           <span>{admin.email}</span>
-          <form action={signOut}><button type="submit" className="font-semibold text-plum underline">Logga ut</button></form>
+          <form action={signOut}><button type="submit" className="font-semibold text-sea underline">Logga ut</button></form>
         </div>
       </header>
 
@@ -210,11 +211,11 @@ export default async function AdminPage({ searchParams }: { searchParams: Promis
         </div>
 
         {visible.length === 0 ? (
-          <p className="mt-6 rounded-2xl bg-mist p-6 text-ink/70">Inga sällskap att visa.</p>
+          <p className="mt-6 rounded-2xl bg-shell p-6 text-ink/70">Inga sällskap att visa.</p>
         ) : (
           <div className="mt-6 overflow-x-auto rounded-2xl bg-white shadow-soft">
             <table className="w-full min-w-[900px] text-left text-sm">
-              <thead className="border-b border-ink/10 bg-mist text-xs uppercase tracking-wider text-ink/70">
+              <thead className="border-b border-ink/10 bg-shell text-xs uppercase tracking-wider text-ink/70">
                 <tr>
                   <th scope="col" className="p-4">Sällskap</th>
                   <th scope="col" className="p-4">Gäster</th>
@@ -239,7 +240,7 @@ export default async function AdminPage({ searchParams }: { searchParams: Promis
                     <td className="p-4"><span className={`inline-block whitespace-nowrap rounded-full px-3 py-1 text-xs font-semibold ${STATUS_CLASS[invitation.status]}`}>{STATUS_LABEL[invitation.status]}</span></td>
                     <td className="space-y-3 p-4">
                       <CopyButtons id={invitation.id} status={invitation.status} link={invitationLink(origin, invitation.token)} message={invitationMessage(origin, invitation.group_name, invitation.guests.map((guest) => guest.name), invitation.token)} />
-                      <InvitationControls id={invitation.id} groupName={invitation.group_name} status={invitation.status} email={invitation.email} />
+                      <InvitationControls id={invitation.id} groupName={invitation.group_name} status={invitation.status} email={invitation.email} personalNote={invitation.personal_note} />
                     </td>
                   </tr>
                 ))}
@@ -263,17 +264,17 @@ export default async function AdminPage({ searchParams }: { searchParams: Promis
         </div>
         {!service && <p className="mt-4 rounded-lg bg-white p-4 text-sm text-ink" role="status">SUPABASE_SERVICE_ROLE_KEY saknas – anmälningar via öppna formuläret visas inte.</p>}
         {duplicates.length > 0 && (
-          <p className="mt-4 rounded-lg bg-lavender p-4 text-sm text-ink" role="status">
+          <p className="mt-4 rounded-lg bg-dusk p-4 text-sm text-ink" role="status">
             <strong>Möjliga dubbletter:</strong> {duplicates.map((rsvp) => `${rsvp.name} (${rsvp.email})`).join(", ")} har samma e-post som en inbjudan.
           </p>
         )}
         {visibleGuests.length === 0 ? (
-          <p className="mt-6 rounded-2xl bg-mist p-6 text-ink/70">{guestFilter === "allergier" ? "Ingen som kommer har angett allergier eller specialkost." : "Inga gäster att visa."}</p>
+          <p className="mt-6 rounded-2xl bg-shell p-6 text-ink/70">{guestFilter === "allergier" ? "Ingen som kommer har angett allergier eller specialkost." : "Inga gäster att visa."}</p>
         ) : (
           <div className="mt-6 overflow-x-auto rounded-2xl bg-white shadow-soft">
             <table className="w-full min-w-[800px] text-left text-sm">
               <caption className="sr-only">Gästlista, {visibleGuests.length} personer</caption>
-              <thead className="border-b border-ink/10 bg-mist text-xs uppercase tracking-wider text-ink/70">
+              <thead className="border-b border-ink/10 bg-shell text-xs uppercase tracking-wider text-ink/70">
                 <tr>
                   <th scope="col" className="p-4">Namn</th>
                   <th scope="col" className="p-4">Sällskap</th>

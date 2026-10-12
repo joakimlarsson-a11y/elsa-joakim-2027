@@ -2,6 +2,7 @@
 
 import { FormEvent, useEffect, useRef, useState } from "react";
 import { inputClass, radioClass } from "./form-styles";
+import RsvpSuccess from "./rsvp-success";
 
 type Status = "idle" | "loading" | "success" | "error";
 type Bus = "" | "Ja" | "Nej";
@@ -15,6 +16,7 @@ export default function RSVPForm() {
   const [status, setStatus] = useState<Status>("idle");
   const [error, setError] = useState("");
   const [persons, setPersons] = useState<Person[]>(() => [emptyPerson(0)]);
+  const [sentNames, setSentNames] = useState("");
   const nextId = useRef(1);
   const [focusTarget, setFocusTarget] = useState<number | "add" | null>(null);
   const addButtonRef = useRef<HTMLButtonElement>(null);
@@ -50,6 +52,8 @@ export default function RSVPForm() {
       const response = await fetch("/api/rsvp", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) });
       const result = await response.json();
       if (!response.ok) throw new Error(result.error || "Något gick fel.");
+      const first = persons.map((person) => person.name.trim().split(/\s+/)[0]).filter(Boolean);
+      setSentNames(first.length > 1 ? `${first.slice(0, -1).join(", ")} & ${first[first.length - 1]}` : first[0] ?? "");
       setStatus("success");
       setPersons([emptyPerson(nextId.current++)]);
     } catch (submitError) {
@@ -58,11 +62,17 @@ export default function RSVPForm() {
     }
   }
 
-  if (status === "success") return <div className="rounded-2xl bg-sky p-8" role="status"><p className="eyebrow text-plum">Tack för ditt svar</p><h3 className="mt-3 font-display text-4xl">Vi ses på vår stora dag!</h3><p className="mt-3 leading-7 text-ink/75">En bekräftelse har skickats till din e-post.</p></div>;
+  if (status === "success") {
+    return (
+      <RsvpSuccess heading={sentNames ? `Skål, ${sentNames}!` : "Skål!"} attending action={<button type="button" onClick={() => setStatus("idle")} className="font-semibold text-sea underline underline-offset-4">Anmäl ett sällskap till</button>}>
+        <p>Vi ses den 19 juni. En bekräftelse är på väg till er e-post.</p>
+      </RsvpSuccess>
+    );
+  }
 
   return (
-    <form onSubmit={submit} className="space-y-8 rounded-2xl bg-mist p-6 sm:p-10">
-      <p className="leading-7 text-ink/75">Fyll i uppgifter för varje person som ska komma. Lägg till fler personer om ni är flera i sällskapet.</p>
+    <form onSubmit={submit} className="space-y-8 rounded-2xl bg-paper p-6 shadow-soft sm:p-10">
+      <p className="leading-7 text-ink/80">Fyll i uppgifter för varje person som ska komma. E-post behövs för alla – då kan vi skicka en bekräftelse och nå er om något ändras.</p>
 
       <ol className="space-y-6">
         {persons.map((person, index) => {
@@ -76,29 +86,30 @@ export default function RSVPForm() {
                   <input id={`${prefix}-name`} required type="text" autoComplete={index === 0 ? "name" : "off"} value={person.name} onChange={(e) => update(person.id, { name: e.target.value })} className={inputClass} />
                 </label>
                 <label htmlFor={`${prefix}-email`} className="block text-sm font-semibold">E-post
-                  <input id={`${prefix}-email`} required type="email" autoComplete={index === 0 ? "email" : "off"} value={person.email} onChange={(e) => update(person.id, { email: e.target.value })} className={inputClass} />
+                  {index > 0 && <span id={`${prefix}-email-hint`} className="mt-1 block font-normal text-ink/75">Barn utan egen e-post – ange förälderns.</span>}
+                  <input id={`${prefix}-email`} required type="email" autoComplete={index === 0 ? "email" : "off"} aria-describedby={index > 0 ? `${prefix}-email-hint` : undefined} value={person.email} onChange={(e) => update(person.id, { email: e.target.value })} className={inputClass} />
                 </label>
                 <label htmlFor={`${prefix}-allergies`} className="block text-sm font-semibold">Allergier eller specialkost<span className="ml-2 font-normal text-ink/70">valfritt</span>
                   <textarea id={`${prefix}-allergies`} rows={2} value={person.allergies} onChange={(e) => update(person.id, { allergies: e.target.value })} className={inputClass} />
                 </label>
                 <fieldset className="space-y-3">
-                  <legend className="text-sm font-semibold">Vill åka med bussen?</legend>
+                  <legend className="text-sm font-semibold">{index === 0 ? "Vill du åka med bussen från kyrkan?" : `Vill ${person.name.trim().split(/\s+/)[0] || "personen"} åka med bussen från kyrkan?`}</legend>
                   <div className="flex flex-wrap gap-3">
                     <label className={radioClass}><input required name={`${prefix}-bus`} type="radio" value="Ja" checked={person.bus === "Ja"} onChange={() => update(person.id, { bus: "Ja" })} />Ja tack</label>
                     <label className={radioClass}><input required name={`${prefix}-bus`} type="radio" value="Nej" checked={person.bus === "Nej"} onChange={() => update(person.id, { bus: "Nej" })} />Nej tack</label>
                   </div>
                 </fieldset>
-                {index > 0 && <button type="button" onClick={() => removePerson(person.id)} className="text-sm font-semibold text-plum underline">Ta bort {person.name.trim() || label.toLowerCase()}</button>}
+                {index > 0 && <button type="button" onClick={() => removePerson(person.id)} className="text-sm font-semibold text-sea underline underline-offset-4">Ta bort {person.name.trim() || label.toLowerCase()}</button>}
               </fieldset>
             </li>
           );
         })}
       </ol>
 
-      {persons.length < MAX_PERSONS && <button ref={addButtonRef} type="button" onClick={addPerson} className="rounded-full border border-plum px-6 py-3 font-semibold text-plum">+ Lägg till person</button>}
+      {persons.length < MAX_PERSONS && <button ref={addButtonRef} type="button" onClick={addPerson} className="min-h-12 rounded-full border-2 border-sea px-6 font-semibold text-sea hover:bg-sea hover:text-white">+ Lägg till person</button>}
 
       {status === "error" && <p className="text-sm font-semibold text-red-800" role="alert">{error}</p>}
-      <button disabled={status === "loading"} type="submit" className="button-primary w-full rounded-full bg-plum px-7 py-3 font-semibold text-white disabled:cursor-wait disabled:opacity-60">{status === "loading" ? "Skickar…" : "Skicka min OSA"}</button>
+      <button disabled={status === "loading"} type="submit" className="button-primary w-full rounded-full bg-ember px-7 py-3 font-semibold text-white disabled:cursor-wait disabled:opacity-60">{status === "loading" ? "Skickar…" : "Skicka min OSA"}</button>
     </form>
   );
 }

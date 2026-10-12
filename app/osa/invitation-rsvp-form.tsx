@@ -1,7 +1,9 @@
 "use client";
 
 import { FormEvent, useState, useTransition } from "react";
+import { firstNames } from "@/lib/site";
 import { inputClass, radioClass } from "../components/form-styles";
+import RsvpSuccess from "../components/rsvp-success";
 import { submitInvitationRsvp } from "./actions";
 import type { Invitation } from "./types";
 
@@ -58,29 +60,30 @@ export default function InvitationRsvpForm({ token, invitation }: { token: strin
   }
 
   if (done) {
-    const anyAttending = guests.some((guest) => guest.attending);
-    const confirmationSent = invitation.has_email || email.trim() !== "";
+    const coming = guests.filter((guest) => guest.attending);
+    const comingNames = firstNames(coming.map((guest) => guest.name));
+    const everyone = firstNames(guests.map((guest) => guest.name));
+    const heading = coming.length > 0
+      ? `Skål${comingNames ? `, ${comingNames}` : ""}! Vi ses 19 juni.`
+      : `Vi kommer att sakna ${solo ? "dig" : "er"}${everyone ? `, ${everyone}` : ""}.`;
     return (
-      <div className="rounded-2xl bg-sky p-8" role="status">
-        <p className="eyebrow text-plum">{solo ? "Tack för ditt svar" : "Tack för ert svar"}</p>
-        <h3 className="mt-3 font-display text-4xl">{anyAttending ? "Vi ses på vår stora dag!" : solo ? "Du kommer att saknas!" : "Ni kommer att saknas!"}</h3>
-        <ul className="mt-5 space-y-1 leading-7 text-ink/80">
-          {guests.map((guest) => <li key={guest.id}><strong>{guest.name}</strong> – {guest.attending ? "kommer" : "kan inte komma"}</li>)}
-        </ul>
-        <p className="mt-5 leading-7 text-ink/75">{solo
-            ? `${confirmationSent ? "En bekräftelse skickas till din e-post. " : ""}Behöver du ändra något kan du använda samma länk igen.`
-            : `${confirmationSent ? "En bekräftelse skickas till er e-post. " : ""}Behöver ni ändra något kan ni använda samma länk igen.`}</p>
-        <button type="button" onClick={() => setDone(false)} className="mt-5 text-sm font-semibold text-plum underline">Ändra svar</button>
-      </div>
+      <RsvpSuccess heading={heading} attending={coming.length > 0} action={<button type="button" onClick={() => setDone(false)} className="font-semibold text-sea underline underline-offset-4">Ändra svar</button>}>
+        {!solo && (
+          <ul className="space-y-1">
+            {guests.map((guest) => <li key={guest.id}><strong>{guest.name}</strong> – {guest.attending ? "kommer" : "kan inte komma"}</li>)}
+          </ul>
+        )}
+        <p>{solo ? "En bekräftelse är på väg till din e-post. Behöver du ändra något använder du bara samma länk igen." : "En bekräftelse är på väg till er e-post. Behöver ni ändra något använder ni bara samma länk igen."}</p>
+      </RsvpSuccess>
     );
   }
 
   if (guests.length === 0) {
-    return <p className="rounded-2xl bg-mist p-8 leading-7 text-ink/75">Inbjudan saknar gäster. Hör av dig till oss så hjälper vi dig.</p>;
+    return <p className="rounded-2xl bg-paper p-8 leading-7 text-ink/80">Inbjudan saknar gäster. Hör av dig till oss så hjälper vi dig.</p>;
   }
 
   return (
-    <form onSubmit={submit} className="space-y-8 rounded-2xl bg-mist p-6 sm:p-10">
+    <form onSubmit={submit} className="space-y-8 rounded-2xl bg-paper p-6 shadow-soft sm:p-10">
       {alreadyResponded && <p className="leading-7 text-ink/75" role="status">{solo ? "Du har redan svarat – ditt tidigare svar är ifyllt nedan och kan ändras." : "Ni har redan svarat – ert tidigare svar är ifyllt nedan och kan ändras."}</p>}
 
       <ol className="space-y-6">
@@ -104,7 +107,7 @@ export default function InvitationRsvpForm({ token, invitation }: { token: strin
                       <textarea id={`${prefix}-diet`} rows={2} maxLength={1000} value={guest.dietary_info} onChange={(e) => update(guest.id, { dietary_info: e.target.value })} className={inputClass} />
                     </label>
                     <fieldset className="space-y-3">
-                      <legend className="text-sm font-semibold">{solo ? "Vill du åka med bussen?" : "Vill åka med bussen?"}</legend>
+                      <legend className="text-sm font-semibold">{solo ? "Vill du åka med bussen från kyrkan?" : `Vill ${guest.name.trim().split(/\s+/)[0]} åka med bussen från kyrkan?`}</legend>
                       <div className="flex flex-wrap gap-3">
                         <label className={radioClass}><input required name={`${prefix}-bus`} type="radio" checked={guest.needs_bus === true} onChange={() => update(guest.id, { needs_bus: true })} />Ja tack</label>
                         <label className={radioClass}><input required name={`${prefix}-bus`} type="radio" checked={guest.needs_bus === false} onChange={() => update(guest.id, { needs_bus: false })} />Nej tack</label>
@@ -125,13 +128,14 @@ export default function InvitationRsvpForm({ token, invitation }: { token: strin
       </ol>
 
       {!invitation.has_email && (
-        <label htmlFor="invitation-email" className="block text-sm font-semibold">E-post för bekräftelse<span className="ml-2 font-normal text-ink/70">valfritt</span>
-          <input id="invitation-email" type="email" autoComplete="email" maxLength={200} value={email} onChange={(e) => setEmail(e.target.value)} className={inputClass} />
+        <label htmlFor="invitation-email" className="block text-sm font-semibold">E-post
+          <span id="invitation-email-hint" className="mt-1 block font-normal text-ink/75">Dit skickar vi bekräftelsen och hör av oss om något ändras.</span>
+          <input id="invitation-email" required aria-describedby="invitation-email-hint" type="email" autoComplete="email" maxLength={200} value={email} onChange={(e) => setEmail(e.target.value)} className={inputClass} />
         </label>
       )}
 
       {error && <p className="text-sm font-semibold text-red-800" role="alert">{error}</p>}
-      <button disabled={pending} type="submit" className="button-primary w-full rounded-full bg-plum px-7 py-3 font-semibold text-white disabled:cursor-wait disabled:opacity-60">{pending ? "Skickar…" : alreadyResponded ? (solo ? "Uppdatera mitt svar" : "Uppdatera vårt svar") : solo ? "Skicka mitt svar" : "Skicka vårt svar"}</button>
+      <button disabled={pending} type="submit" className="button-primary w-full rounded-full bg-ember px-7 py-3 font-semibold text-white disabled:cursor-wait disabled:opacity-60">{pending ? "Skickar…" : alreadyResponded ? (solo ? "Uppdatera mitt svar" : "Uppdatera vårt svar") : solo ? "Skicka mitt svar" : "Skicka vårt svar"}</button>
     </form>
   );
 }

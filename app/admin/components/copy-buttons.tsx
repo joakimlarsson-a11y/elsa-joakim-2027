@@ -23,7 +23,7 @@ export default function CopyButtons({ id, status, link, message }: Props) {
     if (status === "pending") await setInvitationSent(id, true);
   }
 
-  const buttonClass = "rounded-full border border-plum px-4 py-2 text-sm font-semibold text-plum hover:bg-lavender/40";
+  const buttonClass = "rounded-full border border-sea px-4 py-2 text-sm font-semibold text-sea hover:bg-dusk/40";
   return (
     <div className="space-y-2">
       <div className="flex flex-wrap gap-2">
