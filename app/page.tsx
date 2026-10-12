@@ -39,7 +39,7 @@ const navLinks = [
 
 const faqs = [
   { q: "När behöver vi svara?", a: `Senast den ${WEDDING.rsvpBy}. Svara via formuläret längre ner. En anmälan per sällskap räcker.` },
-  ...(WEDDING.dressCode ? [{ q: "Vad har vi på oss?", a: `Klädsel: ${WEDDING.dressCode}.` }] : []),
+  ...(WEDDING.dressCode ? [{ q: "Vad har vi på oss?", a: `Klädkoden är ${WEDDING.dressCode.toLowerCase()}. ${WEDDING.dressCodeNote}`.trim() }] : []),
   ...(WEDDING.children ? [{ q: "Får barnen följa med?", a: WEDDING.children }] : []),
   { q: "Hur tar vi oss mellan kyrkan och festen?", a: "Vi ordnar buss som avgår direkt från Ölmevalla Kyrka efter ceremonin. Ange i OSA:n vilka som vill åka med." },
   { q: "Hur tar vi oss hem?", a: "Vi har ingen buss tillbaka. Från Långedrag går spårvagn 11 in mot centrala Göteborg, och taxi går förstås också bra. Boka gärna i förväg." },
