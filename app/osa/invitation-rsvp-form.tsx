@@ -70,7 +70,7 @@ export default function InvitationRsvpForm({ token, invitation }: { token: strin
       <RsvpSuccess heading={heading} attending={coming.length > 0} action={<button type="button" onClick={() => setDone(false)} className="btn-quiet text-ink">Ändra svar</button>}>
         {!solo && (
           <ul className="space-y-1">
-            {guests.map((guest) => <li key={guest.id}><strong>{guest.name}</strong> – {guest.attending ? "kommer" : "kan inte komma"}</li>)}
+            {guests.map((guest) => <li key={guest.id}><strong>{guest.name}</strong>: {guest.attending ? "kommer" : "kan inte komma"}</li>)}
           </ul>
         )}
         <p>{solo ? "En bekräftelse är på väg till din e-post. Behöver du ändra något använder du bara samma länk igen." : "En bekräftelse är på väg till er e-post. Behöver ni ändra något använder ni bara samma länk igen."}</p>
@@ -84,7 +84,7 @@ export default function InvitationRsvpForm({ token, invitation }: { token: strin
 
   return (
     <form onSubmit={submit} className="space-y-8 bg-paper p-6 sm:p-10">
-      {alreadyResponded && <p className="leading-7 text-ink/75" role="status">{solo ? "Du har redan svarat – ditt tidigare svar är ifyllt nedan och kan ändras." : "Ni har redan svarat – ert tidigare svar är ifyllt nedan och kan ändras."}</p>}
+      {alreadyResponded && <p className="leading-7 text-ink/75" role="status">{solo ? "Du har redan svarat. Ditt svar är ifyllt nedan och du kan ändra det." : "Ni har redan svarat. Ert svar är ifyllt nedan och ni kan ändra det."}</p>}
 
       <ol className="space-y-6">
         {guests.map((guest) => {

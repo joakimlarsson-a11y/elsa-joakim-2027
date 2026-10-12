@@ -49,10 +49,10 @@ export default function NewInvitationForm() {
         <label htmlFor="new-guests" className="block text-sm font-semibold">Gäster<span className="ml-2 font-normal text-ink/70">separera med komma</span>
           <textarea id="new-guests" required rows={2} placeholder="Anna Svensson, Erik Svensson" value={guestNames} onChange={(e) => setGuestNames(e.target.value)} className={inputClass} />
         </label>
-        <label htmlFor="new-email" className="block text-sm font-semibold">E-post<span className="ml-2 font-normal text-ink/70">valfritt – används för bekräftelse efter svar</span>
+        <label htmlFor="new-email" className="block text-sm font-semibold">E-post<span className="ml-2 font-normal text-ink/70">valfritt, används för bekräftelse efter svar</span>
           <input id="new-email" type="email" maxLength={200} value={email} onChange={(e) => setEmail(e.target.value)} className={inputClass} />
         </label>
-        <label htmlFor="new-note" className="block text-sm font-semibold">Personlig hälsning<span className="ml-2 font-normal text-ink/75">valfritt – visas överst på deras sida</span>
+        <label htmlFor="new-note" className="block text-sm font-semibold">Personlig hälsning<span className="ml-2 font-normal text-ink/75">valfritt, visas överst på deras sida</span>
           <textarea id="new-note" rows={2} maxLength={500} placeholder="Vi längtar efter att dansa med er igen!" value={personalNote} onChange={(e) => setPersonalNote(e.target.value)} className={inputClass} />
         </label>
         {error && <p className="text-sm font-semibold text-red-800" role="alert">{error}</p>}

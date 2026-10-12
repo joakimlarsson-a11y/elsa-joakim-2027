@@ -20,7 +20,7 @@ export function GET() {
   const origin = staticOrigin();
   const location = VENUES.church.address ? `${VENUES.church.name}, ${VENUES.church.address}` : VENUES.church.name;
   const description = [
-    ...SCHEDULE.map((item) => `${item.time} ${item.title} – ${item.place}`),
+    ...SCHEDULE.map((item) => `${item.time} ${item.title}, ${item.place}`),
     "",
     origin
   ].join("\n");
@@ -35,7 +35,7 @@ export function GET() {
     "DTSTAMP:20261012T000000Z",
     "DTSTART;TZID=Europe/Stockholm:20270619T140000",
     `DTEND;TZID=Europe/Stockholm:${endStamp()}`,
-    `SUMMARY:${escapeText("Elsa & Joakims bröllop")}`,
+    `SUMMARY:${escapeText("Elsa & Joakim förnyar löftena")}`,
     `LOCATION:${escapeText(location)}`,
     `DESCRIPTION:${escapeText(description)}`,
     `URL:${origin}`,

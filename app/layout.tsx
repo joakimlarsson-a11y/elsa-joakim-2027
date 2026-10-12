@@ -9,7 +9,7 @@ const accent = Cormorant_Garamond({ subsets: ["latin"], weight: "400", style: "i
 
 export const metadata: Metadata = {
   title: "Elsa & Joakim | 19 juni 2027",
-  description: "Välkommen att fira Elsa och Joakims bröllop i sommar.",
+  description: "Välkommen att fira med Elsa och Joakim när de förnyar sina löften i sommar.",
   metadataBase: new URL(staticOrigin())
 };
 

@@ -21,9 +21,9 @@ export async function generateMetadata({ searchParams }: HomeProps): Promise<Met
 const story = [
   { src: "/photos/selfie.jpg", alt: "Elsa och Joakim lutar huvudena mot varandra och ler", caption: "Vi två." },
   { src: "/photos/familj.jpg", alt: "Elsa och Joakim med sin dotter i en grön trädgård", caption: "Och så blev vi fler." },
-  { src: "/photos/bubbel.jpg", alt: "Elsa och Joakim skålar i bubbel på klipporna vid havet", caption: "Bubbel på klipporna – havet är vårt ställe." },
+  { src: "/photos/bubbel.jpg", alt: "Elsa och Joakim skålar i bubbel på klipporna vid havet", caption: "Bubbel på klipporna. Havet är vårt ställe." },
   { src: "/photos/midsommar.jpg", alt: "Elsa och Joakim med blomsterkransar på midsommar", caption: "Midsommar, med kransar." },
-  { src: "/photos/hyrox.jpg", alt: "Elsa och Joakim spänner musklerna efter målgång på Hyrox", caption: "Hyrox. Vi tog oss i mål – tillsammans." },
+  { src: "/photos/hyrox.jpg", alt: "Elsa och Joakim spänner musklerna efter målgång på Hyrox", caption: "Hyrox. Vi tog oss i mål, tillsammans." },
   { src: "/photos/kyss.jpg", alt: "Elsa och Joakim kysser varandra framför en grön häck", caption: "Ja, vi gillar varandra." },
   { src: "/photos/solnedgang.jpg", alt: "Elsa och Joakim ler i solen på en uteservering", caption: "Sena eftermiddagar i solen." },
   { src: "/photos/smoking.jpg", alt: "Elsa och Joakim med sin son, klädda i festkläder", caption: "Uppklädda, alla tre." },
@@ -38,16 +38,15 @@ const navLinks = [
 ];
 
 const faqs = [
-  { q: "När behöver vi svara?", a: `Senast den ${WEDDING.rsvpBy}. Svara via formuläret längre ner – en anmälan per sällskap räcker.` },
-  { q: "Vad betyder OSA?", a: "Om svar anhålles – alltså att vi gärna vill veta om ni kommer." },
+  { q: "När behöver vi svara?", a: `Senast den ${WEDDING.rsvpBy}. Svara via formuläret längre ner. En anmälan per sällskap räcker.` },
   ...(WEDDING.dressCode ? [{ q: "Vad har vi på oss?", a: `Klädsel: ${WEDDING.dressCode}.` }] : []),
   ...(WEDDING.children ? [{ q: "Får barnen följa med?", a: WEDDING.children }] : []),
-  { q: "Hur tar vi oss mellan kyrkan och festen?", a: "Vi ordnar buss som avgår direkt från Ölmevalla Kyrka efter vigseln. Ange i OSA:n vilka som vill åka med." },
-  { q: "Hur tar vi oss hem?", a: "Vi har ingen buss tillbaka. Från Långedrag går spårvagn 11 in mot centrala Göteborg, och taxi går förstås också bra – boka gärna i förväg." },
-  { q: "Jag vill hålla tal eller ordna ett spex – vem kontaktar jag?", a: "Hör av dig till vår toastmadame Jenny Bergdahl i god tid, så hjälper hon dig att planera in det under kvällen." },
+  { q: "Hur tar vi oss mellan kyrkan och festen?", a: "Vi ordnar buss som avgår direkt från Ölmevalla Kyrka efter ceremonin. Ange i OSA:n vilka som vill åka med." },
+  { q: "Hur tar vi oss hem?", a: "Vi har ingen buss tillbaka. Från Långedrag går spårvagn 11 in mot centrala Göteborg, och taxi går förstås också bra. Boka gärna i förväg." },
+  { q: "Jag vill hålla tal eller ordna ett spex. Vem kontaktar jag?", a: "Hör av dig till vår toastmadame Jenny Bergdahl i god tid, så hjälper hon dig att planera in det under kvällen." },
   { q: "Jag har allergier eller äter specialkost.", a: "Skriv det i OSA-formuläret, för var och en i sällskapet, så ser vi till att köket vet om det." },
-  { q: "Önskar ni er några presenter?", a: "Er närvaro är den finaste presenten. Den som ändå vill får gärna bidra till vår bröllopsresa." },
-  { q: "Jag har en annan fråga.", a: "Kontakta Jenny Bergdahl – mer om henne hittar du under Toastmadame." }
+  { q: "Önskar ni er några presenter?", a: "Er närvaro är den finaste presenten. Den som ändå vill får gärna bidra till vår resa." },
+  { q: "Jag har en annan fråga.", a: "Kontakta Jenny Bergdahl. Mer om henne hittar du under Toastmadame." }
 ];
 
 const h2 = "font-display text-[clamp(2.5rem,9vw,4rem)] leading-[1] [hyphens:auto]";
@@ -86,7 +85,7 @@ export default async function Home({ searchParams }: HomeProps) {
   const days = daysLeft(now);
 
   const youAll = solo ? "du" : "ni";
-  const ctaLabel = responded ? `${solo ? "Du" : "Ni"} har svarat – ändra svaret` : names ? `Svara för ${names}` : "OSA här";
+  const ctaLabel = responded ? `${solo ? "Du" : "Ni"} har svarat. Ändra svaret` : names ? `Svara för ${names}` : "OSA här";
 
   return (
     <main className="overflow-x-clip">
@@ -113,17 +112,17 @@ export default async function Home({ searchParams }: HomeProps) {
           ) : null}
           <h1 style={delay(300)} className="hero-rise mt-3 font-display text-[clamp(3.75rem,16vw,6rem)] leading-[.95]">
             Elsa <span className="font-accent text-dusk">&</span> Joakim
-            <span className="sr-only">{thankYou ? " – tack för att ni firade med oss" : " gifter sig 19 juni 2027"}</span>
+            <span className="sr-only">{thankYou ? ", tack för att ni firade med oss" : " förnyar sina löften 19 juni 2027"}</span>
           </h1>
 
           <div className="hero-rise mt-8 max-w-xl space-y-4 text-lg leading-8 text-white/90" style={delay(450)}>
             {thankYou ? (
-              <p>Den 19 juni 2027 blev vi gifta i Ölmevalla Kyrka och dansade in i natten på Långedrag. Tack för att {names ? youAll : "ni"} var där.</p>
+              <p>Den 19 juni 2027 förnyade vi våra löften i Ölmevalla Kyrka och dansade in i natten på Långedrag. Tack för att {names ? youAll : "ni"} var där.</p>
             ) : (
               <>
                 <p>
-                  <span className="font-display text-2xl text-white sm:text-3xl">Lördag 19 juni 2027.</span>{" "}
-                  Vi gifter oss i Ölmevalla Kyrka och firar sedan vid havet på Långedrags Värdshus – {names ? `och vi vill så gärna att ${youAll} är med.` : "välkomna!"}
+                  <span className="mb-2 block font-display text-2xl text-white sm:text-3xl">Lördag 19 juni 2027</span>
+                  Vi förnyar våra löften i Ölmevalla Kyrka och firar sedan vid havet på Långedrags Värdshus. {names ? `Vi vill så gärna att ${youAll} är med.` : "Varmt välkomna!"}
                 </p>
                 {invitation?.personal_note && <p className="border-l border-dusk/60 pl-5 font-accent text-2xl leading-snug text-dusk">{invitation.personal_note}</p>}
               </>
@@ -146,7 +145,7 @@ export default async function Home({ searchParams }: HomeProps) {
       <section className="mx-auto max-w-6xl px-6 py-24 lg:px-10 lg:py-32" aria-labelledby="story-title">
         <div className="grid gap-6 lg:grid-cols-[1fr_1.2fr] lg:items-end">
           <h2 id="story-title" data-reveal="up" className={`${h2} text-ink`}>Vår historia, i bilder</h2>
-          <p data-reveal="up" style={delay(120)} className="max-w-xl text-lg leading-8 text-ink/75">Vi har firat mycket tillsammans – midsommar, målgångar, solnedgångar och vanliga tisdagar. Nu vill vi fira det största av dem med er.</p>
+          <p data-reveal="up" style={delay(120)} className="max-w-xl text-lg leading-8 text-ink/75">Vi har firat mycket tillsammans: midsommar, målgångar, solnedgångar och vanliga tisdagar. Nu vill vi fira det största av dem med er.</p>
         </div>
         <ul className="mt-14 columns-2 gap-4 md:columns-3 md:gap-6">
           {story.map((photo, index) => (
@@ -183,7 +182,7 @@ export default async function Home({ searchParams }: HomeProps) {
                 <span className="absolute -left-[calc(2rem+4px)] top-[4rem] h-[7px] w-[7px] rounded-full border border-ink/50 bg-shell sm:-left-[calc(3rem+4px)]" aria-hidden="true" />
                 <p className="font-display text-4xl text-sea sm:text-5xl">ca {WEDDING.endTime}</p>
                 <h3 className="mt-2 text-xl font-medium text-ink">Kvällen tar slut</h3>
-                <p className="mt-2 max-w-md leading-7 text-ink/75">Ingen buss tillbaka – spårvagn 11 eller taxi tar er hem.</p>
+                <p className="mt-2 max-w-md leading-7 text-ink/75">Ingen buss tillbaka. Spårvagn 11 eller taxi tar er hem.</p>
               </li>
             )}
           </ol>
@@ -193,10 +192,10 @@ export default async function Home({ searchParams }: HomeProps) {
 
       <section id="hitta-hit" className="mx-auto max-w-6xl scroll-mt-4 px-6 py-24 lg:px-10 lg:py-32" aria-labelledby="info-title">
         <h2 id="info-title" data-reveal="up" className={`${h2} max-w-2xl text-ink`}>Hitta hit</h2>
-        <p data-reveal="up" style={delay(120)} className="mt-6 max-w-2xl text-lg leading-8 text-ink/75">Vigseln är i Ölmevalla Kyrka söder om Kungsbacka. Därifrån tar bussen er till Långedrag i västra Göteborg – ungefär 40 minuter längs kusten.</p>
+        <p data-reveal="up" style={delay(120)} className="mt-6 max-w-2xl text-lg leading-8 text-ink/75">Ceremonin är i Ölmevalla Kyrka söder om Kungsbacka. Därifrån tar bussen er till Långedrag i västra Göteborg, ungefär 40 minuter längs kusten.</p>
         <div className="mt-14 grid gap-x-8 gap-y-14 md:grid-cols-2">
           {[
-            { venue: VENUES.church, what: "Vigsel 14:00" },
+            { venue: VENUES.church, what: "Ceremoni 14:00" },
             { venue: VENUES.party, what: "Mingel och middag från 16:30" }
           ].map(({ venue, what }, index) => (
             <article key={venue.name} data-reveal="up" style={delay(index * 140)} className="flex flex-col">
@@ -215,7 +214,7 @@ export default async function Home({ searchParams }: HomeProps) {
         <div id="boende" data-reveal="up" className="mt-28 grid scroll-mt-4 items-center gap-10 lg:grid-cols-[1fr_1.2fr] lg:gap-16">
           <div>
             <h3 className="font-display text-4xl text-ink sm:text-5xl">Sova över</h3>
-            <p className="mt-6 max-w-xl text-lg leading-8 text-ink/75">Vi sover själva på Clarion Hotel Draken i centrala Göteborg – en bit från Långedrag, men lätt att nå med spårvagn 11 eller taxi efter festen. Det är helt frivilligt att bo där; lös gärna boende som passar er.</p>
+            <p className="mt-6 max-w-xl text-lg leading-8 text-ink/75">Vi sover själva på Clarion Hotel Draken i centrala Göteborg. Det är en bit från Långedrag, men lätt att nå med spårvagn 11 eller taxi efter festen. Det är helt frivilligt att bo där; lös gärna boende som passar er.</p>
             <ExternalLink className="btn-quiet mt-6 text-ink" href="https://www.strawberry.se/hotell/sverige/goteborg/clarion-hotel-draken/">Läs mer och boka på Strawberry</ExternalLink>
           </div>
           <div className="relative aspect-[16/10] overflow-hidden">
@@ -233,7 +232,7 @@ export default async function Home({ searchParams }: HomeProps) {
               {invitation ? (
                 <p className="mt-6 max-w-xl text-lg leading-8 text-ink/75">
                   {responded
-                    ? `Tack – vi har fått ${solo ? "ditt" : "ert"} svar. Ändra gärna nedan om något har ändrats, senast den ${WEDDING.rsvpBy}.`
+                    ? `Tack, vi har fått ${solo ? "ditt" : "ert"} svar. Ändra gärna nedan om något har ändrats, senast den ${WEDDING.rsvpBy}.`
                     : `Svara senast den ${WEDDING.rsvpBy}${solo ? "." : ", för var och en i sällskapet."}`}
                 </p>
               ) : (
@@ -286,9 +285,9 @@ export default async function Home({ searchParams }: HomeProps) {
         <p className="font-display text-3xl text-white">E<span className="font-accent text-dusk">&</span>J</p>
         <p className="mt-3">19 juni 2027 · Ölmevalla & Långedrag</p>
         <p className="mt-8 text-xs text-white/60">
-          Foto: {VENUES.church.name} –{" "}
+          Foto: {VENUES.church.name},{" "}
           <a href={VENUES.church.image.creditUrl} target="_blank" rel="noreferrer" className="underline decoration-1 underline-offset-2 hover:text-white">Musicus, CC BY-SA 3.0<span className="sr-only"> (öppnas i ny flik)</span></a>
-          {" · "}{VENUES.party.name} – Lasse Olsson
+          {" · "}{VENUES.party.name}, Lasse Olsson
         </p>
       </footer>
 

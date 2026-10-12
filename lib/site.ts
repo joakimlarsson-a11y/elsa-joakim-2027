@@ -17,13 +17,13 @@ export const WEDDING = {
   /** T.ex. "Kavaj". */
   dressCode: "",
   /** T.ex. "Barn är varmt välkomna!" */
-  children: "",
-  /** Länk till delat fotoalbum efter bröllopet. */
+  children: "Barn är varmt välkomna till ceremonin i kyrkan. Till middagen och festen på kvällen kan vi bara ta emot spädbarn. Vi hoppas att ni förstår och kan ordna barnvakt för de större. Spädbarn behöver inte anmälas i OSA:n.",
+  /** Länk till delat fotoalbum efter dagen. */
   photoAlbumUrl: ""
 } as const;
 
 export const SCHEDULE = [
-  { time: "14:00", title: "Vigsel", place: "Ölmevalla Kyrka", text: "Vi säger ja under de vackra valven." },
+  { time: "14:00", title: "Ceremoni", place: "Ölmevalla Kyrka", text: "Vi säger ja till varandra igen under de vackra valven." },
   { time: "16:00", title: "Buss mot havet", place: "Från kyrkan till Långedrag", text: "Bussen avgår direkt från kyrkan. Ange i OSA:n om ni vill åka med." },
   { time: "16:30", title: "Mingel", place: "Långedrags Värdshus", text: "Välkomstskål och tid att landa tillsammans." },
   { time: "18:30", title: "Middag", place: "Långedrags Värdshus", text: "En kväll fylld av god mat, tal och skratt." }
@@ -68,7 +68,7 @@ export function soloFirstName(guestNames: string[]) {
 
 export function invitationMessage(origin: string, groupName: string, guestNames: string[], token: string) {
   const solo = soloFirstName(guestNames);
-  const greeting = solo ? `Hej ${solo}! Vi gifter oss den 19 juni 2027 och hoppas att du vill fira med oss.` : `Hej ${groupName}! Vi gifter oss den 19 juni 2027 och hoppas att ni vill fira med oss.`;
+  const greeting = solo ? `Hej ${solo}! Vi förnyar våra löften den 19 juni 2027 och hoppas att du vill fira med oss.` : `Hej ${groupName}! Vi förnyar våra löften den 19 juni 2027 och hoppas att ni vill fira med oss.`;
   return `${greeting} Läs mer och svara senast 1 april 2027 här: ${invitationLink(origin, token)}\n\nVarma hälsningar,\nElsa & Joakim`;
 }
 

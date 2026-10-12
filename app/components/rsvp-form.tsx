@@ -72,7 +72,7 @@ export default function RSVPForm() {
 
   return (
     <form onSubmit={submit} className="space-y-8 bg-paper p-6 sm:p-10">
-      <p className="leading-7 text-ink/80">Fyll i uppgifter för varje person som ska komma. E-post behövs för alla – då kan vi skicka en bekräftelse och nå er om något ändras.</p>
+      <p className="leading-7 text-ink/80">Fyll i uppgifter för varje person som ska komma. Vi behöver allas e-post så att vi kan skicka en bekräftelse och nå er om något ändras.</p>
 
       <ol className="space-y-6">
         {persons.map((person, index) => {
@@ -86,7 +86,7 @@ export default function RSVPForm() {
                   <input id={`${prefix}-name`} required type="text" autoComplete={index === 0 ? "name" : "off"} value={person.name} onChange={(e) => update(person.id, { name: e.target.value })} className={inputClass} />
                 </label>
                 <label htmlFor={`${prefix}-email`} className="block text-sm font-medium">E-post
-                  {index > 0 && <span id={`${prefix}-email-hint`} className="mt-1 block font-normal text-ink/75">Barn utan egen e-post – ange förälderns.</span>}
+                  {index > 0 && <span id={`${prefix}-email-hint`} className="mt-1 block font-normal text-ink/75">Har barnet ingen egen e-post? Ange förälderns.</span>}
                   <input id={`${prefix}-email`} required type="email" autoComplete={index === 0 ? "email" : "off"} aria-describedby={index > 0 ? `${prefix}-email-hint` : undefined} value={person.email} onChange={(e) => update(person.id, { email: e.target.value })} className={inputClass} />
                 </label>
                 <label htmlFor={`${prefix}-allergies`} className="block text-sm font-medium">Allergier eller specialkost<span className="ml-2 font-normal text-ink/70">valfritt</span>

@@ -262,7 +262,7 @@ export default async function AdminPage({ searchParams }: { searchParams: Promis
             ))}
           </nav>
         </div>
-        {!service && <p className="mt-4 rounded-lg bg-white p-4 text-sm text-ink" role="status">SUPABASE_SERVICE_ROLE_KEY saknas – anmälningar via öppna formuläret visas inte.</p>}
+        {!service && <p className="mt-4 rounded-lg bg-white p-4 text-sm text-ink" role="status">SUPABASE_SERVICE_ROLE_KEY saknas, så anmälningar via öppna formuläret visas inte.</p>}
         {duplicates.length > 0 && (
           <p className="mt-4 rounded-lg bg-dusk p-4 text-sm text-ink" role="status">
             <strong>Möjliga dubbletter:</strong> {duplicates.map((rsvp) => `${rsvp.name} (${rsvp.email})`).join(", ")} har samma e-post som en inbjudan.

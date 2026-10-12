@@ -29,17 +29,17 @@ export async function sendInvitationConfirmation({ to, groupName, guests, editLi
   const solo = soloFirstName(guests.map((guest) => guest.name));
   const text = solo
     ? {
-        subject: "Tack för din OSA – Elsa & Joakim",
+        subject: "Tack för din OSA!",
         name: solo,
-        intro: anyAttending ? "Vi har tagit emot ditt svar och längtar efter att fira med dig." : "Vi har tagit emot ditt svar. Tack för att du hörde av dig – du kommer att saknas.",
+        intro: anyAttending ? "Vi har tagit emot ditt svar och längtar efter att fira med dig." : "Vi har tagit emot ditt svar. Tack för att du hörde av dig. Vi kommer att sakna dig.",
         summaryTitle: "Ditt svar",
         editHint: "Har något ändrats? Du kan uppdatera ditt svar fram till 1 april 2027.",
         editButton: "Ändra mitt svar"
       }
     : {
-        subject: "Tack för er OSA – Elsa & Joakim",
+        subject: "Tack för er OSA!",
         name: groupName,
-        intro: anyAttending ? "Vi har tagit emot ert svar och längtar efter att fira med er." : "Vi har tagit emot ert svar. Tack för att ni hörde av er – ni kommer att saknas.",
+        intro: anyAttending ? "Vi har tagit emot ert svar och längtar efter att fira med er." : "Vi har tagit emot ert svar. Tack för att ni hörde av er. Vi kommer att sakna er.",
         summaryTitle: "Ert svar",
         editHint: "Har något ändrats? Ni kan uppdatera ert svar fram till 1 april 2027.",
         editButton: "Ändra vårt svar"
@@ -57,7 +57,7 @@ export async function sendInvitationConfirmation({ to, groupName, guests, editLi
       <div style="background:#f5f3fa;border-radius:12px;padding:20px;margin:24px 0">
         <strong>${text.summaryTitle}</strong><ul style="margin-bottom:0;padding-left:20px">${summary}</ul>
       </div>
-      ${anyAttending ? `<p><strong>Praktiskt:</strong> Vigseln börjar 14:00 i Ölmevalla Kyrka. Buss till Långedrags Värdshus avgår 16:00, mingel börjar 16:30 och middag 18:30.</p>` : ""}
+      ${anyAttending ? `<p><strong>Praktiskt:</strong> Ceremonin börjar 14:00 i Ölmevalla Kyrka. Buss till Långedrags Värdshus avgår 16:00, mingel börjar 16:30 och middag 18:30.</p>` : ""}
       <p>${text.editHint}</p>
       <p style="margin:24px 0"><a href="${safeLink}" style="display:inline-block;background:#44336d;color:#ffffff;text-decoration:none;font-weight:bold;padding:12px 28px;border-radius:999px">${text.editButton}</a></p>
       <p style="font-size:13px;color:#555">Fungerar inte knappen? Kopiera länken: <a href="${safeLink}" style="color:#44336d">${safeLink}</a></p>
