@@ -1,22 +1,26 @@
 import type { Config } from "tailwindcss";
 
+// Palett: skandinavisk sand och sten – varm kol, skiffer, lera och linne.
 const config: Config = {
   content: ["./app/**/*.{js,ts,jsx,tsx,mdx}"],
   theme: {
     extend: {
       colors: {
-        ink: "#1d2140",
-        plum: "#44336d",
-        lavender: "#d8d3eb",
-        mist: "#f5f3fa",
-        sky: "#d9e8f0"
+        ink: "#2a2622",
+        sea: "#3f5054",
+        ember: "#8a4a30",
+        dusk: "#e9dccb",
+        shell: "#ece6dc",
+        foam: "#e3dcd0",
+        paper: "#f6f2ec"
       },
       fontFamily: {
-        display: ["Georgia", "Times New Roman", "serif"],
-        sans: ["Trebuchet MS", "Arial", "sans-serif"]
+        display: ["var(--font-sans)", "system-ui", "sans-serif"],
+        accent: ["var(--font-accent)", "Georgia", "serif"],
+        sans: ["var(--font-sans)", "system-ui", "sans-serif"]
       },
       boxShadow: {
-        soft: "0 18px 50px rgba(45, 35, 87, 0.12)"
+        soft: "0 18px 40px -12px rgba(42, 38, 34, 0.18)"
       }
     }
   },

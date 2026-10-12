@@ -11,6 +11,7 @@ export type Invitation = {
   group_name: string;
   status: "pending" | "sent" | "responded";
   has_email: boolean;
+  personal_note?: string | null;
   guests: InvitationGuest[];
 };
 

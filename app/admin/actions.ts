@@ -18,11 +18,12 @@ function validId(id: unknown): id is string {
   return typeof id === "string" && UUID_PATTERN.test(id);
 }
 
-export async function createInvitation(input: { groupName?: unknown; email?: unknown; guestNames?: unknown }): Promise<CreateResult> {
+export async function createInvitation(input: { groupName?: unknown; email?: unknown; guestNames?: unknown; personalNote?: unknown }): Promise<CreateResult> {
   const { supabase } = await requireAdmin();
 
   const groupName = clean(input.groupName, 200);
   const email = clean(input.email, 200).toLowerCase();
+  const personalNote = clean(input.personalNote, 500);
   const names = (typeof input.guestNames === "string" ? input.guestNames : "")
     .split(/[,\n]/)
     .map((name) => name.trim().slice(0, 120))
@@ -35,7 +36,7 @@ export async function createInvitation(input: { groupName?: unknown; email?: unk
 
   const { data: invitation, error } = await supabase
     .from("invitations")
-    .insert({ group_name: groupName, email: email || null })
+    .insert({ group_name: groupName, email: email || null, ...(personalNote ? { personal_note: personalNote } : {}) })
     .select("id, token")
     .single();
   if (error || !invitation) {
@@ -81,6 +82,19 @@ export async function updateInvitationEmail(id: unknown, rawEmail: unknown): Pro
   if (error) {
     console.error("Update email failed:", error);
     return { ok: false, error: "Kunde inte spara e-postadressen." };
+  }
+  revalidatePath("/admin");
+  return { ok: true };
+}
+
+export async function updateInvitationNote(id: unknown, rawNote: unknown): Promise<ActionResult> {
+  if (!validId(id)) return { ok: false, error: "Ogiltigt sällskap." };
+  const note = clean(rawNote, 500);
+  const { supabase } = await requireAdmin();
+  const { error } = await supabase.from("invitations").update({ personal_note: note || null }).eq("id", id);
+  if (error) {
+    console.error("Update personal note failed:", error);
+    return { ok: false, error: "Kunde inte spara hälsningen. Har migreringen för personal_note körts?" };
   }
   revalidatePath("/admin");
   return { ok: true };

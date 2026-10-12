@@ -1,10 +1,12 @@
 import type { CSSProperties } from "react";
 import type { Metadata } from "next";
 import Image from "next/image";
-import { soloFirstName, TOASTMADAME_EMAIL } from "@/lib/site";
-import Countdown from "./components/countdown";
+import { firstNames, mapLink, SCHEDULE, soloFirstName, TOASTMADAME_EMAIL, VENUES, WEDDING } from "@/lib/site";
+import ExternalLink from "./components/external-link";
+import MobileNav from "./components/mobile-nav";
 import RSVPForm from "./components/rsvp-form";
 import ScrollReveal from "./components/scroll-reveal";
+import Shoreline from "./components/shoreline";
 import InvitationRsvpForm from "./osa/invitation-rsvp-form";
 import { loadInvitation } from "./osa/load-invitation";
 
@@ -16,211 +18,285 @@ export async function generateMetadata({ searchParams }: HomeProps): Promise<Met
   return token ? { robots: { index: false, follow: false } } : {};
 }
 
-const heroImage = "/photos/hero-vigsel.jpg";
-const toastImage = "/photos/jenny.jpg";
-
-const introPhotos = [
-  { src: "/photos/selfie.jpg", alt: "Elsa och Joakim lutar huvudena mot varandra och ler" },
-  { src: "/photos/kyss.jpg", alt: "Elsa och Joakim kysser varandra framför en grön häck" },
-  { src: "/photos/skratt.jpg", alt: "Elsa och Joakim skrattar mot varandra i festkläder" }
-];
-
-const storyPhotos = [
-  { src: "/photos/familj.jpg", alt: "Elsa och Joakim med sin dotter i en grön trädgård" },
-  { src: "/photos/solnedgang.jpg", alt: "Elsa och Joakim ler i solen på en uteservering" },
-  { src: "/photos/bubbel.jpg", alt: "Elsa och Joakim skålar i bubbel på klipporna vid havet" },
-  { src: "/photos/midsommar.jpg", alt: "Elsa och Joakim med blomsterkransar på midsommar" },
-  { src: "/photos/hyrox.jpg", alt: "Elsa och Joakim spänner musklerna efter målgång på Hyrox" },
-  { src: "/photos/skal.jpg", alt: "Elsa och Joakim med champagneglas i svartvitt" },
-  { src: "/photos/smoking.jpg", alt: "Elsa och Joakim med sin son, klädda i festkläder" }
-];
-
-const schedule = [
-  { time: "14:00", title: "Vigsel", place: "Ölmevalla Kyrka", text: "Vi säger ja under de vackra valven." },
-  { time: "16:00", title: "Busstransport", place: "Till Långedrags Värdshus", text: "Bussen avgår direkt från kyrkan." },
-  { time: "16:30", title: "Mingel", place: "Långedrags Värdshus", text: "Välkomstskål och tid att landa tillsammans." },
-  { time: "18:30", title: "Middag", place: "Långedrags Värdshus", text: "En kväll fylld av god mat, tal och skratt." }
+const story = [
+  { src: "/photos/selfie.jpg", alt: "Elsa och Joakim lutar huvudena mot varandra och ler", caption: "Vi två." },
+  { src: "/photos/familj.jpg", alt: "Elsa och Joakim med sin dotter i en grön trädgård", caption: "Och så blev vi fler." },
+  { src: "/photos/bubbel.jpg", alt: "Elsa och Joakim skålar i bubbel på klipporna vid havet", caption: "Bubbel på klipporna. Havet är vårt ställe." },
+  { src: "/photos/midsommar.jpg", alt: "Elsa och Joakim med blomsterkransar på midsommar", caption: "Midsommar, med kransar." },
+  { src: "/photos/hyrox.jpg", alt: "Elsa och Joakim spänner musklerna efter målgång på Hyrox", caption: "Hyrox. Vi tog oss i mål, tillsammans." },
+  { src: "/photos/kyss.jpg", alt: "Elsa och Joakim kysser varandra framför en grön häck", caption: "Ja, vi gillar varandra." },
+  { src: "/photos/solnedgang.jpg", alt: "Elsa och Joakim ler i solen på en uteservering", caption: "Sena eftermiddagar i solen." },
+  { src: "/photos/smoking.jpg", alt: "Elsa och Joakim med sin son, klädda i festkläder", caption: "Uppklädda, alla tre." },
+  { src: "/photos/skratt.jpg", alt: "Elsa och Joakim skrattar mot varandra i festkläder", caption: "Snart skrattar vi med er." }
 ];
 
 const navLinks = [
-  { href: "#program", label: "Program" },
+  { href: "#dagen", label: "Dagen" },
   { href: "#hitta-hit", label: "Hitta hit" },
-  { href: "#boende", label: "Boende" },
-  { href: "#fragor", label: "Frågor & svar" }
+  { href: "#fragor", label: "Frågor" },
+  { href: "#osa", label: "OSA" }
 ];
 
 const faqs = [
-  { q: "När behöver vi svara?", a: "Svara via formuläret längre ner senast den 1 april 2027. En anmälan per sällskap räcker." },
-  { q: "Hur tar vi oss mellan kyrkan och festen?", a: "Vi ordnar busstransport som avgår direkt från Ölmevalla Kyrka efter vigseln. Ange i OSA:n om ni vill åka med och hur många platser ni behöver." },
-  { q: "Jag vill hålla tal eller ordna ett spex — vem kontaktar jag?", a: "Hör av dig till vår toastmadame Jenny Bergdahl i god tid, så hjälper hon dig att planera in det under kvällen." },
-  { q: "Jag har allergier eller äter specialkost.", a: "Skriv det i OSA-formuläret, både för dig och eventuell medföljande gäst, så ser vi till att köket vet om det." },
-  { q: "Önskar ni er några presenter?", a: "Er närvaro är den finaste presenten. Den som ändå vill får gärna bidra till vår bröllopsresa." },
-  { q: "Jag har en annan fråga.", a: "Kontakta Jenny Bergdahl via e-post — adressen hittar du under Toastmadame." }
+  { q: "När behöver vi svara?", a: `Senast den ${WEDDING.rsvpBy}. Svara via formuläret längre ner. En anmälan per sällskap räcker.` },
+  ...(WEDDING.dressCode ? [{ q: "Vad har vi på oss?", a: `Klädsel: ${WEDDING.dressCode}.` }] : []),
+  ...(WEDDING.children ? [{ q: "Får barnen följa med?", a: WEDDING.children }] : []),
+  { q: "Hur tar vi oss mellan kyrkan och festen?", a: "Vi ordnar buss som avgår direkt från Ölmevalla Kyrka efter ceremonin. Ange i OSA:n vilka som vill åka med." },
+  { q: "Hur tar vi oss hem?", a: "Vi har ingen buss tillbaka. Från Långedrag går spårvagn 11 in mot centrala Göteborg, och taxi går förstås också bra. Boka gärna i förväg." },
+  { q: "Jag vill hålla tal eller ordna ett spex. Vem kontaktar jag?", a: "Hör av dig till vår toastmadame Jenny Bergdahl i god tid, så hjälper hon dig att planera in det under kvällen." },
+  { q: "Jag har allergier eller äter specialkost.", a: "Skriv det i OSA-formuläret, för var och en i sällskapet, så ser vi till att köket vet om det." },
+  { q: "Önskar ni er några presenter?", a: "Er närvaro är den finaste presenten. Den som ändå vill får gärna bidra till vår resa." },
+  { q: "Jag har en annan fråga.", a: "Kontakta Jenny Bergdahl. Mer om henne hittar du under Toastmadame." }
 ];
+
+const h2 = "font-display text-[clamp(2.5rem,9vw,4rem)] leading-[1] [hyphens:auto]";
 
 function delay(ms: number) {
   return { "--reveal-delay": `${ms}ms` } as CSSProperties;
 }
 
-function ArrowIcon() {
-  return <span aria-hidden="true">↗</span>;
+function stockholmDay(date: Date) {
+  return new Intl.DateTimeFormat("sv-SE", { timeZone: "Europe/Stockholm" }).format(date);
+}
+
+function daysLeft(now: Date) {
+  const today = Date.parse(`${stockholmDay(now)}T00:00:00Z`);
+  const wedding = Date.parse(`${WEDDING.start.slice(0, 10)}T00:00:00Z`);
+  return Math.round((wedding - today) / 86_400_000);
+}
+
+function countdownText(days: number) {
+  if (days === 0) return "Det är i dag!";
+  if (days === 1) return "I morgon är det dags.";
+  return `${days.toLocaleString("sv-SE")} dagar kvar.`;
 }
 
 export default async function Home({ searchParams }: HomeProps) {
   const { token: rawToken } = await searchParams;
   const token = typeof rawToken === "string" ? rawToken.trim() : "";
   const invitation = token ? await loadInvitation(token) : null;
-  const soloName = invitation ? soloFirstName(invitation.guests.map((guest) => guest.name)) : null;
-  const greeting = invitation ? (soloName ? `Hej ${soloName}!` : `Välkomna, ${invitation.group_name}!`) : null;
+  const guestNames = invitation?.guests.map((guest) => guest.name) ?? [];
+  const solo = invitation ? Boolean(soloFirstName(guestNames)) : false;
+  const names = invitation ? firstNames(guestNames) ?? invitation.group_name : null;
+  const responded = invitation?.status === "responded";
+
+  const now = new Date();
+  const thankYou = now >= new Date(WEDDING.thankYouFrom);
+  const days = daysLeft(now);
+
+  const youAll = solo ? "du" : "ni";
+  const ctaLabel = responded ? `${solo ? "Du" : "Ni"} har svarat. Ändra svaret` : names ? `Svara för ${names}` : "OSA här";
 
   return (
-    <main>
+    <main className="overflow-x-clip">
       <ScrollReveal />
-      <section className="relative isolate min-h-[720px] overflow-hidden bg-ink text-white">
-        <Image src={heroImage} alt="Elsa och Joakim håller hand, sedda bakifrån i en ljusupplyst festsal" fill priority sizes="100vw" className="hero-zoom object-cover object-[center_18%] opacity-60" />
-        <div className="absolute inset-0 -z-10 bg-gradient-to-b from-[#1d2140]/45 via-[#1d2140]/45 to-[#1d2140]" />
-        <div className="grain absolute inset-0 -z-10 opacity-40" />
-        <nav className="relative mx-auto flex max-w-6xl items-center justify-between px-6 py-7 lg:px-10" aria-label="Huvudnavigation">
-          <a className="font-display text-2xl font-semibold" href="#top">E<span className="text-lavender">&</span>J</a>
-          <div className="flex items-center gap-6">
-            <ul className="hidden gap-6 text-sm font-semibold md:flex">
-              {navLinks.map((link) => (
-                <li key={link.href}><a href={link.href} className="underline-offset-4 transition hover:text-lavender hover:underline">{link.label}</a></li>
-              ))}
-            </ul>
-            <a href="#osa" className="rounded-full border border-white/70 px-5 py-2 text-sm font-semibold transition hover:bg-white hover:text-ink">OSA</a>
-          </div>
-        </nav>
-        <div id="top" className="relative mx-auto flex min-h-[610px] max-w-6xl flex-col justify-end px-6 pb-20 lg:px-10 lg:pb-28">
-          <p className="hero-rise eyebrow mb-5 text-lavender" style={delay(200)}>{greeting ?? "Vår stora dag"}</p>
-          <h1 style={delay(350)} className="hero-rise max-w-3xl font-display text-7xl leading-[.85] tracking-tight sm:text-8xl lg:text-[10rem]">Elsa <span className="text-lavender">&</span><br /> Joakim</h1>
-          <div className="hero-rise mt-10 flex flex-wrap items-center gap-6" style={delay(550)}>
-            <p className="font-display text-3xl">19 juni 2027</p>
-            <a href="#osa" className="button-primary inline-flex items-center gap-3 rounded-full bg-lavender px-7 py-3 font-semibold text-ink">OSA här <ArrowIcon /></a>
-          </div>
-          <div className="hero-rise mt-10" style={delay(700)}><Countdown /></div>
-        </div>
-      </section>
 
-      <section className="mx-auto max-w-6xl px-6 py-24 lg:px-10 lg:py-32" aria-labelledby="intro-title">
-        <div className="grid gap-12 lg:grid-cols-[1fr_1.4fr] lg:items-end">
-          <div data-reveal="up"><p className="eyebrow text-plum">Vi längtar efter att ses</p><h2 id="intro-title" className="mt-4 max-w-md font-display text-5xl leading-[.95] text-ink sm:text-6xl">En dag att minnas, tillsammans med er.</h2></div>
-          <p data-reveal="up" style={delay(150)} className="max-w-xl text-lg leading-8 text-ink/75">Efter vigseln väntar bubblande mingel, middag och en lång sommarkväll vid havet. Här hittar ni allt ni behöver veta inför vår dag.</p>
-        </div>
-        <ul className="mt-16 grid grid-cols-3 gap-3 sm:gap-6">
-          {introPhotos.map((photo, index) => (
-            <li key={photo.src} data-reveal="photo" style={delay(index * 140)} className={index === 1 ? "sm:mt-10" : ""}>
-              <Image src={photo.src} alt={photo.alt} width={750} height={1000} sizes="(min-width: 1152px) 360px, 33vw" className="aspect-[3/4] w-full rounded-2xl object-cover shadow-soft" />
-            </li>
-          ))}
-        </ul>
-      </section>
-
-      <section id="program" className="scroll-mt-8 bg-mist px-6 py-24 lg:px-10 lg:py-32" aria-labelledby="schedule-title">
-        <div className="mx-auto max-w-6xl">
-          <div data-reveal="up">
-            <p className="eyebrow text-plum">Dagen i korthet</p>
-            <h2 id="schedule-title" className="mt-4 font-display text-6xl text-ink">Schema</h2>
-          </div>
-          <div className="mt-14 grid gap-0 md:grid-cols-4">
-            {schedule.map((item, index) => (
-              <article key={item.time} data-reveal="up" style={delay(index * 130)} className="relative border-l border-plum/25 pb-10 pl-6 md:border-l-0 md:border-t md:pb-0 md:pl-0 md:pt-7 md:pr-7">
-                <div className="absolute -left-[5px] top-0 h-2.5 w-2.5 rounded-full bg-plum md:-top-[5px] md:left-0" aria-hidden="true" />
-                <p className="font-display text-4xl text-plum">{item.time}</p>
-                <h3 className="mt-5 text-lg font-bold">{item.title}</h3>
-                <p className="mt-1 font-semibold text-ink/80">{item.place}</p>
-                <p className="mt-3 text-sm leading-6 text-ink/65">{item.text}</p>
-                {index < schedule.length - 1 && <span className="absolute right-5 top-8 hidden text-2xl text-plum/50 md:block" aria-hidden="true">→</span>}
-              </article>
+      <section id="top" className="on-dark relative isolate flex min-h-[100svh] flex-col overflow-hidden bg-ink text-white">
+        <Image src="/photos/hero-vigsel.jpg" alt="Elsa och Joakim håller hand, sedda bakifrån i en ljusupplyst festsal" fill priority sizes="100vw" className="hero-zoom -z-20 object-cover object-[center_18%]" />
+        <div className="absolute inset-0 -z-10 bg-gradient-to-b from-ink/45 via-ink/25 to-ink/90" />
+        <div className="absolute inset-0 -z-10 bg-gradient-to-r from-ink/45 to-transparent to-60%" />
+        <nav className="relative mx-auto flex w-full max-w-6xl items-center justify-between px-6 py-6 lg:px-10" aria-label="Huvudnavigation">
+          <a className="font-display text-2xl" href="#top" aria-label="Elsa och Joakim, till toppen">E<span className="font-accent text-dusk">&</span>J</a>
+          <ul className="hidden gap-8 text-sm tracking-[.02em] md:flex">
+            {navLinks.map((link) => (
+              <li key={link.href}><a href={link.href} className="underline-offset-[8px] decoration-1 hover:underline">{link.label}</a></li>
             ))}
-          </div>
-        </div>
-      </section>
+          </ul>
+        </nav>
 
-      <section id="hitta-hit" className="mx-auto max-w-6xl scroll-mt-8 px-6 py-24 lg:px-10 lg:py-32" aria-labelledby="info-title">
-        <div className="grid gap-16 lg:grid-cols-2">
-          <div data-reveal="left"><p className="eyebrow text-plum">Bra att veta</p><h2 id="info-title" className="mt-4 font-display text-6xl text-ink">Praktiskt</h2><p className="mt-6 max-w-md leading-7 text-ink/75">Kyrkan och värdshuset ligger en kort resa från varandra. Vi ordnar buss mellan platserna så att alla kan njuta av kvällen.</p></div>
-          <div className="grid gap-5 sm:grid-cols-2">
-            <a data-reveal="up" style={delay(100)} className="group rounded-2xl bg-sky p-7 shadow-soft transition hover:-translate-y-1" href="https://www.google.com/maps/search/?api=1&query=Ölmevalla+Kyrka" target="_blank" rel="noreferrer"><p className="eyebrow text-plum">Vigsel</p><h3 className="mt-4 font-display text-3xl">Ölmevalla Kyrka</h3><p className="mt-8 font-semibold text-plum">Hitta hit <ArrowIcon /></p></a>
-            <a data-reveal="up" style={delay(250)} className="group rounded-2xl bg-lavender p-7 shadow-soft transition hover:-translate-y-1" href="https://www.google.com/maps/search/?api=1&query=Långedrags+Värdshus" target="_blank" rel="noreferrer"><p className="eyebrow text-plum">Fest</p><h3 className="mt-4 font-display text-3xl">Långedrags Värdshus</h3><p className="mt-8 font-semibold text-plum">Hitta hit <ArrowIcon /></p></a>
-          </div>
-        </div>
-        <div data-reveal="up" className="mt-16 border-t border-ink/15 pt-10"><p className="eyebrow text-plum">Presenter</p><p className="mt-4 max-w-2xl font-display text-4xl leading-tight text-ink">Er närvaro är den finaste presenten — vi önskar oss inga andra presenter.</p><p className="mt-5 max-w-xl leading-7 text-ink/70">Den som ändå vill får gärna bidra till vår bröllopsresa. Det viktigaste är att vi får fira tillsammans.</p></div>
-      </section>
+        <div className="relative mx-auto flex w-full max-w-6xl flex-1 flex-col justify-end px-6 pb-16 pt-24 lg:px-10 lg:pb-24">
+          {thankYou ? (
+            <p className="hero-rise font-accent text-3xl text-dusk sm:text-4xl" style={delay(150)}>{names ? `Tack, ${names}!` : "Tack för att ni firade med oss!"}</p>
+          ) : names ? (
+            <p className="hero-rise font-accent text-3xl text-dusk sm:text-4xl" style={delay(150)}>Kära {names},</p>
+          ) : null}
+          <h1 style={delay(300)} className="hero-rise mt-3 font-display text-[clamp(3.75rem,16vw,6rem)] leading-[.95]">
+            Elsa <span className="font-accent text-dusk">&</span> Joakim
+            <span className="sr-only">{thankYou ? ", tack för att ni firade med oss" : " förnyar sina löften 19 juni 2027"}</span>
+          </h1>
 
-      <section id="boende" className="scroll-mt-8 bg-mist px-6 py-24 lg:px-10 lg:py-32" aria-labelledby="stay-title">
-        <div className="mx-auto grid max-w-6xl items-center gap-12 lg:grid-cols-[1fr_1.2fr] lg:gap-16">
-          <div data-reveal="up">
-            <p className="eyebrow text-plum">För er som kommer långväga</p>
-            <h2 id="stay-title" className="mt-4 font-display text-6xl text-ink">Boende</h2>
-            <p className="mt-6 max-w-xl text-lg leading-8 text-ink/75">Brudparet kommer att sova på Clarion Hotell Draken. Det är helt frivilligt att lösa boende själva.</p>
-            <a className="mt-8 inline-flex items-center gap-2 font-semibold text-plum underline decoration-lavender underline-offset-4 hover:decoration-plum" href="https://www.strawberry.se/hotell/sverige/goteborg/clarion-hotel-draken/" target="_blank" rel="noreferrer">Läs mer och boka på Strawberry <ArrowIcon /></a>
+          <div className="hero-rise mt-8 max-w-xl space-y-4 text-lg leading-8 text-white/90" style={delay(450)}>
+            {thankYou ? (
+              <p>Den 19 juni 2027 förnyade vi våra löften i Ölmevalla Kyrka och dansade in i natten på Långedrag. Tack för att {names ? youAll : "ni"} var där.</p>
+            ) : (
+              <>
+                <p>
+                  <span className="mb-2 block font-display text-2xl text-white sm:text-3xl">Lördag 19 juni 2027</span>
+                  Vi förnyar våra löften i Ölmevalla Kyrka och firar sedan vid havet på Långedrags Värdshus. {names ? `Vi vill så gärna att ${youAll} är med.` : "Varmt välkomna!"}
+                </p>
+                {invitation?.personal_note && <p className="border-l border-dusk/60 pl-5 font-accent text-2xl leading-snug text-dusk">{invitation.personal_note}</p>}
+              </>
+            )}
           </div>
-          <div data-reveal="curtain" style={delay(150)} className="relative aspect-[16/10] overflow-hidden rounded-[2rem] shadow-soft">
-            <Image src="/photos/draken.jpg" alt="Clarion Hotel Draken, ett högt hotell med guldskimrande fasad vid Göta älv i solnedgång" fill sizes="(min-width: 1152px) 620px, (min-width: 1024px) 55vw, 100vw" className="object-cover object-[70%_center]" />
+
+          <div className="hero-rise mt-10 flex flex-wrap items-center gap-x-8 gap-y-4" style={delay(600)}>
+            {thankYou ? (
+              WEDDING.photoAlbumUrl && <ExternalLink href={WEDDING.photoAlbumUrl} className="btn btn-primary">Se bilderna från dagen</ExternalLink>
+            ) : (
+              <>
+                <a href="#osa" className="btn btn-primary">{ctaLabel}</a>
+                <p className="text-lg text-white/85">{countdownText(days)}</p>
+              </>
+            )}
           </div>
         </div>
       </section>
 
       <section className="mx-auto max-w-6xl px-6 py-24 lg:px-10 lg:py-32" aria-labelledby="story-title">
-        <div data-reveal="up">
-          <p className="eyebrow text-plum">Lite om oss</p>
-          <h2 id="story-title" className="mt-4 font-display text-6xl text-ink">Vi två, och några till</h2>
+        <div className="grid gap-6 lg:grid-cols-[1fr_1.2fr] lg:items-end">
+          <h2 id="story-title" data-reveal="up" className={`${h2} text-ink`}>Vår historia, i bilder</h2>
+          <p data-reveal="up" style={delay(120)} className="max-w-xl text-lg leading-8 text-ink/75">Vi har firat mycket tillsammans: midsommar, målgångar, solnedgångar och vanliga tisdagar. Nu vill vi fira det största av dem med er.</p>
         </div>
-        <ul className="mt-12 columns-2 gap-4 md:columns-3 md:gap-5 lg:columns-4">
-          {storyPhotos.map((photo, index) => (
-            <li key={photo.src} data-reveal="photo" style={delay((index % 4) * 110)} className="mb-4 break-inside-avoid md:mb-5">
-              <Image src={photo.src} alt={photo.alt} width={750} height={1000} sizes="(min-width: 1024px) 22vw, (min-width: 768px) 30vw, 46vw" className="h-auto w-full rounded-2xl object-cover shadow-soft" />
+        <ul className="mt-14 columns-2 gap-4 md:columns-3 md:gap-6">
+          {story.map((photo, index) => (
+            <li key={photo.src} className="mb-6 break-inside-avoid md:mb-8">
+              <figure data-reveal="develop" style={delay((index % 3) * 120)}>
+                <Image src={photo.src} alt={photo.alt} width={750} height={1000} sizes="(min-width: 1152px) 360px, (min-width: 768px) 31vw, 46vw" className="h-auto w-full object-cover" />
+                <figcaption className="mt-3 font-accent text-lg leading-snug text-ink/80 sm:text-xl">{photo.caption}</figcaption>
+              </figure>
             </li>
           ))}
         </ul>
       </section>
 
-      <section className="bg-ink px-6 py-24 text-white lg:px-10 lg:py-32" aria-labelledby="toast-title">
-        <div className="mx-auto grid max-w-6xl items-center gap-12 lg:grid-cols-[18rem_1fr] lg:gap-16">
-          <div data-reveal="curtain" className="relative mx-auto aspect-[4/5] w-full max-w-[18rem] overflow-hidden rounded-[2rem] lg:mx-0"><Image src={toastImage} alt="Jenny Bergdahl i blommig klänning och glasögon, leende" fill sizes="288px" className="object-cover object-top" /></div>
-          <div data-reveal="right" style={delay(200)}><p className="eyebrow text-lavender">Kvällens tryggaste punkt</p><h2 id="toast-title" className="mt-4 font-display text-6xl">Toastmadame</h2><p className="mt-6 font-display text-4xl text-lavender">Jenny Bergdahl</p><p className="mt-6 max-w-md leading-7 text-white/75">Vill du hålla tal, överraska eller har du en fråga om dagen? Hör av dig till Jenny så hjälper hon dig rätt.</p>{TOASTMADAME_EMAIL ? <div className="mt-8 flex flex-col gap-3 text-lg"><a className="underline decoration-lavender underline-offset-4 hover:text-lavender" href={`mailto:${TOASTMADAME_EMAIL}`}>{TOASTMADAME_EMAIL}</a></div> : <p className="mt-8 text-white/75">Jennys kontaktuppgifter kommer snart.</p>}</div>
+      <Shoreline className="text-shell" />
+      <section id="dagen" className="scroll-mt-4 bg-shell px-6 pb-24 pt-16 lg:px-10 lg:pb-32" aria-labelledby="schedule-title">
+        <div className="mx-auto grid max-w-6xl gap-12 lg:grid-cols-[1fr_1.4fr]">
+          <div data-reveal="up">
+            <h2 id="schedule-title" className={`${h2} text-ink`}>Dagen</h2>
+            <p className="mt-6 max-w-sm text-lg leading-8 text-ink/75">Från kyrkans valv till havsbrisen i Långedrag. Så här ser lördagen ut.</p>
+            {!thankYou && <a href="/kalender.ics" className="btn-quiet mt-6 text-ink">Lägg till i kalendern</a>}
+          </div>
+          <div data-reveal="line" className="relative">
+          <span className="timeline-line absolute inset-y-0 left-0 w-px bg-ink/25" aria-hidden="true" />
+          <ol className="relative pl-8 sm:pl-12">
+            {SCHEDULE.map((item, index) => (
+              <li key={item.time} data-reveal="up" style={delay(index * 160)} className="relative pb-12 last:pb-0">
+                <span className="reveal-dot absolute -left-[calc(2rem+3px)] top-4 h-[7px] w-[7px] rounded-full bg-ember ring-4 ring-shell sm:-left-[calc(3rem+3px)]" aria-hidden="true" />
+                <p className="font-display text-4xl text-sea sm:text-5xl"><time dateTime={`2027-06-19T${item.time}`}>{item.time}</time></p>
+                <h3 className="mt-2 text-xl font-medium text-ink">{item.title}</h3>
+                <p className="text-ink/80">{item.place}</p>
+                <p className="mt-2 max-w-md leading-7 text-ink/75">{item.text}</p>
+              </li>
+            ))}
+            {WEDDING.endTime && (
+              <li data-reveal="up" className="relative pt-12">
+                <span className="reveal-dot absolute -left-[calc(2rem+3px)] top-[4rem] h-[7px] w-[7px] rounded-full border border-ink/50 bg-shell sm:-left-[calc(3rem+3px)]" aria-hidden="true" />
+                <p className="font-display text-4xl text-sea sm:text-5xl">ca {WEDDING.endTime}</p>
+                <h3 className="mt-2 text-xl font-medium text-ink">Kvällen tar slut</h3>
+                <p className="mt-2 max-w-md leading-7 text-ink/75">Ingen buss tillbaka. Spårvagn 11 eller taxi tar er hem.</p>
+              </li>
+            )}
+          </ol>
+          </div>
+        </div>
+      </section>
+      <Shoreline className="text-shell" flip />
+
+      <section id="hitta-hit" className="mx-auto max-w-6xl scroll-mt-4 px-6 py-24 lg:px-10 lg:py-32" aria-labelledby="info-title">
+        <h2 id="info-title" data-reveal="up" className={`${h2} max-w-2xl text-ink`}>Hitta hit</h2>
+        <p data-reveal="up" style={delay(120)} className="mt-6 max-w-2xl text-lg leading-8 text-ink/75">Ceremonin är i Ölmevalla Kyrka söder om Kungsbacka. Därifrån tar bussen er till Långedrag i västra Göteborg, ungefär 40 minuter längs kusten.</p>
+        <div className="mt-14 grid gap-x-8 gap-y-14 md:grid-cols-2">
+          {[
+            { venue: VENUES.church, what: "Ceremoni 14:00" },
+            { venue: VENUES.party, what: "Mingel och middag från 16:30" }
+          ].map(({ venue, what }, index) => (
+            <article key={venue.name} className="flex flex-col">
+              <div data-reveal="image" style={delay(index * 160)} className="relative aspect-[4/3] overflow-hidden bg-foam">
+                <Image src={venue.image.src} alt={venue.image.alt} fill sizes="(min-width: 1152px) 540px, (min-width: 768px) 46vw, 100vw" className="object-cover" />
+              </div>
+              <div data-reveal="up" style={delay(index * 160 + 250)} className="flex flex-col">
+              <h3 className="mt-6 font-display text-3xl text-ink sm:text-4xl">{venue.name}</h3>
+              <p className="mt-2 text-ink/80">{what}</p>
+              {venue.address && <p className="mt-4 leading-7 text-ink/80">{venue.address}</p>}
+              {venue.parking && <p className="mt-2 leading-7 text-ink/75">Parkering: {venue.parking}</p>}
+              <ExternalLink href={mapLink(venue.mapQuery)} className="btn-quiet mt-4 self-start text-ink">Visa på kartan</ExternalLink>
+              </div>
+            </article>
+          ))}
+        </div>
+
+        <div id="boende" className="mt-28 grid scroll-mt-4 items-center gap-10 lg:grid-cols-[1fr_1.2fr] lg:gap-16">
+          <div data-reveal="up">
+            <h3 className="font-display text-4xl text-ink sm:text-5xl">Sova över</h3>
+            <p className="mt-6 max-w-xl text-lg leading-8 text-ink/75">Vi sover själva på Clarion Hotel Draken i centrala Göteborg. Det är en bit från Långedrag, men lätt att nå med spårvagn 11 eller taxi efter festen. Det är helt frivilligt att bo där; lös gärna boende som passar er.</p>
+            <ExternalLink className="btn-quiet mt-6 text-ink" href="https://www.strawberry.se/hotell/sverige/goteborg/clarion-hotel-draken/">Läs mer och boka på Strawberry</ExternalLink>
+          </div>
+          <div data-reveal="image" style={delay(200)} className="relative aspect-[16/10] overflow-hidden">
+            <Image src="/photos/draken.jpg" alt="Clarion Hotel Draken, ett högt hotell med guldskimrande fasad vid Göta älv i solnedgång" fill sizes="(min-width: 1152px) 620px, (min-width: 1024px) 55vw, 100vw" className="object-cover object-[70%_center]" />
+          </div>
         </div>
       </section>
 
-      <section id="fragor" className="mx-auto max-w-3xl scroll-mt-8 px-6 pt-24 lg:pt-32" aria-labelledby="faq-title">
-        <div data-reveal="up">
-          <p className="eyebrow text-plum">Bra att veta</p>
-          <h2 id="faq-title" className="mt-4 font-display text-6xl text-ink">Frågor & svar</h2>
-        </div>
+      {!thankYou && (
+        <>
+          <Shoreline className="text-foam" />
+          <section id="osa" className="scroll-mt-4 bg-foam px-6 pb-24 pt-16 lg:pb-32" aria-labelledby="rsvp-title">
+            <div className="mx-auto max-w-3xl">
+              <h2 id="rsvp-title" data-reveal="up" className={`${h2} text-ink`}>{names ? (responded ? `Ert svar, ${names}` : `Kommer ${youAll}, ${names}?`) : "OSA"}</h2>
+              {invitation ? (
+                <p className="mt-6 max-w-xl text-lg leading-8 text-ink/75">
+                  {responded
+                    ? `Tack, vi har fått ${solo ? "ditt" : "ert"} svar. Ändra gärna nedan om något har ändrats, senast den ${WEDDING.rsvpBy}.`
+                    : `Svara senast den ${WEDDING.rsvpBy}${solo ? "." : ", för var och en i sällskapet."}`}
+                </p>
+              ) : (
+                <>
+                  {token && <p className="mt-6 max-w-xl border border-ember/40 bg-paper px-4 py-3 leading-7 text-ink" role="status">Vi kunde inte läsa inbjudningslänken. Kontrollera att hela länken kom med, eller svara med formuläret nedan.</p>}
+                  <p className="mt-6 max-w-xl text-lg leading-8 text-ink/75">Svara senast den {WEDDING.rsvpBy}. En anmälan per sällskap räcker fint.</p>
+                </>
+              )}
+              <div data-reveal="up" style={delay(120)} className="mt-10">{invitation ? <InvitationRsvpForm token={token} invitation={invitation} /> : <RSVPForm />}</div>
+            </div>
+          </section>
+          <Shoreline className="text-foam" flip />
+        </>
+      )}
+
+      <section id="fragor" className="mx-auto max-w-3xl scroll-mt-4 px-6 py-24 lg:py-32" aria-labelledby="faq-title">
+        <h2 id="faq-title" data-reveal="up" className={`${h2} text-ink`}>Frågor & svar</h2>
         <div className="mt-10 divide-y divide-ink/15 border-y border-ink/15">
           {faqs.map((faq, index) => (
-            <details key={faq.q} data-reveal="up" style={delay(index * 70)} className="group py-5">
-              <summary className="flex cursor-pointer list-none items-center justify-between gap-6 text-lg font-semibold text-ink [&::-webkit-details-marker]:hidden">
+            <details key={faq.q} data-reveal="up" style={delay(index * 80)} className="group py-5">
+              <summary className="flex cursor-pointer list-none items-center justify-between gap-6 text-lg text-ink [&::-webkit-details-marker]:hidden">
                 {faq.q}
-                <span className="text-2xl text-plum transition group-open:rotate-45" aria-hidden="true">+</span>
+                <span className="text-2xl font-light text-ember transition group-open:rotate-45" aria-hidden="true">+</span>
               </summary>
-              <p className="mt-3 max-w-2xl leading-7 text-ink/70">{faq.a}</p>
+              <p className="mt-3 max-w-2xl leading-7 text-ink/75">{faq.a}</p>
             </details>
           ))}
         </div>
       </section>
 
-      <section id="osa" className="mx-auto max-w-3xl scroll-mt-8 px-6 py-24 lg:py-32" aria-labelledby="rsvp-title">
-        <div data-reveal="up">
-          <p className="eyebrow text-plum">Svara senast 1 april 2027</p>
-          {invitation ? (
-            <>
-              <h2 id="rsvp-title" className="mt-4 font-display text-6xl text-ink">{greeting}</h2>
-              <p className="mt-5 max-w-xl leading-7 text-ink/70">{soloName ? "Vi hoppas att du vill fira med oss den 19 juni 2027. Svara nedan." : "Vi hoppas att ni vill fira med oss den 19 juni 2027. Svara för var och en i sällskapet nedan."}</p>
-            </>
-          ) : (
-            <>
-              <h2 id="rsvp-title" className="mt-4 font-display text-6xl text-ink">OSA här</h2>
-              {token && <p className="mt-5 max-w-xl rounded-lg bg-sky px-4 py-3 leading-7 text-ink" role="status">Vi kunde inte läsa inbjudningslänken. Kontrollera att hela länken kom med, eller fyll i formuläret nedan.</p>}
-              <p className="mt-5 max-w-xl leading-7 text-ink/70">Fyll i formuläret nedan — en anmälan per sällskap räcker fint.</p>
-            </>
-          )}
+      <section className="on-dark bg-ink px-6 py-24 text-white lg:px-10 lg:py-32" aria-labelledby="toast-title">
+        <div className="mx-auto grid max-w-6xl items-center gap-12 lg:grid-cols-[18rem_1fr] lg:gap-16">
+          <div className="relative mx-auto aspect-[4/5] w-full max-w-[18rem] overflow-hidden lg:mx-0">
+            <Image src="/photos/jenny.jpg" alt="Jenny Bergdahl i blommig klänning och glasögon, leende" fill sizes="288px" className="object-cover object-top" />
+          </div>
+          <div className="min-w-0">
+            <h2 id="toast-title" className={h2}>Toastmadame</h2>
+            <p className="mt-4 font-accent text-3xl text-dusk sm:text-4xl">Jenny Bergdahl</p>
+            <p className="mt-6 max-w-md text-lg leading-8 text-white/80">Kvällens tryggaste punkt. Vill du hålla tal, överraska eller har du en fråga om dagen? Hör av dig till Jenny så hjälper hon dig rätt.</p>
+            {TOASTMADAME_EMAIL ? (
+              <a className="mt-8 inline-block break-all text-lg underline decoration-1 underline-offset-8 hover:underline-offset-4 transition-all" href={`mailto:${TOASTMADAME_EMAIL}`}>{TOASTMADAME_EMAIL}</a>
+            ) : (
+              <p className="mt-8 text-white/80">Jennys kontaktuppgifter kommer snart.</p>
+            )}
+          </div>
         </div>
-        <div data-reveal="up" style={delay(150)} className="mt-10">{invitation ? <InvitationRsvpForm token={token} invitation={invitation} /> : <RSVPForm />}</div>
       </section>
 
-      <footer className="border-t border-ink/10 px-6 py-10 text-center text-sm text-ink/60"><p className="font-display text-3xl text-ink">E<span className="text-plum">&</span>J</p><p className="mt-3">19 juni 2027 · Ölmevalla & Långedrag</p></footer>
+      <footer className="bg-ink px-6 pb-28 md:pb-12 text-center text-sm text-white/75">
+        <p className="font-display text-3xl text-white">E<span className="font-accent text-dusk">&</span>J</p>
+        <p className="mt-3">19 juni 2027 · Ölmevalla & Långedrag</p>
+        <p className="mt-8 text-xs text-white/60">
+          Foto: {VENUES.church.name},{" "}
+          <a href={VENUES.church.image.creditUrl} target="_blank" rel="noreferrer" className="underline decoration-1 underline-offset-2 hover:text-white">Musicus, CC BY-SA 3.0<span className="sr-only"> (öppnas i ny flik)</span></a>
+          {" · "}{VENUES.party.name}, Lasse Olsson
+        </p>
+      </footer>
+
+      <MobileNav links={navLinks} />
     </main>
   );
 }

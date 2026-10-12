@@ -4,6 +4,7 @@ import { sendInvitationConfirmation } from "@/lib/email";
 import { requestOrigin } from "@/lib/origin";
 import { clean, invitationLink, isEmail, UUID_PATTERN } from "@/lib/site";
 import { createAnonClient, createServiceClient } from "@/lib/supabase/server";
+import { loadInvitation } from "./load-invitation";
 import type { GuestResponse } from "./types";
 
 const MAX_GUESTS = 30;
@@ -33,6 +34,10 @@ export async function submitInvitationRsvp(token: unknown, rawResponses: unknown
 
   const email = clean(rawEmail, 200).toLowerCase();
   if (email && !isEmail(email)) return { ok: false, error: "Kontrollera e-postadressen." };
+  if (!email) {
+    const invitation = await loadInvitation(token);
+    if (invitation && !invitation.has_email) return { ok: false, error: "Fyll i en e-postadress så att vi kan skicka bekräftelsen." };
+  }
 
   let supabase;
   try {

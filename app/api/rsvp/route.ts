@@ -71,7 +71,7 @@ export async function POST(request: Request) {
     await resend.emails.send({
       from: "Elsa & Joakim <onboarding@resend.dev>",
       to: primary.email,
-      subject: "Tack för din OSA – Elsa & Joakim",
+      subject: "Tack för din OSA!",
       html: `<div style="font-family:Arial,sans-serif;max-width:600px;margin:auto;color:#1d2140;line-height:1.6">
         <p style="letter-spacing:2px;text-transform:uppercase;color:#44336d;font-size:12px">19 juni 2027</p>
         <h1 style="font-family:Georgia,serif;font-size:42px;font-weight:500">Tack, ${safeName}!</h1>
@@ -79,7 +79,7 @@ export async function POST(request: Request) {
         <div style="background:#f5f3fa;border-radius:12px;padding:20px;margin:24px 0">
           <strong>Er anmälan</strong><ul style="margin-bottom:0;padding-left:20px">${summary}</ul>
         </div>
-        <p><strong>Praktiskt:</strong> Vigseln börjar 14:00 i Ölmevalla Kyrka. Buss till Långedrags Värdshus avgår 16:00, mingel börjar 16:30 och middag 18:30.</p>
+        <p><strong>Praktiskt:</strong> Ceremonin börjar 14:00 i Ölmevalla Kyrka. Buss till Långedrags Värdshus avgår 16:00, mingel börjar 16:30 och middag 18:30.</p>
         <p>Varmt välkommen!<br>Elsa & Joakim</p>
       </div>`
     });

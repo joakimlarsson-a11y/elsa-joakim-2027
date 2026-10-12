@@ -23,7 +23,7 @@ export default function CopyButtons({ id, status, link, message }: Props) {
     if (status === "pending") await setInvitationSent(id, true);
   }
 
-  const buttonClass = "rounded-full border border-plum px-4 py-2 text-sm font-semibold text-plum hover:bg-lavender/40";
+  const buttonClass = "rounded-full border border-sea px-4 py-2 text-sm font-semibold text-sea hover:bg-dusk/40";
   return (
     <div className="space-y-2">
       <div className="flex flex-wrap gap-2">
@@ -32,7 +32,7 @@ export default function CopyButtons({ id, status, link, message }: Props) {
       </div>
       <span className="sr-only" role="status">{copied ? "Kopierat till urklipp" : ""}</span>
       {fallback && (
-        <label className="block text-xs text-ink/70">Kunde inte kopiera automatiskt – markera och kopiera:
+        <label className="block text-xs text-ink/70">Kunde inte kopiera automatiskt. Markera och kopiera:
           <textarea readOnly rows={3} value={fallback} onFocus={(e) => e.currentTarget.select()} autoFocus className="mt-1 w-full rounded-lg border border-ink/20 bg-white p-2 text-sm text-ink" />
         </label>
       )}
