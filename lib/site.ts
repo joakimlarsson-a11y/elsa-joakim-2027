@@ -15,7 +15,9 @@ export const WEDDING = {
   /** Ungefär när festen slutar, t.ex. "01:00". Används i schemat och kalenderfilen. */
   endTime: "",
   /** T.ex. "Kavaj". */
-  dressCode: "",
+  dressCode: "Kavaj",
+  /** Förklaring av klädkoden, visas under Frågor. */
+  dressCodeNote: "Kostym, gärna med slips, eller en festlig klänning, kjol eller byxdress. Klänningen kan vara knälång eller längre, men långklänning behövs inte. Ta gärna med en tröja eller sjal, det kan bli svalt vid havet på kvällen.",
   /** T.ex. "Barn är varmt välkomna!" */
   children: "Barn är varmt välkomna till ceremonin i kyrkan. Till middagen och festen på kvällen kan vi bara ta emot spädbarn. Vi hoppas att ni förstår och kan ordna barnvakt för de större. Spädbarn behöver inte anmälas i OSA:n.",
   /** Länk till delat fotoalbum efter dagen. */
@@ -74,6 +76,14 @@ export function invitationMessage(origin: string, groupName: string, guestNames:
 
 export function clean(value: unknown, maxLength = 1000) {
   return typeof value === "string" ? value.trim().slice(0, maxLength) : "";
+}
+
+/** Gästnamn från fritext, separerade med komma eller radbrytning. */
+export function parseGuestNames(value: unknown) {
+  return (typeof value === "string" ? value : "")
+    .split(/[,\n]/)
+    .map((name) => name.trim().slice(0, 120))
+    .filter(Boolean);
 }
 
 export function isEmail(value: string) {
