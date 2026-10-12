@@ -85,7 +85,8 @@ export default async function Home({ searchParams }: HomeProps) {
   const days = daysLeft(now);
 
   const youAll = solo ? "du" : "ni";
-  const ctaLabel = responded ? `${solo ? "Du" : "Ni"} har svarat. Ändra svaret` : names ? `Svara för ${names}` : "OSA här";
+  const ctaLabel = responded ? `${solo ? "Du" : "Ni"} har svarat. Ändra svaret` : solo ? "Svara på inbjudan" : names ? `Svara för ${names}` : "OSA här";
+  const salutation = thankYou ? (names ? `Tack, ${names}!` : "Tack för att ni firade med oss!") : names ? `Kära ${names},` : null;
 
   return (
     <main className="overflow-x-clip">
@@ -105,26 +106,22 @@ export default async function Home({ searchParams }: HomeProps) {
         </nav>
 
         <div className="relative mx-auto flex w-full max-w-6xl flex-1 flex-col justify-end px-6 pb-16 pt-24 lg:px-10 lg:pb-24">
-          {thankYou ? (
-            <p className="hero-rise font-accent text-3xl text-dusk sm:text-4xl" style={delay(150)}>{names ? `Tack, ${names}!` : "Tack för att ni firade med oss!"}</p>
-          ) : names ? (
-            <p className="hero-rise font-accent text-3xl text-dusk sm:text-4xl" style={delay(150)}>Kära {names},</p>
-          ) : null}
-          <h1 style={delay(300)} className="hero-rise mt-3 font-display text-[clamp(3.75rem,16vw,6rem)] leading-[.95]">
+          <h1 style={delay(150)} className="hero-rise font-display text-[clamp(3.75rem,16vw,6rem)] leading-[.95]">
             Elsa <span className="font-accent text-dusk">&</span> Joakim
             <span className="sr-only">{thankYou ? ", tack för att ni firade med oss" : " förnyar sina löften 19 juni 2027"}</span>
           </h1>
+          {!thankYou && (
+            <p className="hero-rise mt-4 font-display text-2xl text-white sm:text-3xl" style={delay(300)}>Lördag 19 juni 2027</p>
+          )}
 
-          <div className="hero-rise mt-8 max-w-xl space-y-4 text-lg leading-8 text-white/90" style={delay(450)}>
+          <div className="hero-rise mt-8 max-w-xl space-y-3 text-lg leading-8 text-white/90" style={delay(450)}>
+            {salutation && <p className="font-accent text-3xl leading-tight text-dusk sm:text-4xl">{salutation}</p>}
             {thankYou ? (
               <p>Den 19 juni 2027 förnyade vi våra löften i Ölmevalla Kyrka och dansade in i natten på Långedrag. Tack för att {names ? youAll : "ni"} var där.</p>
             ) : (
               <>
-                <p>
-                  <span className="mb-2 block font-display text-2xl text-white sm:text-3xl">Lördag 19 juni 2027</span>
-                  Vi förnyar våra löften i Ölmevalla Kyrka och firar sedan vid havet på Långedrags Värdshus. {names ? `Vi vill så gärna att ${youAll} är med.` : "Varmt välkomna!"}
-                </p>
-                {invitation?.personal_note && <p className="border-l border-dusk/60 pl-5 font-accent text-2xl leading-snug text-dusk">{invitation.personal_note}</p>}
+                <p>Vi förnyar våra löften i Ölmevalla Kyrka och firar sedan vid havet på Långedrags Värdshus. {names ? `Vi vill så gärna att ${youAll} är med.` : "Varmt välkomna!"}</p>
+                {invitation?.personal_note && <p className="!mt-5 border-l border-dusk/60 pl-5 font-accent text-2xl leading-snug text-dusk">{invitation.personal_note}</p>}
               </>
             )}
           </div>
