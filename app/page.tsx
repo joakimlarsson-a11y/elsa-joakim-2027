@@ -167,10 +167,12 @@ export default async function Home({ searchParams }: HomeProps) {
             <p className="mt-6 max-w-sm text-lg leading-8 text-ink/75">Från kyrkans valv till havsbrisen i Långedrag. Så här ser lördagen ut.</p>
             {!thankYou && <a href="/kalender.ics" className="btn-quiet mt-6 text-ink">Lägg till i kalendern</a>}
           </div>
-          <ol className="relative border-l border-ink/25 pl-8 sm:pl-12">
+          <div data-reveal="line" className="relative">
+          <span className="timeline-line absolute inset-y-0 left-0 w-px bg-ink/25" aria-hidden="true" />
+          <ol className="relative pl-8 sm:pl-12">
             {SCHEDULE.map((item, index) => (
-              <li key={item.time} data-reveal="up" style={delay(index * 110)} className="relative pb-12 last:pb-0">
-                <span className="absolute -left-[calc(2rem+4px)] top-4 h-[7px] w-[7px] rounded-full bg-ember ring-4 ring-shell sm:-left-[calc(3rem+4px)]" aria-hidden="true" />
+              <li key={item.time} data-reveal="up" style={delay(index * 160)} className="relative pb-12 last:pb-0">
+                <span className="reveal-dot absolute -left-[calc(2rem+3px)] top-4 h-[7px] w-[7px] rounded-full bg-ember ring-4 ring-shell sm:-left-[calc(3rem+3px)]" aria-hidden="true" />
                 <p className="font-display text-4xl text-sea sm:text-5xl"><time dateTime={`2027-06-19T${item.time}`}>{item.time}</time></p>
                 <h3 className="mt-2 text-xl font-medium text-ink">{item.title}</h3>
                 <p className="text-ink/80">{item.place}</p>
@@ -179,13 +181,14 @@ export default async function Home({ searchParams }: HomeProps) {
             ))}
             {WEDDING.endTime && (
               <li data-reveal="up" className="relative pt-12">
-                <span className="absolute -left-[calc(2rem+4px)] top-[4rem] h-[7px] w-[7px] rounded-full border border-ink/50 bg-shell sm:-left-[calc(3rem+4px)]" aria-hidden="true" />
+                <span className="reveal-dot absolute -left-[calc(2rem+3px)] top-[4rem] h-[7px] w-[7px] rounded-full border border-ink/50 bg-shell sm:-left-[calc(3rem+3px)]" aria-hidden="true" />
                 <p className="font-display text-4xl text-sea sm:text-5xl">ca {WEDDING.endTime}</p>
                 <h3 className="mt-2 text-xl font-medium text-ink">Kvällen tar slut</h3>
                 <p className="mt-2 max-w-md leading-7 text-ink/75">Ingen buss tillbaka. Spårvagn 11 eller taxi tar er hem.</p>
               </li>
             )}
           </ol>
+          </div>
         </div>
       </section>
       <Shoreline className="text-shell" flip />
@@ -198,26 +201,28 @@ export default async function Home({ searchParams }: HomeProps) {
             { venue: VENUES.church, what: "Ceremoni 14:00" },
             { venue: VENUES.party, what: "Mingel och middag från 16:30" }
           ].map(({ venue, what }, index) => (
-            <article key={venue.name} data-reveal="up" style={delay(index * 140)} className="flex flex-col">
-              <div className="relative aspect-[4/3] overflow-hidden bg-foam">
-                  <Image src={venue.image.src} alt={venue.image.alt} fill sizes="(min-width: 1152px) 540px, (min-width: 768px) 46vw, 100vw" className="object-cover" />
-                </div>
+            <article key={venue.name} className="flex flex-col">
+              <div data-reveal="image" style={delay(index * 160)} className="relative aspect-[4/3] overflow-hidden bg-foam">
+                <Image src={venue.image.src} alt={venue.image.alt} fill sizes="(min-width: 1152px) 540px, (min-width: 768px) 46vw, 100vw" className="object-cover" />
+              </div>
+              <div data-reveal="up" style={delay(index * 160 + 250)} className="flex flex-col">
               <h3 className="mt-6 font-display text-3xl text-ink sm:text-4xl">{venue.name}</h3>
               <p className="mt-2 text-ink/80">{what}</p>
               {venue.address && <p className="mt-4 leading-7 text-ink/80">{venue.address}</p>}
               {venue.parking && <p className="mt-2 leading-7 text-ink/75">Parkering: {venue.parking}</p>}
               <ExternalLink href={mapLink(venue.mapQuery)} className="btn-quiet mt-4 self-start text-ink">Visa på kartan</ExternalLink>
+              </div>
             </article>
           ))}
         </div>
 
-        <div id="boende" data-reveal="up" className="mt-28 grid scroll-mt-4 items-center gap-10 lg:grid-cols-[1fr_1.2fr] lg:gap-16">
-          <div>
+        <div id="boende" className="mt-28 grid scroll-mt-4 items-center gap-10 lg:grid-cols-[1fr_1.2fr] lg:gap-16">
+          <div data-reveal="up">
             <h3 className="font-display text-4xl text-ink sm:text-5xl">Sova över</h3>
             <p className="mt-6 max-w-xl text-lg leading-8 text-ink/75">Vi sover själva på Clarion Hotel Draken i centrala Göteborg. Det är en bit från Långedrag, men lätt att nå med spårvagn 11 eller taxi efter festen. Det är helt frivilligt att bo där; lös gärna boende som passar er.</p>
             <ExternalLink className="btn-quiet mt-6 text-ink" href="https://www.strawberry.se/hotell/sverige/goteborg/clarion-hotel-draken/">Läs mer och boka på Strawberry</ExternalLink>
           </div>
-          <div className="relative aspect-[16/10] overflow-hidden">
+          <div data-reveal="image" style={delay(200)} className="relative aspect-[16/10] overflow-hidden">
             <Image src="/photos/draken.jpg" alt="Clarion Hotel Draken, ett högt hotell med guldskimrande fasad vid Göta älv i solnedgång" fill sizes="(min-width: 1152px) 620px, (min-width: 1024px) 55vw, 100vw" className="object-cover object-[70%_center]" />
           </div>
         </div>
@@ -241,7 +246,7 @@ export default async function Home({ searchParams }: HomeProps) {
                   <p className="mt-6 max-w-xl text-lg leading-8 text-ink/75">Svara senast den {WEDDING.rsvpBy}. En anmälan per sällskap räcker fint.</p>
                 </>
               )}
-              <div className="mt-10">{invitation ? <InvitationRsvpForm token={token} invitation={invitation} /> : <RSVPForm />}</div>
+              <div data-reveal="up" style={delay(120)} className="mt-10">{invitation ? <InvitationRsvpForm token={token} invitation={invitation} /> : <RSVPForm />}</div>
             </div>
           </section>
           <Shoreline className="text-foam" flip />
@@ -250,9 +255,9 @@ export default async function Home({ searchParams }: HomeProps) {
 
       <section id="fragor" className="mx-auto max-w-3xl scroll-mt-4 px-6 py-24 lg:py-32" aria-labelledby="faq-title">
         <h2 id="faq-title" data-reveal="up" className={`${h2} text-ink`}>Frågor & svar</h2>
-        <div data-reveal="up" style={delay(120)} className="mt-10 divide-y divide-ink/15 border-y border-ink/15">
-          {faqs.map((faq) => (
-            <details key={faq.q} className="group py-5">
+        <div className="mt-10 divide-y divide-ink/15 border-y border-ink/15">
+          {faqs.map((faq, index) => (
+            <details key={faq.q} data-reveal="up" style={delay(index * 80)} className="group py-5">
               <summary className="flex cursor-pointer list-none items-center justify-between gap-6 text-lg text-ink [&::-webkit-details-marker]:hidden">
                 {faq.q}
                 <span className="text-2xl font-light text-ember transition group-open:rotate-45" aria-hidden="true">+</span>
@@ -265,10 +270,10 @@ export default async function Home({ searchParams }: HomeProps) {
 
       <section className="on-dark bg-ink px-6 py-24 text-white lg:px-10 lg:py-32" aria-labelledby="toast-title">
         <div className="mx-auto grid max-w-6xl items-center gap-12 lg:grid-cols-[18rem_1fr] lg:gap-16">
-          <div data-reveal="up" className="relative mx-auto aspect-[4/5] w-full max-w-[18rem] overflow-hidden lg:mx-0">
+          <div className="relative mx-auto aspect-[4/5] w-full max-w-[18rem] overflow-hidden lg:mx-0">
             <Image src="/photos/jenny.jpg" alt="Jenny Bergdahl i blommig klänning och glasögon, leende" fill sizes="288px" className="object-cover object-top" />
           </div>
-          <div data-reveal="up" style={delay(140)} className="min-w-0">
+          <div className="min-w-0">
             <h2 id="toast-title" className={h2}>Toastmadame</h2>
             <p className="mt-4 font-accent text-3xl text-dusk sm:text-4xl">Jenny Bergdahl</p>
             <p className="mt-6 max-w-md text-lg leading-8 text-white/80">Kvällens tryggaste punkt. Vill du hålla tal, överraska eller har du en fråga om dagen? Hör av dig till Jenny så hjälper hon dig rätt.</p>
