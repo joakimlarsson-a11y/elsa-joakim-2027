@@ -67,7 +67,7 @@ export default function InvitationRsvpForm({ token, invitation }: { token: strin
       ? `Skål${comingNames ? `, ${comingNames}` : ""}! Vi ses 19 juni.`
       : `Vi kommer att sakna ${solo ? "dig" : "er"}${everyone ? `, ${everyone}` : ""}.`;
     return (
-      <RsvpSuccess heading={heading} attending={coming.length > 0} action={<button type="button" onClick={() => setDone(false)} className="font-semibold text-sea underline underline-offset-4">Ändra svar</button>}>
+      <RsvpSuccess heading={heading} attending={coming.length > 0} action={<button type="button" onClick={() => setDone(false)} className="btn-quiet text-ink">Ändra svar</button>}>
         {!solo && (
           <ul className="space-y-1">
             {guests.map((guest) => <li key={guest.id}><strong>{guest.name}</strong> – {guest.attending ? "kommer" : "kan inte komma"}</li>)}
@@ -79,11 +79,11 @@ export default function InvitationRsvpForm({ token, invitation }: { token: strin
   }
 
   if (guests.length === 0) {
-    return <p className="rounded-2xl bg-paper p-8 leading-7 text-ink/80">Inbjudan saknar gäster. Hör av dig till oss så hjälper vi dig.</p>;
+    return <p className="bg-paper p-8 leading-7 text-ink/80">Inbjudan saknar gäster. Hör av dig till oss så hjälper vi dig.</p>;
   }
 
   return (
-    <form onSubmit={submit} className="space-y-8 rounded-2xl bg-paper p-6 shadow-soft sm:p-10">
+    <form onSubmit={submit} className="space-y-8 bg-paper p-6 sm:p-10">
       {alreadyResponded && <p className="leading-7 text-ink/75" role="status">{solo ? "Du har redan svarat – ditt tidigare svar är ifyllt nedan och kan ändras." : "Ni har redan svarat – ert tidigare svar är ifyllt nedan och kan ändras."}</p>}
 
       <ol className="space-y-6">
@@ -91,10 +91,10 @@ export default function InvitationRsvpForm({ token, invitation }: { token: strin
           const prefix = `guest-${guest.id}`;
           return (
             <li key={guest.id}>
-              <fieldset className="space-y-5 rounded-xl border border-ink/15 bg-white/60 p-5 sm:p-6">
+              <fieldset className="space-y-5 border border-ink/15 p-5 sm:p-6">
                 <legend className="px-1 font-display text-3xl">{guest.name}</legend>
                 <fieldset className="space-y-3">
-                  <legend className="text-sm font-semibold">{solo ? "Kommer du?" : `Kommer ${guest.name}?`}</legend>
+                  <legend className="text-sm font-medium">{solo ? "Kommer du?" : `Kommer ${guest.name}?`}</legend>
                   <div className="flex flex-wrap gap-3">
                     <label className={radioClass}><input required name={`${prefix}-attending`} type="radio" checked={guest.attending === true} onChange={() => update(guest.id, { attending: true })} />Ja, gärna</label>
                     <label className={radioClass}><input required name={`${prefix}-attending`} type="radio" checked={guest.attending === false} onChange={() => update(guest.id, { attending: false })} />Nej, tyvärr</label>
@@ -103,11 +103,11 @@ export default function InvitationRsvpForm({ token, invitation }: { token: strin
 
                 {guest.attending === true && (
                   <>
-                    <label htmlFor={`${prefix}-diet`} className="block text-sm font-semibold">Allergier eller specialkost<span className="ml-2 font-normal text-ink/70">valfritt</span>
+                    <label htmlFor={`${prefix}-diet`} className="block text-sm font-medium">Allergier eller specialkost<span className="ml-2 font-normal text-ink/70">valfritt</span>
                       <textarea id={`${prefix}-diet`} rows={2} maxLength={1000} value={guest.dietary_info} onChange={(e) => update(guest.id, { dietary_info: e.target.value })} className={inputClass} />
                     </label>
                     <fieldset className="space-y-3">
-                      <legend className="text-sm font-semibold">{solo ? "Vill du åka med bussen från kyrkan?" : `Vill ${guest.name.trim().split(/\s+/)[0]} åka med bussen från kyrkan?`}</legend>
+                      <legend className="text-sm font-medium">{solo ? "Vill du åka med bussen från kyrkan?" : `Vill ${guest.name.trim().split(/\s+/)[0]} åka med bussen från kyrkan?`}</legend>
                       <div className="flex flex-wrap gap-3">
                         <label className={radioClass}><input required name={`${prefix}-bus`} type="radio" checked={guest.needs_bus === true} onChange={() => update(guest.id, { needs_bus: true })} />Ja tack</label>
                         <label className={radioClass}><input required name={`${prefix}-bus`} type="radio" checked={guest.needs_bus === false} onChange={() => update(guest.id, { needs_bus: false })} />Nej tack</label>
@@ -117,7 +117,7 @@ export default function InvitationRsvpForm({ token, invitation }: { token: strin
                 )}
 
                 {guest.attending === false && (
-                  <label htmlFor={`${prefix}-message`} className="block text-sm font-semibold">En hälsning till oss<span className="ml-2 font-normal text-ink/70">valfritt</span>
+                  <label htmlFor={`${prefix}-message`} className="block text-sm font-medium">En hälsning till oss<span className="ml-2 font-normal text-ink/70">valfritt</span>
                     <textarea id={`${prefix}-message`} rows={3} maxLength={2000} value={guest.message} onChange={(e) => update(guest.id, { message: e.target.value })} className={inputClass} />
                   </label>
                 )}
@@ -128,14 +128,14 @@ export default function InvitationRsvpForm({ token, invitation }: { token: strin
       </ol>
 
       {!invitation.has_email && (
-        <label htmlFor="invitation-email" className="block text-sm font-semibold">E-post
+        <label htmlFor="invitation-email" className="block text-sm font-medium">E-post
           <span id="invitation-email-hint" className="mt-1 block font-normal text-ink/75">Dit skickar vi bekräftelsen och hör av oss om något ändras.</span>
           <input id="invitation-email" required aria-describedby="invitation-email-hint" type="email" autoComplete="email" maxLength={200} value={email} onChange={(e) => setEmail(e.target.value)} className={inputClass} />
         </label>
       )}
 
-      {error && <p className="text-sm font-semibold text-red-800" role="alert">{error}</p>}
-      <button disabled={pending} type="submit" className="button-primary w-full rounded-full bg-ember px-7 py-3 font-semibold text-white disabled:cursor-wait disabled:opacity-60">{pending ? "Skickar…" : alreadyResponded ? (solo ? "Uppdatera mitt svar" : "Uppdatera vårt svar") : solo ? "Skicka mitt svar" : "Skicka vårt svar"}</button>
+      {error && <p className="text-sm font-medium text-red-800" role="alert">{error}</p>}
+      <button disabled={pending} type="submit" className="btn btn-primary w-full disabled:cursor-wait disabled:opacity-60">{pending ? "Skickar…" : alreadyResponded ? (solo ? "Uppdatera mitt svar" : "Uppdatera vårt svar") : solo ? "Skicka mitt svar" : "Skicka vårt svar"}</button>
     </form>
   );
 }

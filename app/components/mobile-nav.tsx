@@ -24,7 +24,7 @@ export default function MobileNav({ links }: { links: Link[] }) {
       <ul className="grid grid-cols-4">
         {links.map((link) => (
           <li key={link.href}>
-            <a href={link.href} className={`flex min-h-14 items-center justify-center px-1 text-sm font-semibold ${link.href === "#osa" ? "text-dusk" : ""}`}>
+            <a href={link.href} className={`flex min-h-14 items-center justify-center px-1 text-sm tracking-[.02em] ${link.href === "#osa" ? "text-dusk" : ""}`}>
               {link.label}
             </a>
           </li>

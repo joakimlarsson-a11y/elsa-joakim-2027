@@ -64,14 +64,14 @@ export default function RSVPForm() {
 
   if (status === "success") {
     return (
-      <RsvpSuccess heading={sentNames ? `Skål, ${sentNames}!` : "Skål!"} attending action={<button type="button" onClick={() => setStatus("idle")} className="font-semibold text-sea underline underline-offset-4">Anmäl ett sällskap till</button>}>
+      <RsvpSuccess heading={sentNames ? `Skål, ${sentNames}!` : "Skål!"} attending action={<button type="button" onClick={() => setStatus("idle")} className="btn-quiet text-ink">Anmäl ett sällskap till</button>}>
         <p>Vi ses den 19 juni. En bekräftelse är på väg till er e-post.</p>
       </RsvpSuccess>
     );
   }
 
   return (
-    <form onSubmit={submit} className="space-y-8 rounded-2xl bg-paper p-6 shadow-soft sm:p-10">
+    <form onSubmit={submit} className="space-y-8 bg-paper p-6 sm:p-10">
       <p className="leading-7 text-ink/80">Fyll i uppgifter för varje person som ska komma. E-post behövs för alla – då kan vi skicka en bekräftelse och nå er om något ändras.</p>
 
       <ol className="space-y-6">
@@ -80,36 +80,36 @@ export default function RSVPForm() {
           const label = index === 0 ? "Person 1 (du)" : `Person ${index + 1}`;
           return (
             <li key={person.id}>
-              <fieldset className="space-y-5 rounded-xl border border-ink/15 bg-white/60 p-5 sm:p-6">
+              <fieldset className="space-y-5 border border-ink/15 p-5 sm:p-6">
                 <legend className="px-1 font-display text-3xl">{label}</legend>
-                <label htmlFor={`${prefix}-name`} className="block text-sm font-semibold">Namn
+                <label htmlFor={`${prefix}-name`} className="block text-sm font-medium">Namn
                   <input id={`${prefix}-name`} required type="text" autoComplete={index === 0 ? "name" : "off"} value={person.name} onChange={(e) => update(person.id, { name: e.target.value })} className={inputClass} />
                 </label>
-                <label htmlFor={`${prefix}-email`} className="block text-sm font-semibold">E-post
+                <label htmlFor={`${prefix}-email`} className="block text-sm font-medium">E-post
                   {index > 0 && <span id={`${prefix}-email-hint`} className="mt-1 block font-normal text-ink/75">Barn utan egen e-post – ange förälderns.</span>}
                   <input id={`${prefix}-email`} required type="email" autoComplete={index === 0 ? "email" : "off"} aria-describedby={index > 0 ? `${prefix}-email-hint` : undefined} value={person.email} onChange={(e) => update(person.id, { email: e.target.value })} className={inputClass} />
                 </label>
-                <label htmlFor={`${prefix}-allergies`} className="block text-sm font-semibold">Allergier eller specialkost<span className="ml-2 font-normal text-ink/70">valfritt</span>
+                <label htmlFor={`${prefix}-allergies`} className="block text-sm font-medium">Allergier eller specialkost<span className="ml-2 font-normal text-ink/70">valfritt</span>
                   <textarea id={`${prefix}-allergies`} rows={2} value={person.allergies} onChange={(e) => update(person.id, { allergies: e.target.value })} className={inputClass} />
                 </label>
                 <fieldset className="space-y-3">
-                  <legend className="text-sm font-semibold">{index === 0 ? "Vill du åka med bussen från kyrkan?" : `Vill ${person.name.trim().split(/\s+/)[0] || "personen"} åka med bussen från kyrkan?`}</legend>
+                  <legend className="text-sm font-medium">{index === 0 ? "Vill du åka med bussen från kyrkan?" : `Vill ${person.name.trim().split(/\s+/)[0] || "personen"} åka med bussen från kyrkan?`}</legend>
                   <div className="flex flex-wrap gap-3">
                     <label className={radioClass}><input required name={`${prefix}-bus`} type="radio" value="Ja" checked={person.bus === "Ja"} onChange={() => update(person.id, { bus: "Ja" })} />Ja tack</label>
                     <label className={radioClass}><input required name={`${prefix}-bus`} type="radio" value="Nej" checked={person.bus === "Nej"} onChange={() => update(person.id, { bus: "Nej" })} />Nej tack</label>
                   </div>
                 </fieldset>
-                {index > 0 && <button type="button" onClick={() => removePerson(person.id)} className="text-sm font-semibold text-sea underline underline-offset-4">Ta bort {person.name.trim() || label.toLowerCase()}</button>}
+                {index > 0 && <button type="button" onClick={() => removePerson(person.id)} className="text-sm text-ink underline decoration-1 underline-offset-4">Ta bort {person.name.trim() || label.toLowerCase()}</button>}
               </fieldset>
             </li>
           );
         })}
       </ol>
 
-      {persons.length < MAX_PERSONS && <button ref={addButtonRef} type="button" onClick={addPerson} className="min-h-12 rounded-full border-2 border-sea px-6 font-semibold text-sea hover:bg-sea hover:text-white">+ Lägg till person</button>}
+      {persons.length < MAX_PERSONS && <button ref={addButtonRef} type="button" onClick={addPerson} className="btn border border-ink text-ink hover:bg-ink hover:text-paper">+ Lägg till person</button>}
 
-      {status === "error" && <p className="text-sm font-semibold text-red-800" role="alert">{error}</p>}
-      <button disabled={status === "loading"} type="submit" className="button-primary w-full rounded-full bg-ember px-7 py-3 font-semibold text-white disabled:cursor-wait disabled:opacity-60">{status === "loading" ? "Skickar…" : "Skicka min OSA"}</button>
+      {status === "error" && <p className="text-sm font-medium text-red-800" role="alert">{error}</p>}
+      <button disabled={status === "loading"} type="submit" className="btn btn-primary w-full disabled:cursor-wait disabled:opacity-60">{status === "loading" ? "Skickar…" : "Skicka min OSA"}</button>
     </form>
   );
 }

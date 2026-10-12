@@ -30,8 +30,20 @@ export const SCHEDULE = [
 ] as const;
 
 export const VENUES = {
-  church: { name: "Ölmevalla Kyrka", address: "", parking: "", mapQuery: "Ölmevalla Kyrka" },
-  party: { name: "Långedrags Värdshus", address: "", parking: "", mapQuery: "Långedrags Värdshus" }
+  church: {
+    name: "Ölmevalla Kyrka",
+    address: "",
+    parking: "",
+    mapQuery: "Ölmevalla Kyrka",
+    image: { src: "/photos/olmevalla-kyrka.jpg", alt: "Ölmevalla Kyrka, en kyrka i gult tegel med hög ärggrön tornspira, bland lövträd en sommardag", creditUrl: "https://commons.wikimedia.org/wiki/File:%C3%96lmevalla_ka.jpg" }
+  },
+  party: {
+    name: "Långedrags Värdshus",
+    address: "",
+    parking: "",
+    mapQuery: "Långedrags Värdshus",
+    image: { src: "/photos/langedrags-vardshus.jpg", alt: "Flygbild över Långedrags Värdshus med terrass vid vattnet och marinan full av segelbåtar bakom" }
+  }
 } as const;
 
 export function mapLink(query: string) {

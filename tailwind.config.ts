@@ -1,25 +1,26 @@
 import type { Config } from "tailwindcss";
 
-// Palett: Långedrag en junikväll – djupt hav, granit, kvällsljus och tapetens röda.
+// Palett: skandinavisk sand och sten – varm kol, skiffer, lera och linne.
 const config: Config = {
   content: ["./app/**/*.{js,ts,jsx,tsx,mdx}"],
   theme: {
     extend: {
       colors: {
-        ink: "#16252e",
-        sea: "#1f4e5f",
-        ember: "#9a3a28",
-        dusk: "#f1d3b3",
-        shell: "#f1e9dd",
-        foam: "#dbe6e5",
-        paper: "#f9f5ef"
+        ink: "#2a2622",
+        sea: "#3f5054",
+        ember: "#8a4a30",
+        dusk: "#e9dccb",
+        shell: "#ece6dc",
+        foam: "#e3dcd0",
+        paper: "#f6f2ec"
       },
       fontFamily: {
-        display: ["var(--font-display)", "Georgia", "serif"],
+        display: ["var(--font-sans)", "system-ui", "sans-serif"],
+        accent: ["var(--font-accent)", "Georgia", "serif"],
         sans: ["var(--font-sans)", "system-ui", "sans-serif"]
       },
       boxShadow: {
-        soft: "0 18px 40px -12px rgba(22, 37, 46, 0.28)"
+        soft: "0 18px 40px -12px rgba(42, 38, 34, 0.18)"
       }
     }
   },

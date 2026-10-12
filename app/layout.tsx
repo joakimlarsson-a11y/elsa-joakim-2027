@@ -1,10 +1,11 @@
 import type { Metadata } from "next";
-import { Libre_Caslon_Display, Source_Sans_3 } from "next/font/google";
+import { Cormorant_Garamond, Hanken_Grotesk } from "next/font/google";
 import { staticOrigin } from "@/lib/origin";
 import "./globals.css";
 
-const display = Libre_Caslon_Display({ subsets: ["latin"], weight: "400", variable: "--font-display", display: "swap" });
-const sans = Source_Sans_3({ subsets: ["latin"], variable: "--font-sans", display: "swap" });
+const sans = Hanken_Grotesk({ subsets: ["latin"], variable: "--font-sans", display: "swap" });
+// Bara för ornament: et-tecknet, citat och bildtexter.
+const accent = Cormorant_Garamond({ subsets: ["latin"], weight: "400", style: "italic", variable: "--font-accent", display: "swap" });
 
 export const metadata: Metadata = {
   title: "Elsa & Joakim | 19 juni 2027",
@@ -14,7 +15,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="sv" className={`${display.variable} ${sans.variable}`}>
+    <html lang="sv" className={`${sans.variable} ${accent.variable}`}>
       <body className="font-sans">{children}</body>
     </html>
   );

@@ -50,7 +50,7 @@ const faqs = [
   { q: "Jag har en annan fråga.", a: "Kontakta Jenny Bergdahl – mer om henne hittar du under Toastmadame." }
 ];
 
-const h2 = "font-display text-[clamp(2.5rem,9vw,3.75rem)] leading-[1.02] [hyphens:auto]";
+const h2 = "font-display text-[clamp(2.5rem,9vw,4rem)] leading-[1] [hyphens:auto]";
 
 function delay(ms: number) {
   return { "--reveal-delay": `${ms}ms` } as CSSProperties;
@@ -94,25 +94,25 @@ export default async function Home({ searchParams }: HomeProps) {
 
       <section id="top" className="on-dark relative isolate flex min-h-[100svh] flex-col overflow-hidden bg-ink text-white">
         <Image src="/photos/hero-vigsel.jpg" alt="Elsa och Joakim håller hand, sedda bakifrån i en ljusupplyst festsal" fill priority sizes="100vw" className="hero-zoom -z-20 object-cover object-[center_18%]" />
-        <div className="absolute inset-0 -z-10 bg-gradient-to-b from-ink/55 via-ink/35 to-ink" />
-        <div className="absolute inset-0 -z-10 bg-gradient-to-r from-ink/50 to-transparent to-60%" />
+        <div className="absolute inset-0 -z-10 bg-gradient-to-b from-ink/45 via-ink/25 to-ink/90" />
+        <div className="absolute inset-0 -z-10 bg-gradient-to-r from-ink/45 to-transparent to-60%" />
         <nav className="relative mx-auto flex w-full max-w-6xl items-center justify-between px-6 py-6 lg:px-10" aria-label="Huvudnavigation">
-          <a className="font-display text-2xl" href="#top" aria-label="Elsa och Joakim, till toppen">E<span className="text-dusk">&</span>J</a>
-          <ul className="hidden gap-7 text-sm font-semibold md:flex">
+          <a className="font-display text-2xl" href="#top" aria-label="Elsa och Joakim, till toppen">E<span className="font-accent text-dusk">&</span>J</a>
+          <ul className="hidden gap-8 text-sm tracking-[.02em] md:flex">
             {navLinks.map((link) => (
-              <li key={link.href}><a href={link.href} className="underline-offset-[6px] hover:text-dusk hover:underline">{link.label}</a></li>
+              <li key={link.href}><a href={link.href} className="underline-offset-[8px] decoration-1 hover:underline">{link.label}</a></li>
             ))}
           </ul>
         </nav>
 
         <div className="relative mx-auto flex w-full max-w-6xl flex-1 flex-col justify-end px-6 pb-16 pt-24 lg:px-10 lg:pb-24">
           {thankYou ? (
-            <p className="hero-rise font-display text-3xl text-dusk sm:text-4xl" style={delay(150)}>{names ? `Tack, ${names}!` : "Tack för att ni firade med oss!"}</p>
+            <p className="hero-rise font-accent text-3xl text-dusk sm:text-4xl" style={delay(150)}>{names ? `Tack, ${names}!` : "Tack för att ni firade med oss!"}</p>
           ) : names ? (
-            <p className="hero-rise font-display text-3xl text-dusk sm:text-4xl" style={delay(150)}>Kära {names},</p>
+            <p className="hero-rise font-accent text-3xl text-dusk sm:text-4xl" style={delay(150)}>Kära {names},</p>
           ) : null}
-          <h1 style={delay(300)} className="hero-rise mt-3 font-display text-[clamp(4rem,17vw,6rem)] leading-[.9] tracking-tight">
-            Elsa <span className="text-dusk">&</span> Joakim
+          <h1 style={delay(300)} className="hero-rise mt-3 font-display text-[clamp(3.75rem,16vw,6rem)] leading-[.95]">
+            Elsa <span className="font-accent text-dusk">&</span> Joakim
             <span className="sr-only">{thankYou ? " – tack för att ni firade med oss" : " gifter sig 19 juni 2027"}</span>
           </h1>
 
@@ -125,18 +125,18 @@ export default async function Home({ searchParams }: HomeProps) {
                   <span className="font-display text-2xl text-white sm:text-3xl">Lördag 19 juni 2027.</span>{" "}
                   Vi gifter oss i Ölmevalla Kyrka och firar sedan vid havet på Långedrags Värdshus – {names ? `och vi vill så gärna att ${youAll} är med.` : "välkomna!"}
                 </p>
-                {invitation?.personal_note && <p className="border-l-2 border-dusk pl-4 font-display text-xl italic text-dusk">{invitation.personal_note}</p>}
+                {invitation?.personal_note && <p className="border-l border-dusk/60 pl-5 font-accent text-2xl leading-snug text-dusk">{invitation.personal_note}</p>}
               </>
             )}
           </div>
 
           <div className="hero-rise mt-10 flex flex-wrap items-center gap-x-8 gap-y-4" style={delay(600)}>
             {thankYou ? (
-              WEDDING.photoAlbumUrl && <ExternalLink href={WEDDING.photoAlbumUrl} className="button-primary inline-flex items-center rounded-full bg-dusk px-7 py-3 font-semibold text-ink">Se bilderna från dagen</ExternalLink>
+              WEDDING.photoAlbumUrl && <ExternalLink href={WEDDING.photoAlbumUrl} className="btn btn-primary">Se bilderna från dagen</ExternalLink>
             ) : (
               <>
-                <a href="#osa" className="button-primary inline-flex items-center rounded-full bg-ember px-7 py-3 font-semibold text-white">{ctaLabel}</a>
-                <p className="font-display text-xl text-white/90">{countdownText(days)}</p>
+                <a href="#osa" className="btn btn-primary">{ctaLabel}</a>
+                <p className="text-lg text-white/85">{countdownText(days)}</p>
               </>
             )}
           </div>
@@ -145,15 +145,15 @@ export default async function Home({ searchParams }: HomeProps) {
 
       <section className="mx-auto max-w-6xl px-6 py-24 lg:px-10 lg:py-32" aria-labelledby="story-title">
         <div className="grid gap-6 lg:grid-cols-[1fr_1.2fr] lg:items-end">
-          <h2 id="story-title" className={`${h2} text-ink`}>Vår historia, i bilder</h2>
-          <p className="max-w-xl text-lg leading-8 text-ink/75">Vi har firat mycket tillsammans – midsommar, målgångar, solnedgångar och vanliga tisdagar. Nu vill vi fira det största av dem med er.</p>
+          <h2 id="story-title" data-reveal="up" className={`${h2} text-ink`}>Vår historia, i bilder</h2>
+          <p data-reveal="up" style={delay(120)} className="max-w-xl text-lg leading-8 text-ink/75">Vi har firat mycket tillsammans – midsommar, målgångar, solnedgångar och vanliga tisdagar. Nu vill vi fira det största av dem med er.</p>
         </div>
         <ul className="mt-14 columns-2 gap-4 md:columns-3 md:gap-6">
           {story.map((photo, index) => (
             <li key={photo.src} className="mb-6 break-inside-avoid md:mb-8">
               <figure data-reveal="develop" style={delay((index % 3) * 120)}>
-                <Image src={photo.src} alt={photo.alt} width={750} height={1000} sizes="(min-width: 1152px) 360px, (min-width: 768px) 31vw, 46vw" className="h-auto w-full rounded-xl object-cover shadow-soft" />
-                <figcaption className="mt-3 font-display text-base italic leading-snug text-ink/80 sm:text-lg">{photo.caption}</figcaption>
+                <Image src={photo.src} alt={photo.alt} width={750} height={1000} sizes="(min-width: 1152px) 360px, (min-width: 768px) 31vw, 46vw" className="h-auto w-full object-cover" />
+                <figcaption className="mt-3 font-accent text-lg leading-snug text-ink/80 sm:text-xl">{photo.caption}</figcaption>
               </figure>
             </li>
           ))}
@@ -163,26 +163,26 @@ export default async function Home({ searchParams }: HomeProps) {
       <Shoreline className="text-shell" />
       <section id="dagen" className="scroll-mt-4 bg-shell px-6 pb-24 pt-16 lg:px-10 lg:pb-32" aria-labelledby="schedule-title">
         <div className="mx-auto grid max-w-6xl gap-12 lg:grid-cols-[1fr_1.4fr]">
-          <div>
+          <div data-reveal="up">
             <h2 id="schedule-title" className={`${h2} text-ink`}>Dagen</h2>
             <p className="mt-6 max-w-sm text-lg leading-8 text-ink/75">Från kyrkans valv till havsbrisen i Långedrag. Så här ser lördagen ut.</p>
-            {!thankYou && <a href="/kalender.ics" className="mt-8 inline-flex min-h-12 items-center gap-2 rounded-full border-2 border-sea px-6 font-semibold text-sea hover:bg-sea hover:text-white">Lägg till i kalendern</a>}
+            {!thankYou && <a href="/kalender.ics" className="btn-quiet mt-6 text-ink">Lägg till i kalendern</a>}
           </div>
-          <ol className="relative border-l-2 border-dashed border-sea/40 pl-8 sm:pl-12">
-            {SCHEDULE.map((item) => (
-              <li key={item.time} className="relative pb-12 last:pb-0">
-                <span className="absolute -left-[calc(2rem+7px)] top-3 h-3 w-3 rounded-full bg-ember ring-4 ring-shell sm:-left-[calc(3rem+7px)]" aria-hidden="true" />
+          <ol className="relative border-l border-ink/25 pl-8 sm:pl-12">
+            {SCHEDULE.map((item, index) => (
+              <li key={item.time} data-reveal="up" style={delay(index * 110)} className="relative pb-12 last:pb-0">
+                <span className="absolute -left-[calc(2rem+4px)] top-4 h-[7px] w-[7px] rounded-full bg-ember ring-4 ring-shell sm:-left-[calc(3rem+4px)]" aria-hidden="true" />
                 <p className="font-display text-4xl text-sea sm:text-5xl"><time dateTime={`2027-06-19T${item.time}`}>{item.time}</time></p>
-                <h3 className="mt-2 text-xl font-bold text-ink">{item.title}</h3>
-                <p className="font-semibold text-ink/80">{item.place}</p>
+                <h3 className="mt-2 text-xl font-medium text-ink">{item.title}</h3>
+                <p className="text-ink/80">{item.place}</p>
                 <p className="mt-2 max-w-md leading-7 text-ink/75">{item.text}</p>
               </li>
             ))}
             {WEDDING.endTime && (
-              <li className="relative pt-12">
-                <span className="absolute -left-[calc(2rem+7px)] top-[3.75rem] h-3 w-3 rounded-full border-2 border-sea bg-shell sm:-left-[calc(3rem+7px)]" aria-hidden="true" />
+              <li data-reveal="up" className="relative pt-12">
+                <span className="absolute -left-[calc(2rem+4px)] top-[4rem] h-[7px] w-[7px] rounded-full border border-ink/50 bg-shell sm:-left-[calc(3rem+4px)]" aria-hidden="true" />
                 <p className="font-display text-4xl text-sea sm:text-5xl">ca {WEDDING.endTime}</p>
-                <h3 className="mt-2 text-xl font-bold text-ink">Kvällen tar slut</h3>
+                <h3 className="mt-2 text-xl font-medium text-ink">Kvällen tar slut</h3>
                 <p className="mt-2 max-w-md leading-7 text-ink/75">Ingen buss tillbaka – spårvagn 11 eller taxi tar er hem.</p>
               </li>
             )}
@@ -192,30 +192,33 @@ export default async function Home({ searchParams }: HomeProps) {
       <Shoreline className="text-shell" flip />
 
       <section id="hitta-hit" className="mx-auto max-w-6xl scroll-mt-4 px-6 py-24 lg:px-10 lg:py-32" aria-labelledby="info-title">
-        <h2 id="info-title" className={`${h2} max-w-2xl text-ink`}>Hitta hit</h2>
-        <p className="mt-6 max-w-2xl text-lg leading-8 text-ink/75">Vigseln är i Ölmevalla Kyrka söder om Kungsbacka. Därifrån tar bussen er till Långedrag i västra Göteborg – ungefär 40 minuter längs kusten.</p>
-        <div className="mt-12 grid gap-6 md:grid-cols-2">
+        <h2 id="info-title" data-reveal="up" className={`${h2} max-w-2xl text-ink`}>Hitta hit</h2>
+        <p data-reveal="up" style={delay(120)} className="mt-6 max-w-2xl text-lg leading-8 text-ink/75">Vigseln är i Ölmevalla Kyrka söder om Kungsbacka. Därifrån tar bussen er till Långedrag i västra Göteborg – ungefär 40 minuter längs kusten.</p>
+        <div className="mt-14 grid gap-x-8 gap-y-14 md:grid-cols-2">
           {[
-            { venue: VENUES.church, what: "Vigsel 14:00", tone: "bg-foam" },
-            { venue: VENUES.party, what: "Mingel och middag från 16:30", tone: "bg-dusk/60" }
-          ].map(({ venue, what, tone }) => (
-            <article key={venue.name} className={`flex flex-col rounded-2xl p-7 sm:p-9 ${tone}`}>
-              <h3 className="font-display text-3xl text-ink sm:text-4xl">{venue.name}</h3>
-              <p className="mt-2 font-semibold text-ink/80">{what}</p>
+            { venue: VENUES.church, what: "Vigsel 14:00" },
+            { venue: VENUES.party, what: "Mingel och middag från 16:30" }
+          ].map(({ venue, what }, index) => (
+            <article key={venue.name} data-reveal="up" style={delay(index * 140)} className="flex flex-col">
+              <div className="relative aspect-[4/3] overflow-hidden bg-foam">
+                  <Image src={venue.image.src} alt={venue.image.alt} fill sizes="(min-width: 1152px) 540px, (min-width: 768px) 46vw, 100vw" className="object-cover" />
+                </div>
+              <h3 className="mt-6 font-display text-3xl text-ink sm:text-4xl">{venue.name}</h3>
+              <p className="mt-2 text-ink/80">{what}</p>
               {venue.address && <p className="mt-4 leading-7 text-ink/80">{venue.address}</p>}
               {venue.parking && <p className="mt-2 leading-7 text-ink/75">Parkering: {venue.parking}</p>}
-              <ExternalLink href={mapLink(venue.mapQuery)} className="mt-8 self-start font-semibold text-sea underline decoration-sea/40 underline-offset-4 hover:decoration-sea">Visa på kartan</ExternalLink>
+              <ExternalLink href={mapLink(venue.mapQuery)} className="btn-quiet mt-4 self-start text-ink">Visa på kartan</ExternalLink>
             </article>
           ))}
         </div>
 
-        <div id="boende" className="mt-24 grid scroll-mt-4 items-center gap-10 lg:grid-cols-[1fr_1.2fr] lg:gap-16">
+        <div id="boende" data-reveal="up" className="mt-28 grid scroll-mt-4 items-center gap-10 lg:grid-cols-[1fr_1.2fr] lg:gap-16">
           <div>
             <h3 className="font-display text-4xl text-ink sm:text-5xl">Sova över</h3>
             <p className="mt-6 max-w-xl text-lg leading-8 text-ink/75">Vi sover själva på Clarion Hotel Draken i centrala Göteborg – en bit från Långedrag, men lätt att nå med spårvagn 11 eller taxi efter festen. Det är helt frivilligt att bo där; lös gärna boende som passar er.</p>
-            <ExternalLink className="mt-8 inline-block font-semibold text-sea underline decoration-sea/40 underline-offset-4 hover:decoration-sea" href="https://www.strawberry.se/hotell/sverige/goteborg/clarion-hotel-draken/">Läs mer och boka på Strawberry</ExternalLink>
+            <ExternalLink className="btn-quiet mt-6 text-ink" href="https://www.strawberry.se/hotell/sverige/goteborg/clarion-hotel-draken/">Läs mer och boka på Strawberry</ExternalLink>
           </div>
-          <div className="relative aspect-[16/10] overflow-hidden rounded-2xl shadow-soft">
+          <div className="relative aspect-[16/10] overflow-hidden">
             <Image src="/photos/draken.jpg" alt="Clarion Hotel Draken, ett högt hotell med guldskimrande fasad vid Göta älv i solnedgång" fill sizes="(min-width: 1152px) 620px, (min-width: 1024px) 55vw, 100vw" className="object-cover object-[70%_center]" />
           </div>
         </div>
@@ -226,7 +229,7 @@ export default async function Home({ searchParams }: HomeProps) {
           <Shoreline className="text-foam" />
           <section id="osa" className="scroll-mt-4 bg-foam px-6 pb-24 pt-16 lg:pb-32" aria-labelledby="rsvp-title">
             <div className="mx-auto max-w-3xl">
-              <h2 id="rsvp-title" className={`${h2} text-ink`}>{names ? (responded ? `Ert svar, ${names}` : `Kommer ${youAll}, ${names}?`) : "OSA"}</h2>
+              <h2 id="rsvp-title" data-reveal="up" className={`${h2} text-ink`}>{names ? (responded ? `Ert svar, ${names}` : `Kommer ${youAll}, ${names}?`) : "OSA"}</h2>
               {invitation ? (
                 <p className="mt-6 max-w-xl text-lg leading-8 text-ink/75">
                   {responded
@@ -235,7 +238,7 @@ export default async function Home({ searchParams }: HomeProps) {
                 </p>
               ) : (
                 <>
-                  {token && <p className="mt-6 max-w-xl rounded-lg border border-ember/40 bg-white px-4 py-3 leading-7 text-ink" role="status">Vi kunde inte läsa inbjudningslänken. Kontrollera att hela länken kom med, eller svara med formuläret nedan.</p>}
+                  {token && <p className="mt-6 max-w-xl border border-ember/40 bg-paper px-4 py-3 leading-7 text-ink" role="status">Vi kunde inte läsa inbjudningslänken. Kontrollera att hela länken kom med, eller svara med formuläret nedan.</p>}
                   <p className="mt-6 max-w-xl text-lg leading-8 text-ink/75">Svara senast den {WEDDING.rsvpBy}. En anmälan per sällskap räcker fint.</p>
                 </>
               )}
@@ -247,13 +250,13 @@ export default async function Home({ searchParams }: HomeProps) {
       )}
 
       <section id="fragor" className="mx-auto max-w-3xl scroll-mt-4 px-6 py-24 lg:py-32" aria-labelledby="faq-title">
-        <h2 id="faq-title" className={`${h2} text-ink`}>Frågor & svar</h2>
-        <div className="mt-10 divide-y divide-ink/15 border-y border-ink/15">
+        <h2 id="faq-title" data-reveal="up" className={`${h2} text-ink`}>Frågor & svar</h2>
+        <div data-reveal="up" style={delay(120)} className="mt-10 divide-y divide-ink/15 border-y border-ink/15">
           {faqs.map((faq) => (
             <details key={faq.q} className="group py-5">
-              <summary className="flex cursor-pointer list-none items-center justify-between gap-6 text-lg font-semibold text-ink [&::-webkit-details-marker]:hidden">
+              <summary className="flex cursor-pointer list-none items-center justify-between gap-6 text-lg text-ink [&::-webkit-details-marker]:hidden">
                 {faq.q}
-                <span className="text-2xl text-ember transition group-open:rotate-45" aria-hidden="true">+</span>
+                <span className="text-2xl font-light text-ember transition group-open:rotate-45" aria-hidden="true">+</span>
               </summary>
               <p className="mt-3 max-w-2xl leading-7 text-ink/75">{faq.a}</p>
             </details>
@@ -263,15 +266,15 @@ export default async function Home({ searchParams }: HomeProps) {
 
       <section className="on-dark bg-ink px-6 py-24 text-white lg:px-10 lg:py-32" aria-labelledby="toast-title">
         <div className="mx-auto grid max-w-6xl items-center gap-12 lg:grid-cols-[18rem_1fr] lg:gap-16">
-          <div className="relative mx-auto aspect-[4/5] w-full max-w-[18rem] overflow-hidden rounded-2xl lg:mx-0">
+          <div data-reveal="up" className="relative mx-auto aspect-[4/5] w-full max-w-[18rem] overflow-hidden lg:mx-0">
             <Image src="/photos/jenny.jpg" alt="Jenny Bergdahl i blommig klänning och glasögon, leende" fill sizes="288px" className="object-cover object-top" />
           </div>
-          <div className="min-w-0">
+          <div data-reveal="up" style={delay(140)} className="min-w-0">
             <h2 id="toast-title" className={h2}>Toastmadame</h2>
-            <p className="mt-4 font-display text-3xl text-dusk sm:text-4xl">Jenny Bergdahl</p>
+            <p className="mt-4 font-accent text-3xl text-dusk sm:text-4xl">Jenny Bergdahl</p>
             <p className="mt-6 max-w-md text-lg leading-8 text-white/80">Kvällens tryggaste punkt. Vill du hålla tal, överraska eller har du en fråga om dagen? Hör av dig till Jenny så hjälper hon dig rätt.</p>
             {TOASTMADAME_EMAIL ? (
-              <a className="mt-8 inline-block break-all text-lg underline decoration-dusk underline-offset-4 hover:text-dusk" href={`mailto:${TOASTMADAME_EMAIL}`}>{TOASTMADAME_EMAIL}</a>
+              <a className="mt-8 inline-block break-all text-lg underline decoration-1 underline-offset-8 hover:underline-offset-4 transition-all" href={`mailto:${TOASTMADAME_EMAIL}`}>{TOASTMADAME_EMAIL}</a>
             ) : (
               <p className="mt-8 text-white/80">Jennys kontaktuppgifter kommer snart.</p>
             )}
@@ -280,8 +283,13 @@ export default async function Home({ searchParams }: HomeProps) {
       </section>
 
       <footer className="bg-ink px-6 pb-28 md:pb-12 text-center text-sm text-white/75">
-        <p className="font-display text-3xl text-white">E<span className="text-dusk">&</span>J</p>
+        <p className="font-display text-3xl text-white">E<span className="font-accent text-dusk">&</span>J</p>
         <p className="mt-3">19 juni 2027 · Ölmevalla & Långedrag</p>
+        <p className="mt-8 text-xs text-white/60">
+          Foto: {VENUES.church.name} –{" "}
+          <a href={VENUES.church.image.creditUrl} target="_blank" rel="noreferrer" className="underline decoration-1 underline-offset-2 hover:text-white">Musicus, CC BY-SA 3.0<span className="sr-only"> (öppnas i ny flik)</span></a>
+          {" · "}{VENUES.party.name} – Lasse Olsson
+        </p>
       </footer>
 
       <MobileNav links={navLinks} />
