@@ -3,8 +3,9 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { requireAdmin } from "@/lib/admin";
+import { requestOrigin } from "@/lib/origin";
 import { clean, invitationLink, invitationMessage, isEmail, UUID_PATTERN } from "@/lib/site";
-import { createSessionClient } from "@/lib/supabase/server";
+import { createServiceClient, createSessionClient } from "@/lib/supabase/server";
 
 const MAX_GUESTS = 30;
 
@@ -50,7 +51,8 @@ export async function createInvitation(input: { groupName?: unknown; email?: unk
   }
 
   revalidatePath("/admin");
-  return { ok: true, id: invitation.id, groupName, link: invitationLink(invitation.token), message: invitationMessage(groupName, invitation.token) };
+  const origin = await requestOrigin();
+  return { ok: true, id: invitation.id, groupName, link: invitationLink(origin, invitation.token), message: invitationMessage(origin, groupName, names, invitation.token) };
 }
 
 export async function setInvitationSent(id: unknown, sent: boolean): Promise<ActionResult> {
@@ -92,6 +94,43 @@ export async function deleteInvitation(id: unknown): Promise<ActionResult> {
     console.error("Delete invitation failed:", error);
     return { ok: false, error: "Kunde inte ta bort sällskapet." };
   }
+  revalidatePath("/admin");
+  return { ok: true };
+}
+
+export type GuestSource = "invitation" | "open";
+
+export async function deleteGuest(source: unknown, id: unknown): Promise<ActionResult> {
+  if (source === "invitation") {
+    if (!validId(id)) return { ok: false, error: "Ogiltig gäst." };
+    const { supabase } = await requireAdmin();
+    const { data: guest, error } = await supabase.from("guests").delete().eq("id", id).select("invitation_id").single();
+    if (error || !guest) {
+      console.error("Delete guest failed:", error);
+      return { ok: false, error: "Kunde inte ta bort gästen." };
+    }
+
+    const { data: remaining, error: remainingError } = await supabase.from("guests").select("attending").eq("invitation_id", guest.invitation_id);
+    if (remainingError) console.error("Load remaining guests failed:", remainingError);
+    else if (remaining.length === 0) await supabase.from("invitations").delete().eq("id", guest.invitation_id);
+    else if (remaining.every((row) => row.attending !== null)) {
+      // Den borttagna gästen kan ha varit den enda som inte svarat.
+      await supabase.from("invitations").update({ status: "responded" }).eq("id", guest.invitation_id);
+    }
+  } else if (source === "open") {
+    if (typeof id !== "string" || !(UUID_PATTERN.test(id) || /^\d{1,18}$/.test(id))) return { ok: false, error: "Ogiltig anmälan." };
+    await requireAdmin();
+    const service = createServiceClient();
+    if (!service) return { ok: false, error: "SUPABASE_SERVICE_ROLE_KEY saknas." };
+    const { error } = await service.from("rsvps").delete().eq("id", id);
+    if (error) {
+      console.error("Delete rsvp failed:", error);
+      return { ok: false, error: "Kunde inte ta bort anmälan." };
+    }
+  } else {
+    return { ok: false, error: "Ogiltig gäst." };
+  }
+
   revalidatePath("/admin");
   return { ok: true };
 }

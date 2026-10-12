@@ -1,8 +1,20 @@
 import type { CSSProperties } from "react";
+import type { Metadata } from "next";
 import Image from "next/image";
+import { soloFirstName, TOASTMADAME_EMAIL } from "@/lib/site";
 import Countdown from "./components/countdown";
 import RSVPForm from "./components/rsvp-form";
 import ScrollReveal from "./components/scroll-reveal";
+import InvitationRsvpForm from "./osa/invitation-rsvp-form";
+import { loadInvitation } from "./osa/load-invitation";
+
+type HomeProps = { searchParams: Promise<{ token?: string | string[] }> };
+
+export async function generateMetadata({ searchParams }: HomeProps): Promise<Metadata> {
+  const { token } = await searchParams;
+  // Personliga länkar ska inte indexeras.
+  return token ? { robots: { index: false, follow: false } } : {};
+}
 
 const heroImage = "/photos/hero-vigsel.jpg";
 const toastImage = "/photos/jenny.jpg";
@@ -54,7 +66,13 @@ function ArrowIcon() {
   return <span aria-hidden="true">↗</span>;
 }
 
-export default function Home() {
+export default async function Home({ searchParams }: HomeProps) {
+  const { token: rawToken } = await searchParams;
+  const token = typeof rawToken === "string" ? rawToken.trim() : "";
+  const invitation = token ? await loadInvitation(token) : null;
+  const soloName = invitation ? soloFirstName(invitation.guests.map((guest) => guest.name)) : null;
+  const greeting = invitation ? (soloName ? `Hej ${soloName}!` : `Välkomna, ${invitation.group_name}!`) : null;
+
   return (
     <main>
       <ScrollReveal />
@@ -74,7 +92,7 @@ export default function Home() {
           </div>
         </nav>
         <div id="top" className="relative mx-auto flex min-h-[610px] max-w-6xl flex-col justify-end px-6 pb-20 lg:px-10 lg:pb-28">
-          <p className="hero-rise eyebrow mb-5 text-lavender" style={delay(200)}>Vår stora dag</p>
+          <p className="hero-rise eyebrow mb-5 text-lavender" style={delay(200)}>{greeting ?? "Vår stora dag"}</p>
           <h1 style={delay(350)} className="hero-rise max-w-3xl font-display text-7xl leading-[.85] tracking-tight sm:text-8xl lg:text-[10rem]">Elsa <span className="text-lavender">&</span><br /> Joakim</h1>
           <div className="hero-rise mt-10 flex flex-wrap items-center gap-6" style={delay(550)}>
             <p className="font-display text-3xl">19 juni 2027</p>
@@ -161,7 +179,7 @@ export default function Home() {
       <section className="bg-ink px-6 py-24 text-white lg:px-10 lg:py-32" aria-labelledby="toast-title">
         <div className="mx-auto grid max-w-6xl items-center gap-12 lg:grid-cols-[18rem_1fr] lg:gap-16">
           <div data-reveal="curtain" className="relative mx-auto aspect-[4/5] w-full max-w-[18rem] overflow-hidden rounded-[2rem] lg:mx-0"><Image src={toastImage} alt="Jenny Bergdahl i blommig klänning och glasögon, leende" fill sizes="288px" className="object-cover object-top" /></div>
-          <div data-reveal="right" style={delay(200)}><p className="eyebrow text-lavender">Kvällens tryggaste punkt</p><h2 id="toast-title" className="mt-4 font-display text-6xl">Toastmadame</h2><p className="mt-6 font-display text-4xl text-lavender">Jenny Bergdahl</p><p className="mt-6 max-w-md leading-7 text-white/75">Vill du hålla tal, överraska eller har du en fråga om dagen? Hör av dig till Jenny så hjälper hon dig rätt.</p><div className="mt-8 flex flex-col gap-3 text-lg"><a className="underline decoration-lavender underline-offset-4 hover:text-lavender" href="mailto:jenny@elsaochjoakim.se">jenny@elsaochjoakim.se</a></div></div>
+          <div data-reveal="right" style={delay(200)}><p className="eyebrow text-lavender">Kvällens tryggaste punkt</p><h2 id="toast-title" className="mt-4 font-display text-6xl">Toastmadame</h2><p className="mt-6 font-display text-4xl text-lavender">Jenny Bergdahl</p><p className="mt-6 max-w-md leading-7 text-white/75">Vill du hålla tal, överraska eller har du en fråga om dagen? Hör av dig till Jenny så hjälper hon dig rätt.</p>{TOASTMADAME_EMAIL ? <div className="mt-8 flex flex-col gap-3 text-lg"><a className="underline decoration-lavender underline-offset-4 hover:text-lavender" href={`mailto:${TOASTMADAME_EMAIL}`}>{TOASTMADAME_EMAIL}</a></div> : <p className="mt-8 text-white/75">Jennys kontaktuppgifter kommer snart.</p>}</div>
         </div>
       </section>
 
@@ -185,11 +203,21 @@ export default function Home() {
 
       <section id="osa" className="mx-auto max-w-3xl scroll-mt-8 px-6 py-24 lg:py-32" aria-labelledby="rsvp-title">
         <div data-reveal="up">
-        <p className="eyebrow text-plum">Svara senast 1 april 2027</p>
-        <h2 id="rsvp-title" className="mt-4 font-display text-6xl text-ink">OSA här</h2>
-        <p className="mt-5 max-w-xl leading-7 text-ink/70">Fyll i formuläret nedan — en anmälan per sällskap räcker fint.</p>
+          <p className="eyebrow text-plum">Svara senast 1 april 2027</p>
+          {invitation ? (
+            <>
+              <h2 id="rsvp-title" className="mt-4 font-display text-6xl text-ink">{greeting}</h2>
+              <p className="mt-5 max-w-xl leading-7 text-ink/70">{soloName ? "Vi hoppas att du vill fira med oss den 19 juni 2027. Svara nedan." : "Vi hoppas att ni vill fira med oss den 19 juni 2027. Svara för var och en i sällskapet nedan."}</p>
+            </>
+          ) : (
+            <>
+              <h2 id="rsvp-title" className="mt-4 font-display text-6xl text-ink">OSA här</h2>
+              {token && <p className="mt-5 max-w-xl rounded-lg bg-sky px-4 py-3 leading-7 text-ink" role="status">Vi kunde inte läsa inbjudningslänken. Kontrollera att hela länken kom med, eller fyll i formuläret nedan.</p>}
+              <p className="mt-5 max-w-xl leading-7 text-ink/70">Fyll i formuläret nedan — en anmälan per sällskap räcker fint.</p>
+            </>
+          )}
         </div>
-        <div data-reveal="up" style={delay(150)} className="mt-10"><RSVPForm /></div>
+        <div data-reveal="up" style={delay(150)} className="mt-10">{invitation ? <InvitationRsvpForm token={token} invitation={invitation} /> : <RSVPForm />}</div>
       </section>
 
       <footer className="border-t border-ink/10 px-6 py-10 text-center text-sm text-ink/60"><p className="font-display text-3xl text-ink">E<span className="text-plum">&</span>J</p><p className="mt-3">19 juni 2027 · Ölmevalla & Långedrag</p></footer>

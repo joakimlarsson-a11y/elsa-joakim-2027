@@ -4,7 +4,6 @@ export type InvitationGuest = {
   attending: boolean | null;
   dietary_info: string | null;
   needs_bus: boolean;
-  song_request: string | null;
   message: string | null;
 };
 
@@ -20,6 +19,5 @@ export type GuestResponse = {
   attending: boolean;
   dietary_info: string;
   needs_bus: boolean;
-  song_request: string;
   message: string;
 };

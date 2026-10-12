@@ -1,7 +1,8 @@
 "use server";
 
 import { sendInvitationConfirmation } from "@/lib/email";
-import { clean, isEmail, UUID_PATTERN } from "@/lib/site";
+import { requestOrigin } from "@/lib/origin";
+import { clean, invitationLink, isEmail, UUID_PATTERN } from "@/lib/site";
 import { createAnonClient, createServiceClient } from "@/lib/supabase/server";
 import type { GuestResponse } from "./types";
 
@@ -26,7 +27,6 @@ export async function submitInvitationRsvp(token: unknown, rawResponses: unknown
       attending,
       dietary_info: attending ? clean(raw.dietary_info, 1000) : "",
       needs_bus: attending && raw.needs_bus === true,
-      song_request: attending ? clean(raw.song_request, 300) : "",
       message: attending ? "" : clean(raw.message, 2000)
     });
   }
@@ -55,15 +55,16 @@ export async function submitInvitationRsvp(token: unknown, rawResponses: unknown
     if (service) {
       const { data: invitation } = await service
         .from("invitations")
-        .select("group_name, email, guests(name, attending, dietary_info, needs_bus, song_request)")
+        .select("group_name, email, guests(name, attending, dietary_info, needs_bus)")
         .eq("token", token)
         .single();
       if (invitation?.email) {
-        await sendInvitationConfirmation(
-          invitation.email,
-          invitation.group_name,
-          (invitation.guests ?? []).map((guest) => ({ ...guest, attending: guest.attending === true }))
-        );
+        await sendInvitationConfirmation({
+          to: invitation.email,
+          groupName: invitation.group_name,
+          guests: (invitation.guests ?? []).map((guest) => ({ ...guest, attending: guest.attending === true })),
+          editLink: `${invitationLink(await requestOrigin(), token)}#osa`
+        });
       }
     }
   } catch (mailError) {
