@@ -39,15 +39,13 @@ const navLinks = [
 ];
 
 const faqs = [
-  { q: "När behöver vi svara?", a: `Senast den ${WEDDING.rsvpBy}. Svara via formuläret längre ner. En anmälan per sällskap räcker.` },
-  ...(WEDDING.dressCode ? [{ q: "Vad har vi på oss?", a: `Klädkoden är ${WEDDING.dressCode.toLowerCase()}. ${WEDDING.dressCodeNote}`.trim() }] : []),
-  ...(WEDDING.children ? [{ q: "Får barnen följa med?", a: WEDDING.children }] : []),
-  { q: "Hur tar vi oss mellan kyrkan och festen?", a: "Vi ordnar buss som avgår direkt från Ölmevalla Kyrka efter ceremonin. Ange i OSA:n vilka som vill åka med." },
-  { q: "Hur tar vi oss hem?", a: "Vi har ingen buss tillbaka. Från Långedrag går spårvagn 11 in mot centrala Göteborg, och taxi går förstås också bra. Boka gärna i förväg." },
-  { q: "Jag vill hålla tal eller ordna ett spex. Vem kontaktar jag?", a: "Hör av dig till vår toastmadame Jenny Bergdahl i god tid, så hjälper hon dig att planera in det under kvällen." },
-  { q: "Jag har allergier eller äter specialkost.", a: "Skriv det i OSA-formuläret, för var och en i sällskapet, så ser vi till att köket vet om det." },
-  { q: "Önskar ni er några presenter?", a: "Er närvaro är den finaste presenten. Den som ändå vill får gärna bidra till vår resa." },
-  { q: "Jag har en annan fråga.", a: "Kontakta Jenny Bergdahl. Mer om henne hittar du under Toastmadame." }
+  { title: "Svara senast", a: `Senast den ${WEDDING.rsvpBy}, via formuläret längre ner. En anmälan per sällskap räcker.`, image: "/photos/vigsel.jpg", position: "center" },
+  ...(WEDDING.dressCode ? [{ title: `Klädkod: ${WEDDING.dressCode}`, a: WEDDING.dressCodeNote, image: "/photos/skal.jpg", position: "center 30%" }] : []),
+  ...(WEDDING.children ? [{ title: "Barnen", a: WEDDING.children, image: "/photos/familj.jpg", position: "center 30%" }] : []),
+  { title: "Buss till festen", a: "Bussen avgår direkt från Ölmevalla Kyrka efter ceremonin. Ange i OSA:n vilka som vill åka med.", image: "/photos/olmevalla-kyrka.jpg", position: "center" },
+  { title: "Hem efter festen", a: "Ingen buss tillbaka. Spårvagn 11 går in mot centrala Göteborg, och taxi går förstås också bra. Boka gärna i förväg.", image: "/photos/draken.jpg", position: "70% center" },
+  { title: "Allergier och specialkost", a: "Skriv det i OSA-formuläret, för var och en i sällskapet, så ser vi till att köket vet om det.", image: "/photos/langedrags-vardshus.jpg", position: "center" },
+  { title: "Presenter", a: "Er närvaro är den finaste presenten. Den som ändå vill får gärna bidra till vår resa.", image: "/photos/bubbel.jpg", position: "center 35%" }
 ];
 
 const h2 = "font-display text-[clamp(2.5rem,9vw,4rem)] leading-[1] [hyphens:auto]";
@@ -222,6 +220,48 @@ export default async function Home({ searchParams }: HomeProps) {
         </div>
       </section>
 
+      <section className="on-dark bg-ink px-6 py-24 text-white lg:px-10 lg:py-32" aria-labelledby="toast-title">
+        <div className="mx-auto grid max-w-6xl items-center gap-12 lg:grid-cols-[18rem_1fr] lg:gap-16">
+          <div className="relative mx-auto aspect-[4/5] w-full max-w-[18rem] overflow-hidden lg:mx-0">
+            <Image src="/photos/jenny.jpg" alt="Jenny Bergdahl i blommig klänning och glasögon, leende" fill sizes="288px" className="object-cover object-top" />
+          </div>
+          <div className="min-w-0">
+            <h2 id="toast-title" className={h2}>Toastmadame</h2>
+            <p className="mt-4 font-accent text-3xl text-dusk sm:text-4xl">Jenny Bergdahl</p>
+            <p className="mt-6 max-w-md text-lg leading-8 text-white/80">Kvällens tryggaste punkt. Vill du hålla tal, överraska eller har du en fråga om dagen? Hör av dig till Jenny så hjälper hon dig rätt.</p>
+            {TOASTMADAME_EMAIL ? (
+              <a className="btn btn-primary mt-8" href={`mailto:${TOASTMADAME_EMAIL}`}>Mejla Jenny</a>
+            ) : (
+              <p className="mt-8 text-white/80">Jennys kontaktuppgifter kommer snart.</p>
+            )}
+          </div>
+        </div>
+      </section>
+
+      <section id="fragor" className="mx-auto max-w-6xl scroll-mt-4 px-6 py-24 lg:px-10 lg:py-32" aria-labelledby="faq-title">
+        <div className="grid gap-6 lg:grid-cols-[1fr_1.2fr] lg:items-end">
+          <h2 id="faq-title" data-reveal="up" className={`${h2} text-ink`}>Frågor <span className="font-accent text-ember">&</span> svar</h2>
+          <p data-reveal="up" style={delay(120)} className="max-w-xl text-lg leading-8 text-ink/75">Det mesta ni undrar över, samlat på ett ställe. Hittar ni inte svaret? Fråga Jenny.</p>
+        </div>
+        <ul className="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-3 lg:gap-8">
+          {faqs.map((faq, index) => (
+            <li key={faq.title} data-reveal="up" style={delay((index % 3) * 120)}>
+              <article className="faq-card group flex h-full flex-col bg-shell">
+                <div className="relative aspect-[16/10] overflow-hidden">
+                  <Image src={faq.image} alt="" fill sizes="(min-width: 1152px) 340px, (min-width: 1024px) 30vw, (min-width: 640px) 46vw, 100vw" style={{ objectPosition: faq.position }} className="faq-card-image object-cover" />
+                  <span className="absolute left-4 top-3 font-display text-sm tracking-[.08em] text-white/90 [text-shadow:0_1px_8px_rgba(42,38,34,.6)]" aria-hidden="true">{String(index + 1).padStart(2, "0")}</span>
+                </div>
+                <div className="flex flex-1 flex-col px-6 pb-7 pt-6">
+                  <h3 className="font-display text-3xl leading-tight text-ink">{faq.title}</h3>
+                  <span className="mt-4 block h-px w-10 bg-ink/25 transition-all duration-500 group-hover:w-16" aria-hidden="true" />
+                  <p className="mt-4 leading-7 text-ink/75">{faq.a}</p>
+                </div>
+              </article>
+            </li>
+          ))}
+        </ul>
+      </section>
+
       {!thankYou && (
         <>
           <Shoreline className="text-foam" />
@@ -247,40 +287,7 @@ export default async function Home({ searchParams }: HomeProps) {
         </>
       )}
 
-      <section id="fragor" className="mx-auto max-w-3xl scroll-mt-4 px-6 py-24 lg:py-32" aria-labelledby="faq-title">
-        <h2 id="faq-title" data-reveal="up" className={`${h2} text-ink`}>Frågor & svar</h2>
-        <div className="mt-10 divide-y divide-ink/15 border-y border-ink/15">
-          {faqs.map((faq, index) => (
-            <details key={faq.q} data-reveal="up" style={delay(index * 80)} className="group py-5">
-              <summary className="flex cursor-pointer list-none items-center justify-between gap-6 text-lg text-ink [&::-webkit-details-marker]:hidden">
-                {faq.q}
-                <span className="text-2xl font-light text-ember transition group-open:rotate-45" aria-hidden="true">+</span>
-              </summary>
-              <p className="mt-3 max-w-2xl leading-7 text-ink/75">{faq.a}</p>
-            </details>
-          ))}
-        </div>
-      </section>
-
-      <section className="on-dark bg-ink px-6 py-24 text-white lg:px-10 lg:py-32" aria-labelledby="toast-title">
-        <div className="mx-auto grid max-w-6xl items-center gap-12 lg:grid-cols-[18rem_1fr] lg:gap-16">
-          <div className="relative mx-auto aspect-[4/5] w-full max-w-[18rem] overflow-hidden lg:mx-0">
-            <Image src="/photos/jenny.jpg" alt="Jenny Bergdahl i blommig klänning och glasögon, leende" fill sizes="288px" className="object-cover object-top" />
-          </div>
-          <div className="min-w-0">
-            <h2 id="toast-title" className={h2}>Toastmadame</h2>
-            <p className="mt-4 font-accent text-3xl text-dusk sm:text-4xl">Jenny Bergdahl</p>
-            <p className="mt-6 max-w-md text-lg leading-8 text-white/80">Kvällens tryggaste punkt. Vill du hålla tal, överraska eller har du en fråga om dagen? Hör av dig till Jenny så hjälper hon dig rätt.</p>
-            {TOASTMADAME_EMAIL ? (
-              <a className="mt-8 inline-block break-all text-lg underline decoration-1 underline-offset-8 hover:underline-offset-4 transition-all" href={`mailto:${TOASTMADAME_EMAIL}`}>{TOASTMADAME_EMAIL}</a>
-            ) : (
-              <p className="mt-8 text-white/80">Jennys kontaktuppgifter kommer snart.</p>
-            )}
-          </div>
-        </div>
-      </section>
-
-      <footer className="bg-ink px-6 pb-28 md:pb-12 text-center text-sm text-white/75">
+      <footer className="bg-ink px-6 pb-28 pt-16 md:pb-12 text-center text-sm text-white/75">
         <p className="font-display text-3xl text-white">E<span className="font-accent text-dusk">&</span>J</p>
         <p className="mt-3">19 juni 2027 · Ölmevalla & Långedrag</p>
         <p className="mt-8 text-xs text-white/60">
