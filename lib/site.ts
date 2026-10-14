@@ -1,7 +1,7 @@
 export const UUID_PATTERN = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
-/** Kontaktadress till toastmadame Jenny. Lämna tom tills adressen är bestämd. */
-export const TOASTMADAME_EMAIL = "";
+/** Kontaktadress till toastmadame Jenny. */
+export const TOASTMADAME_EMAIL = "elsajoakim2027@gmail.com";
 
 /**
  * Fakta om dagen. Tomma strängar döljs på sidan – fyll i när det är bestämt.
