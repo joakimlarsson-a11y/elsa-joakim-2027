@@ -279,7 +279,7 @@ export default async function Home({ searchParams }: HomeProps) {
             <p className="mt-4 font-accent text-3xl text-dusk sm:text-4xl">Jenny Bergdahl</p>
             <p className="mt-6 max-w-md text-lg leading-8 text-white/80">Kvällens tryggaste punkt. Vill du hålla tal, överraska eller har du en fråga om dagen? Hör av dig till Jenny så hjälper hon dig rätt.</p>
             {TOASTMADAME_EMAIL ? (
-              <a className="mt-8 inline-block break-all text-lg underline decoration-1 underline-offset-8 hover:underline-offset-4 transition-all" href={`mailto:${TOASTMADAME_EMAIL}`}>{TOASTMADAME_EMAIL}</a>
+              <a className="btn btn-primary mt-8" href={`mailto:${TOASTMADAME_EMAIL}`}>Mejla Jenny</a>
             ) : (
               <p className="mt-8 text-white/80">Jennys kontaktuppgifter kommer snart.</p>
             )}
