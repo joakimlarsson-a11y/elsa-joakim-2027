@@ -39,15 +39,13 @@ const navLinks = [
 ];
 
 const faqs = [
-  { title: "Svara senast", q: "När behöver vi svara?", a: `Senast den ${WEDDING.rsvpBy}, via formuläret längre ner. En anmälan per sällskap räcker.`, image: "/photos/vigsel.jpg", position: "center" },
-  ...(WEDDING.dressCode ? [{ title: `Klädkod: ${WEDDING.dressCode}`, q: "Vad har vi på oss?", a: WEDDING.dressCodeNote, image: "/photos/skal.jpg", position: "center 30%" }] : []),
-  ...(WEDDING.children ? [{ title: "Barnen", q: "Får barnen följa med?", a: WEDDING.children, image: "/photos/familj.jpg", position: "center 30%" }] : []),
-  { title: "Buss till festen", q: "Hur tar vi oss mellan kyrkan och festen?", a: "Bussen avgår direkt från Ölmevalla Kyrka efter ceremonin. Ange i OSA:n vilka som vill åka med.", image: "/photos/olmevalla-kyrka.jpg", position: "center" },
-  { title: "Hem efter festen", q: "Hur tar vi oss hem?", a: "Ingen buss tillbaka. Spårvagn 11 går in mot centrala Göteborg, och taxi går förstås också bra. Boka gärna i förväg.", image: "/photos/draken.jpg", position: "70% center" },
-  { title: "Tal och spex", q: "Jag vill hålla tal eller ordna ett spex. Vem kontaktar jag?", a: "Hör av dig till vår toastmadame Jenny Bergdahl i god tid, så hjälper hon dig att planera in det under kvällen.", image: "/photos/skratt.jpg", position: "center 30%", contact: true },
-  { title: "Allergier och specialkost", q: "Jag har allergier eller äter specialkost.", a: "Skriv det i OSA-formuläret, för var och en i sällskapet, så ser vi till att köket vet om det.", image: "/photos/langedrags-vardshus.jpg", position: "center" },
-  { title: "Presenter", q: "Önskar ni er några presenter?", a: "Er närvaro är den finaste presenten. Den som ändå vill får gärna bidra till vår resa.", image: "/photos/bubbel.jpg", position: "center 35%" },
-  { title: "Något annat?", q: "Jag har en annan fråga.", a: "Kontakta vår toastmadame Jenny Bergdahl. Mer om henne hittar du längre ner.", image: "/photos/jenny.jpg", position: "center 20%", contact: true }
+  { title: "Svara senast", a: `Senast den ${WEDDING.rsvpBy}, via formuläret längre ner. En anmälan per sällskap räcker.`, image: "/photos/vigsel.jpg", position: "center" },
+  ...(WEDDING.dressCode ? [{ title: `Klädkod: ${WEDDING.dressCode}`, a: WEDDING.dressCodeNote, image: "/photos/skal.jpg", position: "center 30%" }] : []),
+  ...(WEDDING.children ? [{ title: "Barnen", a: WEDDING.children, image: "/photos/familj.jpg", position: "center 30%" }] : []),
+  { title: "Buss till festen", a: "Bussen avgår direkt från Ölmevalla Kyrka efter ceremonin. Ange i OSA:n vilka som vill åka med.", image: "/photos/olmevalla-kyrka.jpg", position: "center" },
+  { title: "Hem efter festen", a: "Ingen buss tillbaka. Spårvagn 11 går in mot centrala Göteborg, och taxi går förstås också bra. Boka gärna i förväg.", image: "/photos/draken.jpg", position: "70% center" },
+  { title: "Allergier och specialkost", a: "Skriv det i OSA-formuläret, för var och en i sällskapet, så ser vi till att köket vet om det.", image: "/photos/langedrags-vardshus.jpg", position: "center" },
+  { title: "Presenter", a: "Er närvaro är den finaste presenten. Den som ändå vill får gärna bidra till vår resa.", image: "/photos/bubbel.jpg", position: "center 35%" }
 ];
 
 const h2 = "font-display text-[clamp(2.5rem,9vw,4rem)] leading-[1] [hyphens:auto]";
@@ -236,13 +234,9 @@ export default async function Home({ searchParams }: HomeProps) {
                   <span className="absolute left-4 top-3 font-display text-sm tracking-[.08em] text-white/90 [text-shadow:0_1px_8px_rgba(42,38,34,.6)]" aria-hidden="true">{String(index + 1).padStart(2, "0")}</span>
                 </div>
                 <div className="flex flex-1 flex-col px-6 pb-7 pt-6">
-                  <p className="font-accent text-xl leading-snug text-ember">{faq.q}</p>
-                  <h3 className="mt-2 font-display text-3xl leading-tight text-ink">{faq.title}</h3>
+                  <h3 className="font-display text-3xl leading-tight text-ink">{faq.title}</h3>
                   <span className="mt-4 block h-px w-10 bg-ink/25 transition-all duration-500 group-hover:w-16" aria-hidden="true" />
                   <p className="mt-4 leading-7 text-ink/75">{faq.a}</p>
-                  {faq.contact && TOASTMADAME_EMAIL && (
-                    <a href={`mailto:${TOASTMADAME_EMAIL}`} className="btn-quiet mt-auto self-start break-all pt-2 text-ink">{TOASTMADAME_EMAIL}</a>
-                  )}
                 </div>
               </article>
             </li>
