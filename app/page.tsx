@@ -220,7 +220,25 @@ export default async function Home({ searchParams }: HomeProps) {
         </div>
       </section>
 
-      <section id="fragor" className="mx-auto max-w-6xl scroll-mt-4 px-6 pb-24 lg:px-10 lg:pb-32" aria-labelledby="faq-title">
+      <section className="on-dark bg-ink px-6 py-24 text-white lg:px-10 lg:py-32" aria-labelledby="toast-title">
+        <div className="mx-auto grid max-w-6xl items-center gap-12 lg:grid-cols-[18rem_1fr] lg:gap-16">
+          <div className="relative mx-auto aspect-[4/5] w-full max-w-[18rem] overflow-hidden lg:mx-0">
+            <Image src="/photos/jenny.jpg" alt="Jenny Bergdahl i blommig klänning och glasögon, leende" fill sizes="288px" className="object-cover object-top" />
+          </div>
+          <div className="min-w-0">
+            <h2 id="toast-title" className={h2}>Toastmadame</h2>
+            <p className="mt-4 font-accent text-3xl text-dusk sm:text-4xl">Jenny Bergdahl</p>
+            <p className="mt-6 max-w-md text-lg leading-8 text-white/80">Kvällens tryggaste punkt. Vill du hålla tal, överraska eller har du en fråga om dagen? Hör av dig till Jenny så hjälper hon dig rätt.</p>
+            {TOASTMADAME_EMAIL ? (
+              <a className="btn btn-primary mt-8" href={`mailto:${TOASTMADAME_EMAIL}`}>Mejla Jenny</a>
+            ) : (
+              <p className="mt-8 text-white/80">Jennys kontaktuppgifter kommer snart.</p>
+            )}
+          </div>
+        </div>
+      </section>
+
+      <section id="fragor" className="mx-auto max-w-6xl scroll-mt-4 px-6 py-24 lg:px-10 lg:py-32" aria-labelledby="faq-title">
         <div className="grid gap-6 lg:grid-cols-[1fr_1.2fr] lg:items-end">
           <h2 id="faq-title" data-reveal="up" className={`${h2} text-ink`}>Frågor <span className="font-accent text-ember">&</span> svar</h2>
           <p data-reveal="up" style={delay(120)} className="max-w-xl text-lg leading-8 text-ink/75">Det mesta ni undrar över, samlat på ett ställe. Hittar ni inte svaret? Fråga Jenny.</p>
@@ -269,25 +287,7 @@ export default async function Home({ searchParams }: HomeProps) {
         </>
       )}
 
-      <section className="on-dark bg-ink px-6 py-24 text-white lg:px-10 lg:py-32" aria-labelledby="toast-title">
-        <div className="mx-auto grid max-w-6xl items-center gap-12 lg:grid-cols-[18rem_1fr] lg:gap-16">
-          <div className="relative mx-auto aspect-[4/5] w-full max-w-[18rem] overflow-hidden lg:mx-0">
-            <Image src="/photos/jenny.jpg" alt="Jenny Bergdahl i blommig klänning och glasögon, leende" fill sizes="288px" className="object-cover object-top" />
-          </div>
-          <div className="min-w-0">
-            <h2 id="toast-title" className={h2}>Toastmadame</h2>
-            <p className="mt-4 font-accent text-3xl text-dusk sm:text-4xl">Jenny Bergdahl</p>
-            <p className="mt-6 max-w-md text-lg leading-8 text-white/80">Kvällens tryggaste punkt. Vill du hålla tal, överraska eller har du en fråga om dagen? Hör av dig till Jenny så hjälper hon dig rätt.</p>
-            {TOASTMADAME_EMAIL ? (
-              <a className="btn btn-primary mt-8" href={`mailto:${TOASTMADAME_EMAIL}`}>Mejla Jenny</a>
-            ) : (
-              <p className="mt-8 text-white/80">Jennys kontaktuppgifter kommer snart.</p>
-            )}
-          </div>
-        </div>
-      </section>
-
-      <footer className="bg-ink px-6 pb-28 md:pb-12 text-center text-sm text-white/75">
+      <footer className="bg-ink px-6 pb-28 pt-16 md:pb-12 text-center text-sm text-white/75">
         <p className="font-display text-3xl text-white">E<span className="font-accent text-dusk">&</span>J</p>
         <p className="mt-3">19 juni 2027 · Ölmevalla & Långedrag</p>
         <p className="mt-8 text-xs text-white/60">
