@@ -38,10 +38,10 @@ const navLinks = [
   { href: "#osa", label: "OSA" }
 ];
 
-type Faq = { title: string; a: string | readonly string[]; image: string; position: string; alt?: string; featured?: boolean; kicker?: string; signoff?: string };
+type Faq = { title: string; a: string | readonly string[]; image: string; position: string; alt?: string; featured?: boolean; signoff?: string };
 
 const faqs: Faq[] = [
-  ...(WEDDING.dressCode ? [{ title: `Klädkod: ${WEDDING.dressCode}`, a: WEDDING.dressCodeNote, kicker: WEDDING.dressCodeKicker, signoff: WEDDING.dressCodeSignoff, image: "/photos/kladkod-farger.jpg", position: "center", featured: true, alt: "Inspirationsbild: vår bröllopsbukett med rosa och ljusgula rosor, ljusblå blommor, slöjblomster och salviagröna blad, knuten med vitt band, bredvid fem färgprover märkta rosa, ljusgul, salviagrön, ljusblå och ljusgrå, med blomrankor i hörnen." }] : []),
+  ...(WEDDING.dressCode ? [{ title: `Klädkod: ${WEDDING.dressCode}`, a: WEDDING.dressCodeNote, signoff: WEDDING.dressCodeSignoff, image: "/photos/kladkod-farger.jpg", position: "center", featured: true, alt: "Inspirationsbild med rubriken Vår bröllopsfärgskala – En midsommardröm – Kärlek, glädje, tillsammans: vår bröllopsbukett med rosa och ljusgula rosor, ljusblå blommor, slöjblomster och salviagröna blad, knuten med vitt band, bredvid fem färgprover märkta rosa, ljusgul, salviagrön, ljusblå och ljusgrå, med blomrankor i hörnen." }] : []),
   ...(WEDDING.children ? [{ title: "Barnen", a: WEDDING.children, image: "/photos/barnen.jpg", position: "center 18%" }] : []),
   { title: "Presenter", a: "Er närvaro är den finaste presenten. Den som ändå vill får gärna bidra till vår resa.", image: "/photos/presenter.jpg", position: "center 40%", alt: "Joakim och Elsa ler mot kameran, han med en stor blombukett i papper och hon med rosa rosor i en glasburk." }
 ];
@@ -247,7 +247,7 @@ export default async function Home({ searchParams }: HomeProps) {
               <article className={`faq-card group flex h-full flex-col bg-shell ${faq.featured ? "sm:grid sm:grid-cols-2" : ""}`}>
                 {faq.featured ? (
                   // Bakgrunden matchar bildens papperston så att den oklippta bilden smälter in.
-                  <div className="relative aspect-[1024/1330] bg-[#f3ece5]">
+                  <div className="relative aspect-[1024/1516] bg-[#f3ece5]">
                     <Image src={faq.image} alt={faq.alt ?? ""} fill sizes="(min-width: 1152px) 600px, (min-width: 640px) 50vw, 100vw" className="object-contain" />
                     <span className="absolute left-4 top-3 font-display text-sm tracking-[.08em] text-ink/70" aria-hidden="true">{String(index + 1).padStart(2, "0")}</span>
                   </div>
@@ -259,7 +259,6 @@ export default async function Home({ searchParams }: HomeProps) {
                 )}
                 <div className={`flex flex-1 flex-col px-6 pb-7 pt-6 ${faq.featured ? "sm:justify-center sm:px-10 lg:px-16" : ""}`}>
                   <h3 className={`font-display leading-tight text-ink ${faq.featured ? "text-4xl sm:text-5xl lg:text-6xl" : "text-3xl"}`}>{faq.title}</h3>
-                  {faq.kicker && <p className="mt-2 font-accent text-3xl leading-tight text-ember">{faq.kicker}</p>}
                   <span className="mt-4 block h-px w-10 bg-ink/25 transition-all duration-500 group-hover:w-16" aria-hidden="true" />
                   {(typeof faq.a === "string" ? [faq.a] : faq.a).map((paragraph) => (
                     <p key={paragraph} className={`mt-4 text-ink/75 ${faq.featured ? "max-w-md text-lg leading-8" : "leading-7"}`}>{paragraph}</p>

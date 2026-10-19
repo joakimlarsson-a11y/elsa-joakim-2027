@@ -20,8 +20,7 @@ export const WEDDING = {
   dressCodeNote: [
     "Vi ser fram emot att fira vår stora dag med er, och hoppas att ni vill klä er i färgerna från vår bröllopsbukett: rosa, ljusgul, salviagrön, ljusblå och ljusgrå."
   ],
-  /** Rubrik och hälsning från inspirationsbilden. */
-  dressCodeKicker: "En midsommardröm",
+  /** Hälsning under klädkoden. */
   dressCodeSignoff: "Tack för att ni är en del av vår resa!",
   /** T.ex. "Barn är varmt välkomna!" */
   children: "Barn är varmt välkomna till ceremonin i kyrkan. Under middagen och festen råder vuxet sällskap. Spädbarn är givetvis välkomna, de behöver inte anmälas i OSA:n.",
