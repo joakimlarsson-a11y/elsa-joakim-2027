@@ -43,7 +43,7 @@ type Faq = { title: string; a: string; image: string; position: string; alt?: st
 const faqs: Faq[] = [
   // Inspirationsbilden innehåller text, så den visas oklippt och beskrivs i alt-texten.
   ...(WEDDING.dressCode ? [{ title: `Klädkod: ${WEDDING.dressCode}`, a: WEDDING.dressCodeNote, image: "/photos/kladkod-farger.jpg", position: "center", featured: true, alt: "Inspirationsbild: Vår bröllopsfärgskala, en midsommardröm. En bukett med rosa och ljusgula rosor, ljusblå blommor, slöjblomster och salviagröna blad, knuten med vitt band. Färgerna är rosa, ljusgul, salviagrön, ljusblå och ljusgrå. Vi ser fram emot att fira vår stora dag med er, och hoppas att ni vill klä er i färgerna från vår bröllopsbukett!" }] : []),
-  ...(WEDDING.children ? [{ title: "Barnen", a: WEDDING.children, image: "/photos/familj.jpg", position: "center 30%" }] : []),
+  ...(WEDDING.children ? [{ title: "Barnen", a: WEDDING.children, image: "/photos/barnen.jpg", position: "center 18%" }] : []),
   { title: "Presenter", a: "Er närvaro är den finaste presenten. Den som ändå vill får gärna bidra till vår resa.", image: "/photos/bubbel.jpg", position: "center 35%" }
 ];
 
