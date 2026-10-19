@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
-import { Resend } from "resend";
+import { scheduleLinkHtml, scheduleLinkText, sendEmail } from "@/lib/email";
 
 type PersonInput = { name?: unknown; email?: unknown; allergies?: unknown; bus?: unknown };
 type RSVPBody = { persons?: unknown };
@@ -63,26 +63,26 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Vi kunde inte spara ditt svar. Försök igen." }, { status: 500 });
     }
 
-    const resend = new Resend(resendKey);
-    const safeName = escapeHtml(primary.name);
-    const summary = persons
-      .map((person) => `<li><strong>${escapeHtml(person.name)}</strong> (${escapeHtml(person.email)})<br>Busstransport: ${person.bus}${person.allergies ? `<br>Specialkost: ${escapeHtml(person.allergies)}` : ""}</li>`)
+    const details = (person: Person) => [`Busstransport: ${person.bus}`, ...(person.allergies ? [`Specialkost: ${person.allergies}`] : [])];
+    const summaryHtml = persons
+      .map((person) => `<li><strong>${escapeHtml(person.name)}</strong> (${escapeHtml(person.email)})<br>${details(person).map(escapeHtml).join("<br>")}</li>`)
       .join("");
-    await resend.emails.send({
-      from: "Elsa & Joakim <osa@elsajoakim2027.se>",
-      to: primary.email,
-      subject: "Tack för din OSA!",
-      html: `<div style="font-family:Arial,sans-serif;max-width:600px;margin:auto;color:#1d2140;line-height:1.6">
-        <p style="letter-spacing:2px;text-transform:uppercase;color:#44336d;font-size:12px">19 juni 2027</p>
-        <h1 style="font-family:Georgia,serif;font-size:42px;font-weight:500">Tack, ${safeName}!</h1>
-        <p>Vi har tagit emot din OSA och längtar efter att fira med dig.</p>
-        <div style="background:#f5f3fa;border-radius:12px;padding:20px;margin:24px 0">
-          <strong>Er anmälan</strong><ul style="margin-bottom:0;padding-left:20px">${summary}</ul>
-        </div>
-        <p><strong>Praktiskt:</strong> Ceremonin börjar 14:00 i Ölmevalla Kyrka. Buss till Långedrags Värdshus avgår 16:00, mingel börjar 16:30 och middag 18:30.</p>
-        <p>Varmt välkommen!<br>Elsa & Joakim</p>
-      </div>`
-    });
+    const summaryText = persons.map((person) => `- ${person.name} (${person.email}): ${details(person).join(", ")}`).join("\n");
+    try {
+      await sendEmail({
+        to: primary.email,
+        subject: "Tack för din OSA!",
+        html: `<h1 style="font-family:Georgia,serif;font-size:42px;font-weight:500">Tack, ${escapeHtml(primary.name)}!</h1>
+  <p>Vi har tagit emot din OSA och längtar efter att fira med dig.</p>
+  <div style="background:#f5f3fa;border-radius:12px;padding:20px;margin:24px 0">
+    <strong>Er anmälan</strong><ul style="margin-bottom:0;padding-left:20px">${summaryHtml}</ul>
+  </div>
+  ${scheduleLinkHtml()}`,
+        text: [`Tack, ${primary.name}!`, "Vi har tagit emot din OSA och längtar efter att fira med dig.", `Er anmälan:\n${summaryText}`, scheduleLinkText(), "Varma hälsningar,\nElsa & Joakim"].join("\n\n")
+      });
+    } catch (mailError) {
+      console.error("RSVP confirmation email failed:", mailError);
+    }
 
     return NextResponse.json({ ok: true });
   } catch (error) {
