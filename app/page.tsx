@@ -38,11 +38,11 @@ const navLinks = [
   { href: "#osa", label: "OSA" }
 ];
 
-type Faq = { title: string; a: string; image: string; position: string; alt?: string };
+type Faq = { title: string; a: string; image: string; position: string; alt?: string; featured?: boolean };
 
 const faqs: Faq[] = [
-  // Texten hänvisar till bilden som inspiration, så den behöver en alt-text.
-  ...(WEDDING.dressCode ? [{ title: `Klädkod: ${WEDDING.dressCode}`, a: WEDDING.dressCodeNote, image: "/photos/skal.jpg", position: "center 30%", alt: "Inspirationsbild: Elsa i en mönstrad, långärmad klänning och Joakim i ljus kavaj, vit skjorta och ljusa byxor" }] : []),
+  // Inspirationsbilden innehåller text, så den visas oklippt och beskrivs i alt-texten.
+  ...(WEDDING.dressCode ? [{ title: `Klädkod: ${WEDDING.dressCode}`, a: WEDDING.dressCodeNote, image: "/photos/kladkod-farger.jpg", position: "center", featured: true, alt: "Inspirationsbild: Vår bröllopsfärgskala, en midsommardröm. En bukett med rosa och ljusgula rosor, ljusblå blommor, slöjblomster och salviagröna blad, knuten med vitt band. Färgerna är rosa, ljusgul, salviagrön, ljusblå och ljusgrå. Vi ser fram emot att fira vår stora dag med er, och hoppas att ni vill klä er i färgerna från vår bröllopsbukett!" }] : []),
   ...(WEDDING.children ? [{ title: "Barnen", a: WEDDING.children, image: "/photos/familj.jpg", position: "center 30%" }] : []),
   { title: "Presenter", a: "Er närvaro är den finaste presenten. Den som ändå vill får gärna bidra till vår resa.", image: "/photos/bubbel.jpg", position: "center 35%" }
 ];
@@ -242,18 +242,26 @@ export default async function Home({ searchParams }: HomeProps) {
           <h2 id="faq-title" data-reveal="up" className={`${h2} text-ink`}>Frågor <span className="font-accent text-ember">&</span> svar</h2>
           <p data-reveal="up" style={delay(120)} className="max-w-xl text-lg leading-8 text-ink/75">Det mesta ni undrar över, samlat på ett ställe.</p>
         </div>
-        <ul className="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-3 lg:gap-8">
+        <ul className="mt-14 grid gap-6 sm:grid-cols-2 lg:gap-8">
           {faqs.map((faq, index) => (
-            <li key={faq.title} data-reveal="up" style={delay((index % 3) * 120)}>
-              <article className="faq-card group flex h-full flex-col bg-shell">
-                <div className="relative aspect-[16/10] overflow-hidden">
-                  <Image src={faq.image} alt={faq.alt ?? ""} fill sizes="(min-width: 1152px) 340px, (min-width: 1024px) 30vw, (min-width: 640px) 46vw, 100vw" style={{ objectPosition: faq.position }} className="faq-card-image object-cover" />
-                  <span className="absolute left-4 top-3 font-display text-sm tracking-[.08em] text-white/90 [text-shadow:0_1px_8px_rgba(42,38,34,.6)]" aria-hidden="true">{String(index + 1).padStart(2, "0")}</span>
-                </div>
-                <div className="flex flex-1 flex-col px-6 pb-7 pt-6">
-                  <h3 className="font-display text-3xl leading-tight text-ink">{faq.title}</h3>
+            <li key={faq.title} data-reveal="up" style={delay((index % 3) * 120)} className={faq.featured ? "sm:col-span-2" : undefined}>
+              <article className={`faq-card group flex h-full flex-col bg-shell ${faq.featured ? "sm:grid sm:grid-cols-2 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)]" : ""}`}>
+                {faq.featured ? (
+                  // Bakgrunden matchar bildens papperston så att den oklippta bilden smälter in.
+                  <div className="relative aspect-[2/3] bg-[#f3ece5]">
+                    <Image src={faq.image} alt={faq.alt ?? ""} fill sizes="(min-width: 1152px) 440px, (min-width: 1024px) 40vw, (min-width: 640px) 46vw, 100vw" className="object-contain" />
+                    <span className="absolute left-4 top-3 font-display text-sm tracking-[.08em] text-ink/70" aria-hidden="true">{String(index + 1).padStart(2, "0")}</span>
+                  </div>
+                ) : (
+                  <div className="relative aspect-[16/10] overflow-hidden">
+                    <Image src={faq.image} alt={faq.alt ?? ""} fill sizes="(min-width: 1152px) 540px, (min-width: 640px) 46vw, 100vw" style={{ objectPosition: faq.position }} className="faq-card-image object-cover" />
+                    <span className="absolute left-4 top-3 font-display text-sm tracking-[.08em] text-white/90 [text-shadow:0_1px_8px_rgba(42,38,34,.6)]" aria-hidden="true">{String(index + 1).padStart(2, "0")}</span>
+                  </div>
+                )}
+                <div className={`flex flex-1 flex-col px-6 pb-7 pt-6 ${faq.featured ? "sm:justify-center sm:px-10 lg:px-16" : ""}`}>
+                  <h3 className={`font-display leading-tight text-ink ${faq.featured ? "text-4xl sm:text-5xl lg:text-6xl" : "text-3xl"}`}>{faq.title}</h3>
                   <span className="mt-4 block h-px w-10 bg-ink/25 transition-all duration-500 group-hover:w-16" aria-hidden="true" />
-                  <p className="mt-4 leading-7 text-ink/75">{faq.a}</p>
+                  <p className={`mt-4 text-ink/75 ${faq.featured ? "max-w-md text-lg leading-8" : "leading-7"}`}>{faq.a}</p>
                 </div>
               </article>
             </li>
