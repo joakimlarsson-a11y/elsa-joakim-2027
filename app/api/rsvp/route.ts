@@ -69,7 +69,7 @@ export async function POST(request: Request) {
       .map((person) => `<li><strong>${escapeHtml(person.name)}</strong> (${escapeHtml(person.email)})<br>Busstransport: ${person.bus}${person.allergies ? `<br>Specialkost: ${escapeHtml(person.allergies)}` : ""}</li>`)
       .join("");
     await resend.emails.send({
-      from: "Elsa & Joakim <onboarding@resend.dev>",
+      from: "Elsa & Joakim <osa@elsajoakim2027.se>",
       to: primary.email,
       subject: "Tack för din OSA!",
       html: `<div style="font-family:Arial,sans-serif;max-width:600px;margin:auto;color:#1d2140;line-height:1.6">

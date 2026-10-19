@@ -47,7 +47,7 @@ export async function sendInvitationConfirmation({ to, groupName, guests, editLi
   const safeLink = escapeHtml(editLink);
 
   await new Resend(resendKey).emails.send({
-    from: "Elsa & Joakim <onboarding@resend.dev>",
+    from: "Elsa & Joakim <osa@elsajoakim2027.se>",
     to,
     subject: text.subject,
     html: `<div style="font-family:Arial,sans-serif;max-width:600px;margin:auto;color:#1d2140;line-height:1.6">
