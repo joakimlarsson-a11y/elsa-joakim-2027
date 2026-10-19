@@ -86,8 +86,7 @@ export default function RSVPForm() {
                   <input id={`${prefix}-name`} required type="text" autoComplete={index === 0 ? "name" : "off"} value={person.name} onChange={(e) => update(person.id, { name: e.target.value })} className={inputClass} />
                 </label>
                 <label htmlFor={`${prefix}-email`} className="block text-sm font-medium">E-post
-                  {index > 0 && <span id={`${prefix}-email-hint`} className="mt-1 block font-normal text-ink/75">Har barnet ingen egen e-post? Ange förälderns.</span>}
-                  <input id={`${prefix}-email`} required type="email" autoComplete={index === 0 ? "email" : "off"} aria-describedby={index > 0 ? `${prefix}-email-hint` : undefined} value={person.email} onChange={(e) => update(person.id, { email: e.target.value })} className={inputClass} />
+                  <input id={`${prefix}-email`} required type="email" autoComplete={index === 0 ? "email" : "off"} value={person.email} onChange={(e) => update(person.id, { email: e.target.value })} className={inputClass} />
                 </label>
                 <label htmlFor={`${prefix}-allergies`} className="block text-sm font-medium">Allergier eller specialkost<span className="ml-2 font-normal text-ink/70">valfritt</span>
                   <textarea id={`${prefix}-allergies`} rows={2} value={person.allergies} onChange={(e) => update(person.id, { allergies: e.target.value })} className={inputClass} />
