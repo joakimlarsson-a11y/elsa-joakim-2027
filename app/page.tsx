@@ -237,9 +237,9 @@ export default async function Home({ searchParams }: HomeProps) {
       </section>
 
       <section id="fragor" className="mx-auto max-w-6xl scroll-mt-4 px-6 py-24 lg:px-10 lg:py-32" aria-labelledby="faq-title">
-        <div className="grid gap-6 lg:grid-cols-[1fr_1.2fr] lg:items-end">
+        <div>
           <h2 id="faq-title" data-reveal="up" className={`${h2} text-ink`}>Frågor <span className="font-accent text-ember">&</span> svar</h2>
-          <p data-reveal="up" style={delay(120)} className="max-w-xl text-lg leading-8 text-ink/75">Det mesta ni undrar över, samlat på ett ställe.</p>
+          <p data-reveal="up" style={delay(120)} className="mt-6 max-w-xl text-lg leading-8 text-ink/75">Det mesta ni undrar över, samlat på ett ställe.</p>
         </div>
         <ul className="mt-14 grid gap-6 sm:grid-cols-2 lg:gap-8">
           {faqs.map((faq, index) => (
