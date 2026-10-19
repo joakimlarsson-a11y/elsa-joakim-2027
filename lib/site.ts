@@ -17,15 +17,15 @@ export const WEDDING = {
   /** T.ex. "Kavaj". */
   dressCode: "Kavaj",
   /** Förklaring av klädkoden, visas under Frågor. */
-  dressCodeNote: "Kostym, gärna med slips, eller en festlig klänning, kjol eller byxdress. Klänningen kan vara knälång eller längre, men långklänning behövs inte. Ta gärna med en tröja eller sjal, det kan bli svalt vid havet på kvällen.",
+  dressCodeNote: "Midsommar är runt hörnet, se inspirationsbild. Ta gärna med en tröja eller sjal, det kan bli svalt vid havet på kvällen.",
   /** T.ex. "Barn är varmt välkomna!" */
-  children: "Barn är varmt välkomna till ceremonin i kyrkan. Till middagen och festen på kvällen kan vi bara ta emot spädbarn. Vi hoppas att ni förstår och kan ordna barnvakt för de större. Spädbarn behöver inte anmälas i OSA:n.",
+  children: "Barn är varmt välkomna till ceremonin i kyrkan. Under middagen och festen råder vuxet sällskap. Spädbarn är givetvis välkomna, de behöver inte anmälas i OSA:n.",
   /** Länk till delat fotoalbum efter dagen. */
   photoAlbumUrl: ""
 } as const;
 
 export const SCHEDULE = [
-  { time: "14:00", title: "Ceremoni", place: "Ölmevalla Kyrka", text: "Vi säger ja till varandra igen under de vackra valven." },
+  { time: "14:00", title: "Ceremoni", place: "Ölmevalla Kyrka", text: "Vi förnyar våra löften." },
   { time: "16:00", title: "Buss mot havet", place: "Från kyrkan till Långedrag", text: "Bussen avgår direkt från kyrkan. Ange i OSA:n om ni vill åka med." },
   { time: "16:30", title: "Mingel", place: "Långedrags Värdshus", text: "Välkomstskål och tid att landa tillsammans." },
   { time: "18:30", title: "Middag", place: "Långedrags Värdshus", text: "En kväll fylld av god mat, tal och skratt." }

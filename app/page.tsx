@@ -21,14 +21,14 @@ export async function generateMetadata({ searchParams }: HomeProps): Promise<Met
 
 const story = [
   { src: "/photos/selfie.jpg", alt: "Elsa och Joakim lutar huvudena mot varandra och ler", caption: "Vi två." },
-  { src: "/photos/familj.jpg", alt: "Elsa och Joakim med sin dotter i en grön trädgård", caption: "Och så blev vi fler." },
-  { src: "/photos/bubbel.jpg", alt: "Elsa och Joakim skålar i bubbel på klipporna vid havet", caption: "Bubbel på klipporna. Havet är vårt ställe." },
-  { src: "/photos/midsommar.jpg", alt: "Elsa och Joakim med blomsterkransar på midsommar", caption: "Midsommar, med kransar." },
-  { src: "/photos/hyrox.jpg", alt: "Elsa och Joakim spänner musklerna efter målgång på Hyrox", caption: "Hyrox. Vi tog oss i mål, tillsammans." },
-  { src: "/photos/kyss.jpg", alt: "Elsa och Joakim kysser varandra framför en grön häck", caption: "Ja, vi gillar varandra." },
-  { src: "/photos/solnedgang.jpg", alt: "Elsa och Joakim ler i solen på en uteservering", caption: "Sena eftermiddagar i solen." },
-  { src: "/photos/smoking.jpg", alt: "Elsa och Joakim med sin son, klädda i festkläder", caption: "Uppklädda, alla tre." },
-  { src: "/photos/skratt.jpg", alt: "Elsa och Joakim skrattar mot varandra i festkläder", caption: "Snart skrattar vi med er." }
+  { src: "/photos/familj.jpg", alt: "Elsa och Joakim med sin dotter i en grön trädgård", caption: "Och så blev vi fler, fina Viola!" },
+  { src: "/photos/bubbel.jpg", alt: "Elsa och Joakim skålar i bubbel på klipporna vid havet", caption: "Bubbel på klipporna i Krokvik" },
+  { src: "/photos/midsommar.jpg", alt: "Elsa och Joakim med blomsterkransar på midsommar", caption: "Midsommar på landet" },
+  { src: "/photos/hyrox.jpg", alt: "Elsa och Joakim spänner musklerna efter målgång på Hyrox", caption: "Tillsammans har vi hittat vår grej" },
+  { src: "/photos/kyss.jpg", alt: "Elsa och Joakim kysser varandra framför en grön häck", caption: "Underbara minnen i Italien" },
+  { src: "/photos/solnedgang.jpg", alt: "Elsa och Joakim ler i solen på en uteservering", caption: "Häng på älskade Brewshack i Åsa" },
+  { src: "/photos/smoking.jpg", alt: "Elsa och Joakim med sin son, klädda i festkläder", caption: "Vilhelms första nyår" },
+  { src: "/photos/skratt.jpg", alt: "Elsa och Joakim skrattar mot varandra i festkläder", caption: "Vi längtar efter att fira med er!" }
 ];
 
 const navLinks = [
@@ -38,13 +38,12 @@ const navLinks = [
   { href: "#osa", label: "OSA" }
 ];
 
-const faqs = [
-  { title: "Svara senast", a: `Senast den ${WEDDING.rsvpBy}, via formuläret längre ner. En anmälan per sällskap räcker.`, image: "/photos/vigsel.jpg", position: "center" },
-  ...(WEDDING.dressCode ? [{ title: `Klädkod: ${WEDDING.dressCode}`, a: WEDDING.dressCodeNote, image: "/photos/skal.jpg", position: "center 30%" }] : []),
+type Faq = { title: string; a: string; image: string; position: string; alt?: string };
+
+const faqs: Faq[] = [
+  // Texten hänvisar till bilden som inspiration, så den behöver en alt-text.
+  ...(WEDDING.dressCode ? [{ title: `Klädkod: ${WEDDING.dressCode}`, a: WEDDING.dressCodeNote, image: "/photos/skal.jpg", position: "center 30%", alt: "Inspirationsbild: Elsa i en mönstrad, långärmad klänning och Joakim i ljus kavaj, vit skjorta och ljusa byxor" }] : []),
   ...(WEDDING.children ? [{ title: "Barnen", a: WEDDING.children, image: "/photos/familj.jpg", position: "center 30%" }] : []),
-  { title: "Buss till festen", a: "Bussen avgår direkt från Ölmevalla Kyrka efter ceremonin. Ange i OSA:n vilka som vill åka med.", image: "/photos/olmevalla-kyrka.jpg", position: "center" },
-  { title: "Hem efter festen", a: "Ingen buss tillbaka. Spårvagn 11 går in mot centrala Göteborg, och taxi går förstås också bra. Boka gärna i förväg.", image: "/photos/draken.jpg", position: "70% center" },
-  { title: "Allergier och specialkost", a: "Skriv det i OSA-formuläret, för var och en i sällskapet, så ser vi till att köket vet om det.", image: "/photos/langedrags-vardshus.jpg", position: "center" },
   { title: "Presenter", a: "Er närvaro är den finaste presenten. Den som ändå vill får gärna bidra till vår resa.", image: "/photos/bubbel.jpg", position: "center 35%" }
 ];
 
@@ -156,7 +155,7 @@ export default async function Home({ searchParams }: HomeProps) {
         <div className="mx-auto grid max-w-6xl gap-12 lg:grid-cols-[1fr_1.4fr]">
           <div data-reveal="up">
             <h2 id="schedule-title" className={`${h2} text-ink`}>Dagen</h2>
-            <p className="mt-6 max-w-sm text-lg leading-8 text-ink/75">Från kyrkans valv till havsbrisen i Långedrag. Så här ser lördagen ut.</p>
+            <p className="mt-6 max-w-sm text-lg leading-8 text-ink/75">Från kyrkan på landet till havsbrisen i Långedrag. Så här ser lördagen ut.</p>
             {!thankYou && <a href="/kalender.ics" className="btn-quiet mt-6 text-ink">Lägg till i kalendern</a>}
           </div>
           <div data-reveal="line" className="relative">
@@ -187,11 +186,11 @@ export default async function Home({ searchParams }: HomeProps) {
 
       <section id="hitta-hit" className="mx-auto max-w-6xl scroll-mt-4 px-6 py-24 lg:px-10 lg:py-32" aria-labelledby="info-title">
         <h2 id="info-title" data-reveal="up" className={`${h2} max-w-2xl text-ink`}>Hitta hit</h2>
-        <p data-reveal="up" style={delay(120)} className="mt-6 max-w-2xl text-lg leading-8 text-ink/75">Ceremonin är i Ölmevalla Kyrka söder om Kungsbacka. Därifrån tar bussen er till Långedrag i västra Göteborg, ungefär 40 minuter längs kusten.</p>
+        <p data-reveal="up" style={delay(120)} className="mt-6 max-w-2xl text-lg leading-8 text-ink/75">Ceremonin är i Ölmevalla Kyrka i Åsa, söder om Kungsbacka. Kom ihåg att vara på plats senast 20 minuter innan ceremonin börjar. Därifrån tar bussen er till Långedrag i västra Göteborg, ungefär 40 minuter längs kusten.</p>
         <div className="mt-14 grid gap-x-8 gap-y-14 md:grid-cols-2">
           {[
-            { venue: VENUES.church, what: "Ceremoni 14:00" },
-            { venue: VENUES.party, what: "Mingel och middag från 16:30" }
+            { venue: VENUES.church, what: "Ceremoni kl. 14:00" },
+            { venue: VENUES.party, what: "Mingel och middag från kl. 16:30" }
           ].map(({ venue, what }, index) => (
             <article key={venue.name} className="flex flex-col">
               <div data-reveal="image" style={delay(index * 160)} className="relative aspect-[4/3] overflow-hidden bg-foam">
@@ -211,7 +210,7 @@ export default async function Home({ searchParams }: HomeProps) {
         <div id="boende" className="mt-28 grid scroll-mt-4 items-center gap-10 lg:grid-cols-[1fr_1.2fr] lg:gap-16">
           <div data-reveal="up">
             <h3 className="font-display text-4xl text-ink sm:text-5xl">Sova över</h3>
-            <p className="mt-6 max-w-xl text-lg leading-8 text-ink/75">Vi sover själva på Clarion Hotel Draken i centrala Göteborg. Det är en bit från Långedrag, men lätt att nå med spårvagn 11 eller taxi efter festen. Det är helt frivilligt att bo där; lös gärna boende som passar er.</p>
+            <p className="mt-6 max-w-xl text-lg leading-8 text-ink/75">Vi övernattar på Clarion Hotel Draken i centrala Göteborg, lätt att nå med spårvagn 11 eller taxi efter festen. Det är helt frivilligt att bo där; lös gärna boende som passar er.</p>
             <ExternalLink className="btn-quiet mt-6 text-ink" href="https://www.strawberry.se/hotell/sverige/goteborg/clarion-hotel-draken/">Läs mer och boka på Strawberry</ExternalLink>
           </div>
           <div data-reveal="image" style={delay(200)} className="relative aspect-[16/10] overflow-hidden">
@@ -241,14 +240,14 @@ export default async function Home({ searchParams }: HomeProps) {
       <section id="fragor" className="mx-auto max-w-6xl scroll-mt-4 px-6 py-24 lg:px-10 lg:py-32" aria-labelledby="faq-title">
         <div className="grid gap-6 lg:grid-cols-[1fr_1.2fr] lg:items-end">
           <h2 id="faq-title" data-reveal="up" className={`${h2} text-ink`}>Frågor <span className="font-accent text-ember">&</span> svar</h2>
-          <p data-reveal="up" style={delay(120)} className="max-w-xl text-lg leading-8 text-ink/75">Det mesta ni undrar över, samlat på ett ställe. Hittar ni inte svaret? Fråga Jenny.</p>
+          <p data-reveal="up" style={delay(120)} className="max-w-xl text-lg leading-8 text-ink/75">Det mesta ni undrar över, samlat på ett ställe.</p>
         </div>
         <ul className="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-3 lg:gap-8">
           {faqs.map((faq, index) => (
             <li key={faq.title} data-reveal="up" style={delay((index % 3) * 120)}>
               <article className="faq-card group flex h-full flex-col bg-shell">
                 <div className="relative aspect-[16/10] overflow-hidden">
-                  <Image src={faq.image} alt="" fill sizes="(min-width: 1152px) 340px, (min-width: 1024px) 30vw, (min-width: 640px) 46vw, 100vw" style={{ objectPosition: faq.position }} className="faq-card-image object-cover" />
+                  <Image src={faq.image} alt={faq.alt ?? ""} fill sizes="(min-width: 1152px) 340px, (min-width: 1024px) 30vw, (min-width: 640px) 46vw, 100vw" style={{ objectPosition: faq.position }} className="faq-card-image object-cover" />
                   <span className="absolute left-4 top-3 font-display text-sm tracking-[.08em] text-white/90 [text-shadow:0_1px_8px_rgba(42,38,34,.6)]" aria-hidden="true">{String(index + 1).padStart(2, "0")}</span>
                 </div>
                 <div className="flex flex-1 flex-col px-6 pb-7 pt-6">
