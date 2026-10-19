@@ -1,8 +1,7 @@
 "use server";
 
 import { sendInvitationConfirmation } from "@/lib/email";
-import { requestOrigin } from "@/lib/origin";
-import { clean, invitationLink, isEmail, UUID_PATTERN } from "@/lib/site";
+import { clean, invitationLink, isEmail, SITE_URL, UUID_PATTERN } from "@/lib/site";
 import { createAnonClient, createServiceClient } from "@/lib/supabase/server";
 import { loadInvitation } from "./load-invitation";
 import type { GuestResponse } from "./types";
@@ -68,7 +67,7 @@ export async function submitInvitationRsvp(token: unknown, rawResponses: unknown
           to: invitation.email,
           groupName: invitation.group_name,
           guests: (invitation.guests ?? []).map((guest) => ({ ...guest, attending: guest.attending === true })),
-          editLink: `${invitationLink(await requestOrigin(), token)}#osa`
+          editLink: `${invitationLink(SITE_URL, token)}#osa`
         });
       }
     }

@@ -1,3 +1,6 @@
+/** Publik adress till sajten. Används i mejl så att länkar alltid matchar avsändardomänen. */
+export const SITE_URL = "https://elsajoakim2027.se";
+
 export const UUID_PATTERN = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
 /** Kontaktadress till toastmadame Jenny. */
