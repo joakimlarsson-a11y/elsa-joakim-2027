@@ -222,7 +222,7 @@ export default async function Home({ searchParams }: HomeProps) {
       <section className="on-dark bg-ink px-6 py-24 text-white lg:px-10 lg:py-32" aria-labelledby="toast-title">
         <div className="mx-auto grid max-w-6xl items-center gap-12 lg:grid-cols-[18rem_1fr] lg:gap-16">
           <div className="relative mx-auto aspect-[4/5] w-full max-w-[18rem] overflow-hidden lg:mx-0">
-            <Image src="/photos/jenny.jpg" alt="Jenny Bergdahl i blommig klänning och glasögon, leende" fill sizes="288px" className="object-cover object-top" />
+            <Image src="/photos/jenny.jpg" alt="Jenny Bergdahl i glasögon och svart skjorta, leende" fill sizes="288px" className="object-cover" />
           </div>
           <div className="min-w-0">
             <h2 id="toast-title" className={h2}>Toastmadame</h2>
