@@ -38,13 +38,13 @@ const navLinks = [
   { href: "#osa", label: "OSA" }
 ];
 
-type Faq = { title: string; a: string; image: string; position: string; alt?: string; featured?: boolean; lightImage?: boolean };
+type Faq = { title: string; a: string; image: string; position: string; alt?: string; featured?: boolean };
 
 const faqs: Faq[] = [
   // Inspirationsbilden innehåller text, så den visas oklippt och beskrivs i alt-texten.
   ...(WEDDING.dressCode ? [{ title: `Klädkod: ${WEDDING.dressCode}`, a: WEDDING.dressCodeNote, image: "/photos/kladkod-farger.jpg", position: "center", featured: true, alt: "Inspirationsbild: Vår bröllopsfärgskala, en midsommardröm. En bukett med rosa och ljusgula rosor, ljusblå blommor, slöjblomster och salviagröna blad, knuten med vitt band. Färgerna är rosa, ljusgul, salviagrön, ljusblå och ljusgrå. Vi ser fram emot att fira vår stora dag med er, och hoppas att ni vill klä er i färgerna från vår bröllopsbukett!" }] : []),
   ...(WEDDING.children ? [{ title: "Barnen", a: WEDDING.children, image: "/photos/barnen.jpg", position: "center 18%" }] : []),
-  { title: "Presenter", a: "Er närvaro är den finaste presenten. Den som ändå vill får gärna bidra till vår resa.", image: "/photos/presenter-resa.svg", position: "center", lightImage: true }
+  { title: "Presenter", a: "Er närvaro är den finaste presenten. Den som ändå vill får gärna bidra till vår resa.", image: "/photos/presenter.jpg", position: "center 40%", alt: "Joakim och Elsa ler mot kameran, han med en stor blombukett i papper och hon med rosa rosor i en glasburk." }
 ];
 
 const h2 = "font-display text-[clamp(2.5rem,9vw,4rem)] leading-[1] [hyphens:auto]";
@@ -255,7 +255,7 @@ export default async function Home({ searchParams }: HomeProps) {
                 ) : (
                   <div className="relative aspect-[16/10] overflow-hidden">
                     <Image src={faq.image} alt={faq.alt ?? ""} fill sizes="(min-width: 1152px) 540px, (min-width: 640px) 46vw, 100vw" style={{ objectPosition: faq.position }} className="faq-card-image object-cover" />
-                    <span className={`absolute left-4 top-3 font-display text-sm tracking-[.08em] ${faq.lightImage ? "text-ink/70" : "text-white/90 [text-shadow:0_1px_8px_rgba(42,38,34,.6)]"}`} aria-hidden="true">{String(index + 1).padStart(2, "0")}</span>
+                    <span className="absolute left-4 top-3 font-display text-sm tracking-[.08em] text-white/90 [text-shadow:0_1px_8px_rgba(42,38,34,.6)]" aria-hidden="true">{String(index + 1).padStart(2, "0")}</span>
                   </div>
                 )}
                 <div className={`flex flex-1 flex-col px-6 pb-7 pt-6 ${faq.featured ? "sm:justify-center sm:px-10 lg:px-16" : ""}`}>
