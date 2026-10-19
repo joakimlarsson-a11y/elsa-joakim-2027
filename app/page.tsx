@@ -41,7 +41,7 @@ const navLinks = [
 type Faq = { title: string; a: string | readonly string[]; image: string; position: string; alt?: string; featured?: boolean; kicker?: string; signoff?: string };
 
 const faqs: Faq[] = [
-  ...(WEDDING.dressCode ? [{ title: `Klädkod: ${WEDDING.dressCode}`, a: WEDDING.dressCodeNote, kicker: WEDDING.dressCodeKicker, signoff: WEDDING.dressCodeSignoff, image: "/photos/kladkod-farger.jpg", position: "center", featured: true, alt: "Inspirationsbild: vår bröllopsbukett med rosa och ljusgula rosor, ljusblå blommor, slöjblomster och salviagröna blad, knuten med vitt band, bredvid fem färgprover." }] : []),
+  ...(WEDDING.dressCode ? [{ title: `Klädkod: ${WEDDING.dressCode}`, a: WEDDING.dressCodeNote, kicker: WEDDING.dressCodeKicker, signoff: WEDDING.dressCodeSignoff, image: "/photos/kladkod-farger.jpg", position: "center", featured: true, alt: "Inspirationsbild: vår bröllopsbukett med rosa och ljusgula rosor, ljusblå blommor, slöjblomster och salviagröna blad, knuten med vitt band, bredvid fem färgprover märkta rosa, ljusgul, salviagrön, ljusblå och ljusgrå, med blomrankor i hörnen." }] : []),
   ...(WEDDING.children ? [{ title: "Barnen", a: WEDDING.children, image: "/photos/barnen.jpg", position: "center 18%" }] : []),
   { title: "Presenter", a: "Er närvaro är den finaste presenten. Den som ändå vill får gärna bidra till vår resa.", image: "/photos/presenter.jpg", position: "center 40%", alt: "Joakim och Elsa ler mot kameran, han med en stor blombukett i papper och hon med rosa rosor i en glasburk." }
 ];
@@ -247,7 +247,7 @@ export default async function Home({ searchParams }: HomeProps) {
               <article className={`faq-card group flex h-full flex-col bg-shell ${faq.featured ? "sm:grid sm:grid-cols-2" : ""}`}>
                 {faq.featured ? (
                   // Bakgrunden matchar bildens papperston så att den oklippta bilden smälter in.
-                  <div className="relative aspect-[1024/854] bg-[#f3ece5] sm:aspect-auto sm:min-h-full">
+                  <div className="relative aspect-[1024/1330] bg-[#f3ece5]">
                     <Image src={faq.image} alt={faq.alt ?? ""} fill sizes="(min-width: 1152px) 600px, (min-width: 640px) 50vw, 100vw" className="object-contain" />
                     <span className="absolute left-4 top-3 font-display text-sm tracking-[.08em] text-ink/70" aria-hidden="true">{String(index + 1).padStart(2, "0")}</span>
                   </div>

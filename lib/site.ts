@@ -18,8 +18,7 @@ export const WEDDING = {
   dressCode: "Kavaj",
   /** Förklaring av klädkoden, visas under Frågor. Ett stycke per rad. */
   dressCodeNote: [
-    "Vi ser fram emot att fira vår stora dag med er, och hoppas att ni vill klä er i färgerna från vår bröllopsbukett: rosa, ljusgul, salviagrön, ljusblå och ljusgrå.",
-    "Ta gärna med en tröja eller sjal, det kan bli svalt vid havet på kvällen."
+    "Vi ser fram emot att fira vår stora dag med er, och hoppas att ni vill klä er i färgerna från vår bröllopsbukett: rosa, ljusgul, salviagrön, ljusblå och ljusgrå."
   ],
   /** Rubrik och hälsning från inspirationsbilden. */
   dressCodeKicker: "En midsommardröm",
