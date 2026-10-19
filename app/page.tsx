@@ -38,11 +38,10 @@ const navLinks = [
   { href: "#osa", label: "OSA" }
 ];
 
-type Faq = { title: string; a: string; image: string; position: string; alt?: string; featured?: boolean };
+type Faq = { title: string; a: string | readonly string[]; image: string; position: string; alt?: string; featured?: boolean; kicker?: string; signoff?: string };
 
 const faqs: Faq[] = [
-  // Inspirationsbilden innehåller text, så den visas oklippt och beskrivs i alt-texten.
-  ...(WEDDING.dressCode ? [{ title: `Klädkod: ${WEDDING.dressCode}`, a: WEDDING.dressCodeNote, image: "/photos/kladkod-farger.jpg", position: "center", featured: true, alt: "Inspirationsbild: Vår bröllopsfärgskala, en midsommardröm. En bukett med rosa och ljusgula rosor, ljusblå blommor, slöjblomster och salviagröna blad, knuten med vitt band. Färgerna är rosa, ljusgul, salviagrön, ljusblå och ljusgrå. Vi ser fram emot att fira vår stora dag med er, och hoppas att ni vill klä er i färgerna från vår bröllopsbukett!" }] : []),
+  ...(WEDDING.dressCode ? [{ title: `Klädkod: ${WEDDING.dressCode}`, a: WEDDING.dressCodeNote, kicker: WEDDING.dressCodeKicker, signoff: WEDDING.dressCodeSignoff, image: "/photos/kladkod-farger.jpg", position: "center", featured: true, alt: "Inspirationsbild: vår bröllopsbukett med rosa och ljusgula rosor, ljusblå blommor, slöjblomster och salviagröna blad, knuten med vitt band, bredvid fem färgprover." }] : []),
   ...(WEDDING.children ? [{ title: "Barnen", a: WEDDING.children, image: "/photos/barnen.jpg", position: "center 18%" }] : []),
   { title: "Presenter", a: "Er närvaro är den finaste presenten. Den som ändå vill får gärna bidra till vår resa.", image: "/photos/presenter.jpg", position: "center 40%", alt: "Joakim och Elsa ler mot kameran, han med en stor blombukett i papper och hon med rosa rosor i en glasburk." }
 ];
@@ -245,23 +244,27 @@ export default async function Home({ searchParams }: HomeProps) {
         <ul className="mt-14 grid gap-6 sm:grid-cols-2 lg:gap-8">
           {faqs.map((faq, index) => (
             <li key={faq.title} data-reveal="up" style={delay((index % 3) * 120)} className={faq.featured ? "sm:col-span-2" : undefined}>
-              <article className={`faq-card group flex h-full flex-col bg-shell ${faq.featured ? "sm:grid sm:grid-cols-2 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)]" : ""}`}>
+              <article className={`faq-card group flex h-full flex-col bg-shell ${faq.featured ? "sm:grid sm:grid-cols-2" : ""}`}>
                 {faq.featured ? (
                   // Bakgrunden matchar bildens papperston så att den oklippta bilden smälter in.
-                  <div className="relative aspect-[2/3] bg-[#f3ece5]">
-                    <Image src={faq.image} alt={faq.alt ?? ""} fill sizes="(min-width: 1152px) 440px, (min-width: 1024px) 40vw, (min-width: 640px) 46vw, 100vw" className="object-contain" />
+                  <div className="relative aspect-[1024/854] bg-[#f3ece5] sm:aspect-auto sm:min-h-full">
+                    <Image src={faq.image} alt={faq.alt ?? ""} fill sizes="(min-width: 1152px) 600px, (min-width: 640px) 50vw, 100vw" className="object-contain" />
                     <span className="absolute left-4 top-3 font-display text-sm tracking-[.08em] text-ink/70" aria-hidden="true">{String(index + 1).padStart(2, "0")}</span>
                   </div>
                 ) : (
-                  <div className="relative aspect-[16/10] overflow-hidden">
+                  <div className="relative aspect-[4/3] overflow-hidden">
                     <Image src={faq.image} alt={faq.alt ?? ""} fill sizes="(min-width: 1152px) 540px, (min-width: 640px) 46vw, 100vw" style={{ objectPosition: faq.position }} className="faq-card-image object-cover" />
                     <span className="absolute left-4 top-3 font-display text-sm tracking-[.08em] text-white/90 [text-shadow:0_1px_8px_rgba(42,38,34,.6)]" aria-hidden="true">{String(index + 1).padStart(2, "0")}</span>
                   </div>
                 )}
                 <div className={`flex flex-1 flex-col px-6 pb-7 pt-6 ${faq.featured ? "sm:justify-center sm:px-10 lg:px-16" : ""}`}>
                   <h3 className={`font-display leading-tight text-ink ${faq.featured ? "text-4xl sm:text-5xl lg:text-6xl" : "text-3xl"}`}>{faq.title}</h3>
+                  {faq.kicker && <p className="mt-2 font-accent text-3xl leading-tight text-ember">{faq.kicker}</p>}
                   <span className="mt-4 block h-px w-10 bg-ink/25 transition-all duration-500 group-hover:w-16" aria-hidden="true" />
-                  <p className={`mt-4 text-ink/75 ${faq.featured ? "max-w-md text-lg leading-8" : "leading-7"}`}>{faq.a}</p>
+                  {(typeof faq.a === "string" ? [faq.a] : faq.a).map((paragraph) => (
+                    <p key={paragraph} className={`mt-4 text-ink/75 ${faq.featured ? "max-w-md text-lg leading-8" : "leading-7"}`}>{paragraph}</p>
+                  ))}
+                  {faq.signoff && <p className="mt-6 font-accent text-2xl leading-snug text-ink/80">{faq.signoff}</p>}
                 </div>
               </article>
             </li>
