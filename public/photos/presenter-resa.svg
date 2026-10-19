@@ -1,0 +1,123 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 1000" width="1600" height="1000">
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#f6f2ec"/>
+      <stop offset="0.7" stop-color="#efe2d0"/>
+      <stop offset="1" stop-color="#e9d3bb"/>
+    </linearGradient>
+    <linearGradient id="sea" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#55686c"/>
+      <stop offset="1" stop-color="#3f5054"/>
+    </linearGradient>
+    <linearGradient id="case" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#9a5638"/>
+      <stop offset="1" stop-color="#7d4229"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Himmel, sol och hav -->
+  <rect width="1600" height="600" fill="url(#sky)"/>
+  <circle cx="1180" cy="560" r="130" fill="#ecc39a"/>
+  <circle cx="1180" cy="560" r="96" fill="#f1cfa8"/>
+  <g fill="none" stroke="#e3dcd0" stroke-linecap="round" stroke-width="5" opacity=".8">
+    <path d="M140 250 q60 -26 120 0 t120 0"/>
+    <path d="M1300 200 q40 -18 80 0 t80 0"/>
+  </g>
+  <rect y="560" width="1600" height="440" fill="url(#sea)"/>
+  <g stroke-linecap="round" fill="none">
+    <g stroke="#ecc39a" stroke-width="7" opacity=".85">
+      <path d="M1100 600 h160"/>
+      <path d="M1125 635 h110"/>
+      <path d="M1145 672 h70"/>
+    </g>
+    <g stroke="#7d8e90" stroke-width="5" opacity=".7">
+      <path d="M120 640 q40 -16 80 0 t80 0"/>
+      <path d="M560 700 q40 -16 80 0 t80 0"/>
+      <path d="M1340 720 q40 -16 80 0 t80 0"/>
+      <path d="M260 760 q40 -16 80 0 t80 0"/>
+    </g>
+  </g>
+
+  <!-- Strand -->
+  <path d="M0 820 C 320 770 620 790 900 800 S 1400 770 1600 790 V1000 H0 Z" fill="#e3dcd0"/>
+  <path d="M0 860 C 360 830 700 850 1000 852 S 1450 832 1600 845 V1000 H0 Z" fill="#ece6dc"/>
+
+  <!-- Skugga -->
+  <ellipse cx="760" cy="880" rx="400" ry="26" fill="#2a2622" opacity=".12"/>
+
+  <!-- Resväska -->
+  <g>
+    <path d="M660 450 v-46 a28 28 0 0 1 28 -28 h144 a28 28 0 0 1 28 28 v46" fill="none" stroke="#5e321f" stroke-width="22" stroke-linecap="round"/>
+    <rect x="460" y="448" width="600" height="420" rx="36" fill="url(#case)"/>
+    <rect x="460" y="448" width="600" height="420" rx="36" fill="none" stroke="#5e321f" stroke-width="6"/>
+    <path d="M478 520 H1042" stroke="#6e3a25" stroke-width="6"/>
+    <!-- Remmar -->
+    <rect x="570" y="448" width="54" height="420" fill="#6e3a25"/>
+    <rect x="896" y="448" width="54" height="420" fill="#6e3a25"/>
+    <rect x="562" y="600" width="70" height="56" rx="8" fill="none" stroke="#d9b98c" stroke-width="8"/>
+    <rect x="888" y="600" width="70" height="56" rx="8" fill="none" stroke="#d9b98c" stroke-width="8"/>
+    <!-- Hörnskydd -->
+    <g fill="#5e321f">
+      <path d="M460 520 v-36 a36 36 0 0 1 36 -36 h36 v22 h-30 a20 20 0 0 0 -20 20 v30 Z"/>
+      <path d="M1060 520 v-36 a36 36 0 0 0 -36 -36 h-36 v22 h30 a20 20 0 0 1 20 20 v30 Z"/>
+      <path d="M460 796 v36 a36 36 0 0 0 36 36 h36 v-22 h-30 a20 20 0 0 1 -20 -20 v-30 Z"/>
+      <path d="M1060 796 v36 a36 36 0 0 1 -36 36 h-36 v-22 h30 a20 20 0 0 0 20 -20 v-30 Z"/>
+    </g>
+    <!-- Klistermärken -->
+    <circle cx="745" cy="700" r="62" fill="#9aab98"/>
+    <circle cx="745" cy="700" r="48" fill="none" stroke="#f6f2ec" stroke-width="4" stroke-dasharray="6 9"/>
+    <path d="M715 712 l20 -36 l14 22 l10 -12 l22 26 Z" fill="#f6f2ec"/>
+    <rect x="790" y="600" width="86" height="58" rx="6" fill="#e8b4b8" transform="rotate(-8 833 629)"/>
+    <circle cx="833" cy="629" r="14" fill="#f6f2ec" transform="rotate(-8 833 629)"/>
+    <!-- Adresslapp -->
+    <path d="M780 392 C 760 440 700 470 680 520" fill="none" stroke="#2a2622" stroke-width="3"/>
+    <g transform="rotate(-14 660 580)">
+      <path d="M612 520 h96 v128 a8 8 0 0 1 -8 8 h-80 a8 8 0 0 1 -8 -8 Z" fill="#f6f2ec" stroke="#2a2622" stroke-width="3"/>
+      <circle cx="660" cy="540" r="7" fill="none" stroke="#2a2622" stroke-width="3"/>
+      <text x="660" y="600" text-anchor="middle" font-family="Georgia, serif" font-style="italic" font-size="34" fill="#8a4a30">E&amp;J</text>
+      <path d="M630 624 h60" stroke="#2a2622" stroke-width="2" opacity=".4"/>
+    </g>
+  </g>
+
+  <!-- Biljetter -->
+  <g transform="rotate(-10 1210 780)">
+    <rect x="1080" y="700" width="280" height="130" rx="10" fill="#f6f2ec" stroke="#2a2622" stroke-width="3"/>
+    <rect x="1080" y="700" width="280" height="30" rx="10" fill="#3f5054"/>
+    <rect x="1080" y="716" width="280" height="14" fill="#3f5054"/>
+    <path d="M1290 736 v90" stroke="#2a2622" stroke-width="3" stroke-dasharray="6 8" opacity=".5"/>
+    <path d="M1110 770 h140 M1110 796 h90" stroke="#2a2622" stroke-width="4" stroke-linecap="round" opacity=".35"/>
+    <path d="M1340 790 l-30 -14 l6 14 l-6 14 Z" fill="#8a4a30"/>
+  </g>
+  <g transform="rotate(6 1250 850)">
+    <rect x="1120" y="790" width="280" height="130" rx="10" fill="#f6f2ec" stroke="#2a2622" stroke-width="3"/>
+    <rect x="1120" y="790" width="280" height="30" rx="10" fill="#8a4a30"/>
+    <rect x="1120" y="806" width="280" height="14" fill="#8a4a30"/>
+    <path d="M1330 826 v90" stroke="#2a2622" stroke-width="3" stroke-dasharray="6 8" opacity=".5"/>
+    <path d="M1150 860 h140 M1150 886 h90" stroke="#2a2622" stroke-width="4" stroke-linecap="round" opacity=".35"/>
+    <path d="M1380 880 l-30 -14 l6 14 l-6 14 Z" fill="#3f5054"/>
+  </g>
+
+  <!-- Kvist i bröllopsfärgerna -->
+  <g stroke-linecap="round">
+    <path d="M300 960 C 290 880 270 820 230 760" fill="none" stroke="#7f927d" stroke-width="6"/>
+    <path d="M300 960 C 320 890 360 840 400 800" fill="none" stroke="#7f927d" stroke-width="6"/>
+    <path d="M300 960 C 300 900 310 830 320 740" fill="none" stroke="#7f927d" stroke-width="6"/>
+    <g fill="#9aab98">
+      <ellipse cx="258" cy="840" rx="30" ry="13" transform="rotate(-40 258 840)"/>
+      <ellipse cx="364" cy="846" rx="30" ry="13" transform="rotate(-35 364 846)"/>
+      <ellipse cx="290" cy="900" rx="26" ry="11" transform="rotate(30 290 900)"/>
+      <ellipse cx="330" cy="890" rx="26" ry="11" transform="rotate(-25 330 890)"/>
+    </g>
+    <g>
+      <circle cx="230" cy="752" r="26" fill="#e8b4b8"/>
+      <circle cx="230" cy="752" r="10" fill="#d48e95"/>
+      <circle cx="320" cy="732" r="24" fill="#f1dd9a"/>
+      <circle cx="320" cy="732" r="9" fill="#ddc373"/>
+      <circle cx="404" cy="794" r="22" fill="#b9cbe6"/>
+      <circle cx="404" cy="794" r="8" fill="#93abd1"/>
+      <circle cx="272" cy="790" r="8" fill="#f6f2ec"/>
+      <circle cx="362" cy="770" r="8" fill="#f6f2ec"/>
+      <circle cx="286" cy="760" r="6" fill="#f6f2ec"/>
+    </g>
+  </g>
+</svg>
