@@ -32,8 +32,8 @@ export const WEDDING = {
 
 export const SCHEDULE = [
   { time: "14:00", title: "Ceremoni", place: "Ölmevalla Kyrka", text: "Vi förnyar våra löften." },
-  { time: "16:00", title: "Buss mot havet", place: "Från kyrkan till Långedrag", text: "Bussen avgår direkt från kyrkan. Ange i OSA:n om ni vill åka med." },
-  { time: "16:30", title: "Mingel", place: "", text: "Välkomstskål och tid att landa tillsammans." },
+  { time: "16:00", title: "Buss mot havet", place: "Från kyrkan till Långedrags värdshus", text: "Bussen avgår direkt från kyrkan. Ange i OSA:n om ni vill åka med." },
+  { time: "17:00", title: "Mingel", place: "", text: "Välkomstskål och tid att landa tillsammans." },
   { time: "18:30", title: "Middag", place: "", text: "En kväll fylld av god mat, tal och skratt." },
   { time: "22:00", title: "Fest och dans", place: "", text: "Dansgolvet öppnar och vi dansar in i natten tillsammans." }
 ] as const;

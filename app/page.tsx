@@ -154,7 +154,7 @@ export default async function Home({ searchParams }: HomeProps) {
         <div className="mx-auto grid max-w-6xl gap-12 lg:grid-cols-[1fr_1.4fr]">
           <div data-reveal="up">
             <h2 id="schedule-title" className={`${h2} text-ink`}>Dagen</h2>
-            <p className="mt-6 max-w-sm text-lg leading-8 text-ink/75">Från kyrkan på landet till havsbrisen i Långedrag. Så här ser lördagen ut:</p>
+            <p className="mt-6 max-w-sm text-lg leading-8 text-ink/75">Från kyrkan på landet till havsbrisen på västkusten. Så här ser lördagen ut:</p>
           </div>
           <div data-reveal="line" className="relative">
           <span className="timeline-line absolute inset-y-0 left-0 w-px bg-ink/25" aria-hidden="true" />
@@ -188,7 +188,7 @@ export default async function Home({ searchParams }: HomeProps) {
         <div className="mt-14 grid gap-x-8 gap-y-14 md:grid-cols-2">
           {[
             { venue: VENUES.church, what: "Ceremoni kl. 14:00" },
-            { venue: VENUES.party, what: "Mingel och middag från kl. 16:30. Parkering finns i anslutning till värdshuset för er som kommer med egen bil." }
+            { venue: VENUES.party, what: "Mingel och middag från kl. 17:00. Parkering finns i anslutning till värdshuset för er som kommer med egen bil." }
           ].map(({ venue, what }, index) => (
             <article key={venue.name} className="flex flex-col">
               <div data-reveal="image" style={delay(index * 160)} className="relative aspect-[4/3] overflow-hidden bg-foam">
