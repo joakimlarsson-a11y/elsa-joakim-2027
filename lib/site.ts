@@ -51,7 +51,7 @@ export const VENUES = {
     address: "",
     parking: "",
     mapQuery: "Långedrags Värdshus",
-    image: { src: "/photos/langedrags-vardshus.jpg", alt: "Flygbild över Långedrags Värdshus med terrass vid vattnet och marinan full av segelbåtar bakom" }
+    image: { src: "/photos/langedrags-matsal.jpg", alt: "Dukade långbord med vita stolar och blommor i Långedrags Värdshus matsal, med stora fönster ut mot havet och segelbåtar" }
   }
 } as const;
 

@@ -25,7 +25,7 @@ const story = [
   { src: "/photos/bubbel.jpg", alt: "Elsa och Joakim skålar i bubbel på klipporna vid havet", caption: "Bubbel på klipporna i Krokvik" },
   { src: "/photos/midsommar.jpg", alt: "Elsa och Joakim med blomsterkransar på midsommar", caption: "Midsommar på landet" },
   { src: "/photos/hyrox.jpg", alt: "Elsa och Joakim spänner musklerna efter målgång på Hyrox", caption: "Tillsammans har vi hittat vår grej" },
-  { src: "/photos/kyss.jpg", alt: "Elsa och Joakim kysser varandra framför en grön häck", caption: "Underbara minnen i Italien" },
+  { src: "/photos/spanien.jpg", alt: "Elsa och Joakim kysser varandra i solnedgången på en terrass med palmer i bakgrunden", caption: "Underbara minnen i Spanien" },
   { src: "/photos/solnedgang.jpg", alt: "Elsa och Joakim ler i solen på en uteservering", caption: "Häng på älskade Brewshack i Åsa" },
   { src: "/photos/smoking.jpg", alt: "Elsa och Joakim med sin son, klädda i festkläder", caption: "Vilhelms första nyår" },
   { src: "/photos/skratt.jpg", alt: "Elsa och Joakim skrattar mot varandra i festkläder", caption: "Vi längtar efter att fira med er!" }
@@ -302,7 +302,6 @@ export default async function Home({ searchParams }: HomeProps) {
         <p className="mt-8 text-xs text-white/60">
           Foto: {VENUES.church.name},{" "}
           <a href={VENUES.church.image.creditUrl} target="_blank" rel="noreferrer" className="underline decoration-1 underline-offset-2 hover:text-white">Musicus, CC BY-SA 3.0<span className="sr-only"> (öppnas i ny flik)</span></a>
-          {" · "}{VENUES.party.name}, Lasse Olsson
         </p>
       </footer>
 
