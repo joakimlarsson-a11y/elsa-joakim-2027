@@ -3,6 +3,7 @@ import { NextResponse, type NextRequest } from "next/server";
 
 export async function middleware(request: NextRequest) {
   let response = NextResponse.next({ request });
+  if (process.env.NODE_ENV === "development" && request.nextUrl.pathname === "/admin/preview") return response;
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
   const isLogin = request.nextUrl.pathname === "/admin/login";
