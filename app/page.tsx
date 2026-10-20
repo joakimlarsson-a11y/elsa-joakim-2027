@@ -137,11 +137,11 @@ export default async function Home({ searchParams }: HomeProps) {
           <h2 id="story-title" data-reveal="up" className={`${h2} text-ink`}>Vår historia, i bilder</h2>
           <p data-reveal="up" style={delay(120)} className="max-w-xl text-lg leading-8 text-ink/75">Vi har firat mycket tillsammans: midsommar, målgångar, solnedgångar och vanliga tisdagar. Nu vill vi fira det största av dem med er.</p>
         </div>
-        <ul className="mt-14 columns-2 gap-4 md:columns-3 md:gap-6">
+        <ul className="mt-14 grid grid-cols-2 gap-x-4 gap-y-8 md:grid-cols-3 md:gap-x-6 md:gap-y-10">
           {story.map((photo, index) => (
-            <li key={photo.src} className="mb-6 break-inside-avoid md:mb-8">
+            <li key={photo.src}>
               <figure data-reveal="develop" style={delay((index % 3) * 120)}>
-                <Image src={photo.src} alt={photo.alt} width={750} height={1000} sizes="(min-width: 1152px) 360px, (min-width: 768px) 31vw, 46vw" className="h-auto w-full object-cover" />
+                <Image src={photo.src} alt={photo.alt} width={750} height={1000} sizes="(min-width: 1152px) 360px, (min-width: 768px) 31vw, 46vw" className="aspect-[3/4] h-auto w-full object-cover" />
                 <figcaption className="mt-3 text-center font-accent text-lg leading-snug text-ink/80 sm:text-xl">{photo.caption}</figcaption>
               </figure>
             </li>
@@ -164,15 +164,15 @@ export default async function Home({ searchParams }: HomeProps) {
                 <span className="reveal-dot absolute -left-[calc(2rem+3px)] top-4 h-[7px] w-[7px] rounded-full bg-ember ring-4 ring-shell sm:-left-[calc(3rem+3px)]" aria-hidden="true" />
                 <p className="font-display text-4xl text-sea sm:text-5xl"><time dateTime={`2027-06-19T${item.time}`}>{item.time}</time></p>
                 <h3 className="mt-2 text-xl font-medium text-ink">{item.title}</h3>
-                <p className="text-ink/80">{item.place}</p>
+                {item.place && <p className="text-ink/80">{item.place}</p>}
                 <p className="mt-2 max-w-md leading-7 text-ink/75">{item.text}</p>
               </li>
             ))}
             {WEDDING.endTime && (
-              <li data-reveal="up" className="relative pt-12">
-                <span className="reveal-dot absolute -left-[calc(2rem+3px)] top-[4rem] h-[7px] w-[7px] rounded-full border border-ink/50 bg-shell sm:-left-[calc(3rem+3px)]" aria-hidden="true" />
-                <p className="font-display text-4xl text-sea sm:text-5xl">ca {WEDDING.endTime}</p>
-                <h3 className="mt-2 text-xl font-medium text-ink">Kvällen tar slut</h3>
+              <li data-reveal="up" style={delay(SCHEDULE.length * 160)} className="relative">
+                <span className="reveal-dot absolute -left-[calc(2rem+3px)] top-4 h-[7px] w-[7px] rounded-full border border-ink/50 bg-shell sm:-left-[calc(3rem+3px)]" aria-hidden="true" />
+                <p className="font-display text-4xl text-sea sm:text-5xl"><time dateTime={`2027-06-20T${WEDDING.endTime}`}>{WEDDING.endTime}</time></p>
+                <h3 className="mt-2 text-xl font-medium text-ink">Tack för ikväll</h3>
                 <p className="mt-2 max-w-md leading-7 text-ink/75">Ingen buss tillbaka. Spårvagn 11 eller taxi tar er hem.</p>
               </li>
             )}
@@ -188,7 +188,7 @@ export default async function Home({ searchParams }: HomeProps) {
         <div className="mt-14 grid gap-x-8 gap-y-14 md:grid-cols-2">
           {[
             { venue: VENUES.church, what: "Ceremoni kl. 14:00" },
-            { venue: VENUES.party, what: "Mingel och middag från kl. 16:30" }
+            { venue: VENUES.party, what: "Mingel och middag från kl. 16:30. Parkering finns i anslutning till värdshuset för er som kommer med egen bil." }
           ].map(({ venue, what }, index) => (
             <article key={venue.name} className="flex flex-col">
               <div data-reveal="image" style={delay(index * 160)} className="relative aspect-[4/3] overflow-hidden bg-foam">
@@ -290,7 +290,7 @@ export default async function Home({ searchParams }: HomeProps) {
               <div data-reveal="up" style={delay(120)} className="mt-10">{invitation ? <InvitationRsvpForm token={token} invitation={invitation} /> : <RSVPForm />}</div>
             </div>
           </section>
-          <Shoreline className="text-foam" flip />
+          <Shoreline className="bg-ink text-foam" flip />
         </>
       )}
 
