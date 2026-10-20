@@ -48,7 +48,7 @@ export default function NewInvitationForm({ origin }: { origin: string }) {
       )}
       <form onSubmit={submit} className="space-y-5 rounded-2xl bg-shell p-6 sm:p-8">
         <label htmlFor="new-group" className="block text-sm font-semibold">Sällskapsnamn
-          <input id="new-group" required maxLength={200} placeholder="Familjen Svensson" value={groupName} onChange={(e) => setGroupName(e.target.value)} className={inputClass} />
+          <input id="new-group" required autoFocus maxLength={200} placeholder="Familjen Svensson" value={groupName} onChange={(e) => setGroupName(e.target.value)} className={inputClass} />
         </label>
         <label htmlFor="new-guests" className="block text-sm font-semibold">Gäster<span className="ml-2 font-normal text-ink/70">separera med komma</span>
           <textarea id="new-guests" required rows={2} placeholder="Anna Svensson, Erik Svensson" value={guestNames} onChange={(e) => setGuestNames(e.target.value)} className={inputClass} />
