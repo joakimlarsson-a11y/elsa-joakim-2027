@@ -21,10 +21,9 @@ export const WEDDING = {
   dressCode: "Kavaj",
   /** Förklaring av klädkoden, visas under Frågor. Ett stycke per rad. */
   dressCodeNote: [
-    "Vi ser fram emot att fira vår stora dag med er, och hoppas att ni vill klä er i färgerna från vår bröllopsbukett: rosa, ljusgul, salviagrön, ljusblå och ljusgrå."
+    "Vi ser fram emot att fira vår stora dag med er, och hoppas att ni vill klä er i färgerna från vår inspirationsbild."
   ],
   /** Hälsning under klädkoden. */
-  dressCodeSignoff: "Tack för att ni är en del av vår resa!",
   /** T.ex. "Barn är varmt välkomna!" */
   children: "Barn är varmt välkomna till ceremonin i kyrkan. Under middagen och festen råder vuxet sällskap. Spädbarn är givetvis välkomna, de behöver inte anmälas i OSA:n.",
   /** Länk till delat fotoalbum efter dagen. */

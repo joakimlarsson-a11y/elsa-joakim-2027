@@ -38,10 +38,10 @@ const navLinks = [
   { href: "#osa", label: "OSA" }
 ];
 
-type Faq = { title: string; a: string | readonly string[]; image: string; position: string; alt?: string; featured?: boolean; signoff?: string };
+type Faq = { title: string; a: string | readonly string[]; image: string; position: string; alt?: string; featured?: boolean };
 
 const faqs: Faq[] = [
-  ...(WEDDING.dressCode ? [{ title: `Klädkod: ${WEDDING.dressCode}`, a: WEDDING.dressCodeNote, signoff: WEDDING.dressCodeSignoff, image: "/photos/kladkod-farger.jpg", position: "center", featured: true, alt: "Inspirationsbild med rubriken Vår bröllopsfärgskala – En midsommardröm – Kärlek, glädje, tillsammans: vår bröllopsbukett med rosa och ljusgula rosor, ljusblå blommor, slöjblomster och salviagröna blad, knuten med vitt band, bredvid fem färgprover märkta rosa, ljusgul, salviagrön, ljusblå och ljusgrå, med blomrankor i hörnen." }] : []),
+  ...(WEDDING.dressCode ? [{ title: `Klädkod: ${WEDDING.dressCode}`, a: WEDDING.dressCodeNote, image: "/photos/kladkod-farger.jpg", position: "center", featured: true, alt: "Inspirationsbild med rubriken Vår bröllopsfärgskala – En midsommardröm – Kärlek, glädje, tillsammans: vår bröllopsbukett med rosa och ljusgula rosor, ljusblå blommor, slöjblomster och salviagröna blad, knuten med vitt band, bredvid fem färgprover märkta rosa, ljusgul, salviagrön, ljusblå och ljusgrå, med blomrankor i hörnen." }] : []),
   ...(WEDDING.children ? [{ title: "Barnen", a: WEDDING.children, image: "/photos/barnen.jpg", position: "center 18%" }] : []),
   { title: "Presenter", a: "Er närvaro är den finaste presenten. Den som ändå vill får gärna bidra till vår resa.", image: "/photos/presenter.jpg", position: "center 40%", alt: "Joakim och Elsa ler mot kameran, han med en stor blombukett i papper och hon med rosa rosor i en glasburk." }
 ];
@@ -142,7 +142,7 @@ export default async function Home({ searchParams }: HomeProps) {
             <li key={photo.src} className="mb-6 break-inside-avoid md:mb-8">
               <figure data-reveal="develop" style={delay((index % 3) * 120)}>
                 <Image src={photo.src} alt={photo.alt} width={750} height={1000} sizes="(min-width: 1152px) 360px, (min-width: 768px) 31vw, 46vw" className="h-auto w-full object-cover" />
-                <figcaption className="mt-3 font-accent text-lg leading-snug text-ink/80 sm:text-xl">{photo.caption}</figcaption>
+                <figcaption className="mt-3 text-center font-accent text-lg leading-snug text-ink/80 sm:text-xl">{photo.caption}</figcaption>
               </figure>
             </li>
           ))}
@@ -154,8 +154,7 @@ export default async function Home({ searchParams }: HomeProps) {
         <div className="mx-auto grid max-w-6xl gap-12 lg:grid-cols-[1fr_1.4fr]">
           <div data-reveal="up">
             <h2 id="schedule-title" className={`${h2} text-ink`}>Dagen</h2>
-            <p className="mt-6 max-w-sm text-lg leading-8 text-ink/75">Från kyrkan på landet till havsbrisen i Långedrag. Så här ser lördagen ut.</p>
-            {!thankYou && <a href="/kalender.ics" className="btn-quiet mt-6 text-ink">Lägg till i kalendern</a>}
+            <p className="mt-6 max-w-sm text-lg leading-8 text-ink/75">Från kyrkan på landet till havsbrisen i Långedrag. Så här ser lördagen ut:</p>
           </div>
           <div data-reveal="line" className="relative">
           <span className="timeline-line absolute inset-y-0 left-0 w-px bg-ink/25" aria-hidden="true" />
@@ -263,7 +262,6 @@ export default async function Home({ searchParams }: HomeProps) {
                   {(typeof faq.a === "string" ? [faq.a] : faq.a).map((paragraph) => (
                     <p key={paragraph} className={`mt-4 text-ink/75 ${faq.featured ? "max-w-md text-lg leading-8" : "leading-7"}`}>{paragraph}</p>
                   ))}
-                  {faq.signoff && <p className="mt-6 font-accent text-2xl leading-snug text-ink/80">{faq.signoff}</p>}
                 </div>
               </article>
             </li>
