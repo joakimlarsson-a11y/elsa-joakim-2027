@@ -154,7 +154,7 @@ export default async function Home({ searchParams }: HomeProps) {
         <div className="mx-auto grid max-w-6xl gap-12 lg:grid-cols-[1fr_1.4fr]">
           <div data-reveal="up">
             <h2 id="schedule-title" className={`${h2} text-ink`}>Dagen</h2>
-            <p className="mt-6 max-w-sm text-lg leading-8 text-ink/75">Från kyrkan på landet till havsbrisen i Långedrag. Så här ser lördagen ut:</p>
+            <p className="mt-6 max-w-sm text-lg leading-8 text-ink/75">Från kyrkan på landet till havsbrisen på västkusten. Så här ser lördagen ut:</p>
           </div>
           <div data-reveal="line" className="relative">
           <span className="timeline-line absolute inset-y-0 left-0 w-px bg-ink/25" aria-hidden="true" />
@@ -187,8 +187,8 @@ export default async function Home({ searchParams }: HomeProps) {
         <p data-reveal="up" style={delay(120)} className="mt-6 max-w-2xl text-lg leading-8 text-ink/75">Ceremonin är i Ölmevalla Kyrka i Åsa, söder om Kungsbacka. Kom ihåg att vara på plats senast 20 minuter innan ceremonin börjar. Därifrån tar bussen er till Långedrag i västra Göteborg, ungefär 40 minuter längs kusten.</p>
         <div className="mt-14 grid gap-x-8 gap-y-14 md:grid-cols-2">
           {[
-            { venue: VENUES.church, what: "Ceremoni kl. 14:00" },
-            { venue: VENUES.party, what: "Mingel och middag från kl. 16:30. Parkering finns i anslutning till värdshuset för er som kommer med egen bil." }
+            { venue: VENUES.church, what: "Ceremoni kl. 14:00. Kom i god tid innan ceremonin börjar." },
+            { venue: VENUES.party, what: "Mingel och middag från kl. 17:00. Parkering finns i anslutning till värdshuset för er som kommer med egen bil." }
           ].map(({ venue, what }, index) => (
             <article key={venue.name} className="flex flex-col">
               <div data-reveal="image" style={delay(index * 160)} className="relative aspect-[4/3] overflow-hidden bg-foam">
@@ -203,17 +203,6 @@ export default async function Home({ searchParams }: HomeProps) {
               </div>
             </article>
           ))}
-        </div>
-
-        <div id="boende" className="mt-28 grid scroll-mt-4 items-center gap-10 lg:grid-cols-[1fr_1.2fr] lg:gap-16">
-          <div data-reveal="up">
-            <h3 className="font-display text-4xl text-ink sm:text-5xl">Sova över</h3>
-            <p className="mt-6 max-w-xl text-lg leading-8 text-ink/75">Vi övernattar på Clarion Hotel Draken i centrala Göteborg, lätt att nå med spårvagn 11 eller taxi efter festen. Det är helt frivilligt att bo där; lös gärna boende som passar er.</p>
-            <ExternalLink className="btn-quiet mt-6 text-ink" href="https://www.strawberry.se/hotell/sverige/goteborg/clarion-hotel-draken/">Läs mer och boka på Strawberry</ExternalLink>
-          </div>
-          <div data-reveal="image" style={delay(200)} className="relative aspect-[16/10] overflow-hidden">
-            <Image src="/photos/draken.jpg" alt="Clarion Hotel Draken, ett högt hotell med guldskimrande fasad vid Göta älv i solnedgång" fill sizes="(min-width: 1152px) 620px, (min-width: 1024px) 55vw, 100vw" className="object-cover object-[70%_center]" />
-          </div>
         </div>
       </section>
 
@@ -267,6 +256,17 @@ export default async function Home({ searchParams }: HomeProps) {
             </li>
           ))}
         </ul>
+
+        <div id="boende" className="mt-28 grid scroll-mt-4 items-center gap-10 lg:grid-cols-[1fr_1.2fr] lg:gap-16">
+          <div data-reveal="up">
+            <h3 className="font-display text-4xl text-ink sm:text-5xl">Boende</h3>
+            <p className="mt-6 max-w-xl text-lg leading-8 text-ink/75">För er som reser hit eller bara vill unna er en hotellnatt så övernattar vi på Clarion Hotel Draken i centrala Göteborg. Från Långedrags värdshus är det lätt att nå hotellet med spårvagn 11 eller taxi efter festen.</p>
+            <ExternalLink className="btn-quiet mt-6 text-ink" href="https://www.strawberry.se/hotell/sverige/goteborg/clarion-hotel-draken/">Läs mer och boka på Strawberry</ExternalLink>
+          </div>
+          <div data-reveal="image" style={delay(200)} className="relative aspect-[16/10] overflow-hidden">
+            <Image src="/photos/draken.jpg" alt="Clarion Hotel Draken, ett högt hotell med guldskimrande fasad vid Göta älv i solnedgång" fill sizes="(min-width: 1152px) 620px, (min-width: 1024px) 55vw, 100vw" className="object-cover object-[70%_center]" />
+          </div>
+        </div>
       </section>
 
       {!thankYou && (
