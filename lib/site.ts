@@ -16,7 +16,7 @@ export const WEDDING = {
   thankYouFrom: "2027-06-20T12:00:00+02:00",
   rsvpBy: "1 april 2027",
   /** Ungefär när festen slutar, t.ex. "01:00". Används i schemat och kalenderfilen. */
-  endTime: "",
+  endTime: "01:00",
   /** T.ex. "Kavaj". */
   dressCode: "Kavaj",
   /** Förklaring av klädkoden, visas under Frågor. Ett stycke per rad. */
@@ -33,8 +33,9 @@ export const WEDDING = {
 export const SCHEDULE = [
   { time: "14:00", title: "Ceremoni", place: "Ölmevalla Kyrka", text: "Vi förnyar våra löften." },
   { time: "16:00", title: "Buss mot havet", place: "Från kyrkan till Långedrag", text: "Bussen avgår direkt från kyrkan. Ange i OSA:n om ni vill åka med." },
-  { time: "16:30", title: "Mingel", place: "Långedrags Värdshus", text: "Välkomstskål och tid att landa tillsammans." },
-  { time: "18:30", title: "Middag", place: "Långedrags Värdshus", text: "En kväll fylld av god mat, tal och skratt." }
+  { time: "16:30", title: "Mingel", place: "", text: "Välkomstskål och tid att landa tillsammans." },
+  { time: "18:30", title: "Middag", place: "", text: "En kväll fylld av god mat, tal och skratt." },
+  { time: "22:00", title: "Fest och dans", place: "", text: "Dansgolvet öppnar och vi dansar in i natten tillsammans." }
 ] as const;
 
 export const VENUES = {
