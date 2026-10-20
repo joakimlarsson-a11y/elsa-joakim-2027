@@ -9,7 +9,7 @@ import { signOut } from "./actions";
 import CopyButtons from "./components/copy-buttons";
 import DeleteGuestButton from "./components/delete-guest-button";
 import InvitationControls from "./components/invitation-controls";
-import NewInvitationForm from "./components/new-invitation-form";
+import NewInvitationDialog from "./components/new-invitation-dialog";
 
 export const dynamic = "force-dynamic";
 
@@ -193,66 +193,7 @@ export default async function AdminPage({ searchParams }: { searchParams: Promis
         <StatCard label="Specialkost" value={withDietary.length} hint="allergier eller specialkost" />
       </section>
 
-      <section aria-labelledby="new-title" className="mt-14 grid gap-8 lg:grid-cols-[1fr_1.4fr]">
-        <div>
-          <h2 id="new-title" className="font-display text-4xl text-ink">Nytt sällskap</h2>
-          <p className="mt-4 leading-7 text-ink/70">Efter att sällskapet sparats kopierar ni länken eller ett färdigt meddelande och skickar det själva via SMS, Messenger eller liknande. Sällskapet markeras som skickat när ni kopierar.</p>
-        </div>
-        <NewInvitationForm origin={origin} />
-      </section>
-
-      <section aria-labelledby="list-title" className="mt-16">
-        <div className="flex flex-wrap items-end justify-between gap-4">
-          <h2 id="list-title" className="font-display text-4xl text-ink">Sällskap</h2>
-          <nav aria-label="Filter" className="flex flex-wrap gap-2">
-            {FILTERS.map((item) => (
-              <Link key={item.key} href={adminHref(item.key, guestFilter, "list-title")} aria-current={filter === item.key ? "page" : undefined} className={pillClass(filter === item.key)}>{item.label}</Link>
-            ))}
-          </nav>
-        </div>
-
-        {visible.length === 0 ? (
-          <p className="mt-6 rounded-2xl bg-shell p-6 text-ink/70">Inga sällskap att visa.</p>
-        ) : (
-          <div className="mt-6 overflow-x-auto rounded-2xl bg-white shadow-soft">
-            <table className="w-full min-w-[900px] text-left text-sm">
-              <thead className="border-b border-ink/10 bg-shell text-xs uppercase tracking-wider text-ink/70">
-                <tr>
-                  <th scope="col" className="p-4">Sällskap</th>
-                  <th scope="col" className="p-4">Gäster</th>
-                  <th scope="col" className="p-4">Status</th>
-                  <th scope="col" className="p-4">Inbjudan</th>
-                </tr>
-              </thead>
-              <tbody>
-                {visible.map((invitation) => (
-                  <tr key={invitation.id} className="border-b border-ink/10 align-top last:border-0">
-                    <td className="p-4">
-                      <p className="font-semibold text-ink">{invitation.group_name}</p>
-                      <p className="mt-1 text-ink/60">{invitation.email ?? <em>Ingen e-post</em>}</p>
-                    </td>
-                    <td className="p-4">
-                      <ul className="space-y-1">
-                        {invitation.guests.map((guest) => (
-                          <li key={guest.id}><span className="font-semibold">{guest.name}</span> <AnswerLabel attending={guest.attending} /></li>
-                        ))}
-                      </ul>
-                    </td>
-                    <td className="p-4"><span className={`inline-block whitespace-nowrap rounded-full px-3 py-1 text-xs font-semibold ${STATUS_CLASS[invitation.status]}`}>{STATUS_LABEL[invitation.status]}</span></td>
-                    <td className="space-y-3 p-4">
-                      <CopyButtons id={invitation.id} status={invitation.status} link={invitationLink(origin, invitation.token)} message={invitationMessage(origin, invitation.group_name, invitation.guests.map((guest) => guest.name), invitation.token)} />
-                      <ExternalLink href={invitationLink(origin, invitation.token)} className="inline-block text-sm font-semibold text-sea underline">Visa inbjudan<span className="sr-only"> för {invitation.group_name}</span></ExternalLink>
-                      <InvitationControls id={invitation.id} groupName={invitation.group_name} status={invitation.status} email={invitation.email} personalNote={invitation.personal_note} />
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        )}
-      </section>
-
-      <section aria-labelledby="guests-title" className="mt-16">
+      <section aria-labelledby="guests-title" className="mt-14">
         <div className="flex flex-wrap items-end justify-between gap-4">
           <div>
             <h2 id="guests-title" className="scroll-mt-8 font-display text-4xl text-ink">Gästlista</h2>
@@ -305,6 +246,60 @@ export default async function AdminPage({ searchParams }: { searchParams: Promis
           </div>
         )}
       </section>
+      <section aria-labelledby="list-title" className="mt-16">
+        <div className="flex flex-wrap items-end justify-between gap-4">
+          <div className="flex flex-wrap items-center gap-4">
+            <h2 id="list-title" className="scroll-mt-8 font-display text-4xl text-ink">Sällskap</h2>
+            <NewInvitationDialog origin={origin} />
+          </div>
+          <nav aria-label="Filtrera sällskap" className="flex flex-wrap gap-2">
+            {FILTERS.map((item) => (
+              <Link key={item.key} href={adminHref(item.key, guestFilter, "list-title")} aria-current={filter === item.key ? "page" : undefined} className={pillClass(filter === item.key)}>{item.label}</Link>
+            ))}
+          </nav>
+        </div>
+
+        {visible.length === 0 ? (
+          <p className="mt-6 rounded-2xl bg-shell p-6 text-ink/70">Inga sällskap att visa.</p>
+        ) : (
+          <div className="mt-6 overflow-x-auto rounded-2xl bg-white shadow-soft">
+            <table className="w-full min-w-[900px] text-left text-sm">
+              <thead className="border-b border-ink/10 bg-shell text-xs uppercase tracking-wider text-ink/70">
+                <tr>
+                  <th scope="col" className="p-4">Sällskap</th>
+                  <th scope="col" className="p-4">Gäster</th>
+                  <th scope="col" className="p-4">Status</th>
+                  <th scope="col" className="p-4">Inbjudan</th>
+                </tr>
+              </thead>
+              <tbody>
+                {visible.map((invitation) => (
+                  <tr key={invitation.id} className="border-b border-ink/10 align-top last:border-0">
+                    <td className="p-4">
+                      <p className="font-semibold text-ink">{invitation.group_name}</p>
+                      <p className="mt-1 text-ink/60">{invitation.email ?? <em>Ingen e-post</em>}</p>
+                    </td>
+                    <td className="p-4">
+                      <ul className="space-y-1">
+                        {invitation.guests.map((guest) => (
+                          <li key={guest.id}><span className="font-semibold">{guest.name}</span> <AnswerLabel attending={guest.attending} /></li>
+                        ))}
+                      </ul>
+                    </td>
+                    <td className="p-4"><span className={`inline-block whitespace-nowrap rounded-full px-3 py-1 text-xs font-semibold ${STATUS_CLASS[invitation.status]}`}>{STATUS_LABEL[invitation.status]}</span></td>
+                    <td className="space-y-3 p-4">
+                      <CopyButtons id={invitation.id} status={invitation.status} link={invitationLink(origin, invitation.token)} message={invitationMessage(origin, invitation.group_name, invitation.guests.map((guest) => guest.name), invitation.token)} />
+                      <ExternalLink href={invitationLink(origin, invitation.token)} className="inline-block text-sm font-semibold text-sea underline">Visa inbjudan<span className="sr-only"> för {invitation.group_name}</span></ExternalLink>
+                      <InvitationControls id={invitation.id} groupName={invitation.group_name} status={invitation.status} email={invitation.email} personalNote={invitation.personal_note} />
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+      </section>
+
     </main>
   );
 }
