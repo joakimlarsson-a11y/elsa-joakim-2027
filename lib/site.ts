@@ -14,14 +14,14 @@ export const WEDDING = {
   start: "2027-06-19T14:00:00+02:00",
   /** Dagen efter: då byter sidan till tackläge. */
   thankYouFrom: "2027-06-20T12:00:00+02:00",
-  rsvpBy: "1 april 2027",
+  rsvpBy: "1 mars 2027",
   /** Ungefär när festen slutar, t.ex. "01:00". Används i schemat och kalenderfilen. */
   endTime: "01:00",
   /** T.ex. "Kavaj". */
   dressCode: "Kavaj",
   /** Förklaring av klädkoden, visas under Frågor. Ett stycke per rad. */
   dressCodeNote: [
-    "Vi ser fram emot att fira vår stora dag med er, och hoppas att ni vill klä er i färgerna från vår inspirationsbild."
+    "Vi ser fram emot att fira vår stora dag med er och hoppas att ni vill klä er i färgerna från vår inspirationsbild."
   ],
   /** Hälsning under klädkoden. */
   /** T.ex. "Barn är varmt välkomna!" */
@@ -78,7 +78,7 @@ export function soloFirstName(guestNames: string[]) {
 export function invitationMessage(origin: string, groupName: string, guestNames: string[], token: string) {
   const solo = soloFirstName(guestNames);
   const greeting = solo ? `Hej ${solo}! Vi förnyar våra löften den 19 juni 2027 och hoppas att du vill fira med oss.` : `Hej ${groupName}! Vi förnyar våra löften den 19 juni 2027 och hoppas att ni vill fira med oss.`;
-  return `${greeting} Läs mer och svara senast 1 april 2027 här: ${invitationLink(origin, token)}\n\nVarma hälsningar,\nElsa & Joakim`;
+  return `${greeting} Läs mer och svara senast ${WEDDING.rsvpBy} här: ${invitationLink(origin, token)}\n\nVarma hälsningar,\nElsa & Joakim`;
 }
 
 export function clean(value: unknown, maxLength = 1000) {

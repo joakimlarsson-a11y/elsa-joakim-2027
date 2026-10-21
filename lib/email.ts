@@ -1,5 +1,5 @@
 import { Resend } from "resend";
-import { escapeHtml, SITE_URL, soloFirstName } from "./site";
+import { escapeHtml, SITE_URL, soloFirstName, WEDDING } from "./site";
 
 const FROM = "Elsa & Joakim <osa@elsajoakim2027.se>";
 const REPLY_TO = "osa@elsajoakim2027.se";
@@ -57,7 +57,7 @@ export async function sendInvitationConfirmation({ to, groupName, guests, editLi
         name: solo,
         intro: anyAttending ? "Vi har tagit emot ditt svar och längtar efter att fira med dig." : "Vi har tagit emot ditt svar. Tack för att du hörde av dig. Vi kommer att sakna dig.",
         summaryTitle: "Ditt svar",
-        editHint: "Har något ändrats? Du kan uppdatera ditt svar fram till 1 april 2027.",
+        editHint: `Har något ändrats? Du kan uppdatera ditt svar fram till ${WEDDING.rsvpBy}.`,
         editButton: "Ändra mitt svar"
       }
     : {
@@ -65,7 +65,7 @@ export async function sendInvitationConfirmation({ to, groupName, guests, editLi
         name: groupName,
         intro: anyAttending ? "Vi har tagit emot ert svar och längtar efter att fira med er." : "Vi har tagit emot ert svar. Tack för att ni hörde av er. Vi kommer att sakna er.",
         summaryTitle: "Ert svar",
-        editHint: "Har något ändrats? Ni kan uppdatera ert svar fram till 1 april 2027.",
+        editHint: `Har något ändrats? Ni kan uppdatera ert svar fram till ${WEDDING.rsvpBy}.`,
         editButton: "Ändra vårt svar"
       };
 
