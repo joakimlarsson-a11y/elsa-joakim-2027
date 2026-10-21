@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
-import { scheduleLinkHtml, scheduleLinkText, sendEmail } from "@/lib/email";
+import { scheduleLinkHtml, scheduleLinkText, sendEmails } from "@/lib/email";
+import { firstNames } from "@/lib/site";
 
 type PersonInput = { name?: unknown; email?: unknown; allergies?: unknown; bus?: unknown };
 type RSVPBody = { persons?: unknown };
@@ -68,18 +69,28 @@ export async function POST(request: Request) {
       .map((person) => `<li><strong>${escapeHtml(person.name)}</strong> (${escapeHtml(person.email)})<br>${details(person).map(escapeHtml).join("<br>")}</li>`)
       .join("");
     const summaryText = persons.map((person) => `- ${person.name} (${person.email}): ${details(person).join(", ")}`).join("\n");
+    // Ett mejl per unik adress; personer som delar adress tilltalas tillsammans.
+    const recipients = new Map<string, Person[]>();
+    for (const person of persons) recipients.set(person.email, [...(recipients.get(person.email) ?? []), person]);
+    const party = persons.length > 1;
+    const intro = party ? "Vi har tagit emot er OSA och längtar efter att fira med er." : "Vi har tagit emot din OSA och längtar efter att fira med dig.";
     try {
-      await sendEmail({
-        to: primary.email,
-        subject: "Tack för din OSA!",
-        html: `<h1 style="font-family:Georgia,serif;font-size:42px;font-weight:500">Tack, ${escapeHtml(primary.name)}!</h1>
-  <p>Vi har tagit emot din OSA och längtar efter att fira med dig.</p>
+      await sendEmails(
+        Array.from(recipients, ([to, people]) => {
+          const greeting = firstNames(people.map((person) => person.name)) ?? people[0].name;
+          return {
+            to,
+            subject: party ? "Tack för er OSA!" : "Tack för din OSA!",
+            html: `<h1 style="font-family:Georgia,serif;font-size:42px;font-weight:500">Tack, ${escapeHtml(greeting)}!</h1>
+  <p>${intro}</p>
   <div style="background:#f5f3fa;border-radius:12px;padding:20px;margin:24px 0">
     <strong>Er anmälan</strong><ul style="margin-bottom:0;padding-left:20px">${summaryHtml}</ul>
   </div>
   ${scheduleLinkHtml()}`,
-        text: [`Tack, ${primary.name}!`, "Vi har tagit emot din OSA och längtar efter att fira med dig.", `Er anmälan:\n${summaryText}`, scheduleLinkText(), "Varma hälsningar,\nElsa & Joakim"].join("\n\n")
-      });
+            text: [`Tack, ${greeting}!`, intro, `Er anmälan:\n${summaryText}`, scheduleLinkText(), "Varma hälsningar,\nElsa & Joakim"].join("\n\n")
+          };
+        })
+      );
     } catch (mailError) {
       console.error("RSVP confirmation email failed:", mailError);
     }

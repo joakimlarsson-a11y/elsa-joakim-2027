@@ -14,26 +14,32 @@ export type ConfirmationGuest = {
 
 type EmailContent = { to: string; subject: string; html: string; text: string };
 
-/** Skickar ett mejl med gemensam avsändare, svarsadress och HTML-ram. */
-export async function sendEmail({ to, subject, html, text }: EmailContent) {
-  const resendKey = process.env.RESEND_API_KEY;
-  if (!resendKey) {
-    console.error("Missing RESEND_API_KEY; skipping email.");
-    return;
-  }
-  const { error } = await new Resend(resendKey).emails.send({
-    from: FROM,
-    replyTo: REPLY_TO,
-    to,
-    subject,
-    text,
-    html: `<!DOCTYPE html><html lang="sv"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${escapeHtml(subject)}</title></head><body style="margin:0;padding:24px 16px;background:#ffffff">
+function wrapHtml(subject: string, html: string) {
+  return `<!DOCTYPE html><html lang="sv"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${escapeHtml(subject)}</title></head><body style="margin:0;padding:24px 16px;background:#ffffff">
 <div style="font-family:Arial,sans-serif;max-width:600px;margin:auto;color:#1d2140;line-height:1.6">
   <p style="letter-spacing:2px;text-transform:uppercase;color:#44336d;font-size:12px">19 juni 2027</p>
   ${html}
   <p>Varma hälsningar,<br>Elsa &amp; Joakim</p>
-</div></body></html>`
-  });
+</div></body></html>`;
+}
+
+function resendClient() {
+  const resendKey = process.env.RESEND_API_KEY;
+  if (!resendKey) console.error("Missing RESEND_API_KEY; skipping email.");
+  return resendKey ? new Resend(resendKey) : null;
+}
+
+/** Skickar ett mejl med gemensam avsändare, svarsadress och HTML-ram. */
+export async function sendEmail(content: EmailContent) {
+  await sendEmails([content]);
+}
+
+/** Skickar flera mejl i ett anrop, så att Resends anropsgräns inte slår till för stora sällskap. */
+export async function sendEmails(contents: EmailContent[]) {
+  const resend = resendClient();
+  if (!resend || contents.length === 0) return;
+  const emails = contents.map(({ to, subject, html, text }) => ({ from: FROM, replyTo: REPLY_TO, to, subject, text, html: wrapHtml(subject, html) }));
+  const { error } = emails.length === 1 ? await resend.emails.send(emails[0]) : await resend.batch.send(emails);
   if (error) throw new Error(`Resend failed: ${error.message}`);
 }
 
