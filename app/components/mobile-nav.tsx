@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 
 type Link = { href: string; label: string };
 
-/** Fast flikrad längst ner på mobil. Döljs medan heron syns; utan JS är den alltid synlig. */
+/** Svävande glasflikrad längst ner på mobil. Döljs medan heron syns; utan JS är den alltid synlig. */
 export default function MobileNav({ links }: { links: Link[] }) {
   const [hidden, setHidden] = useState(false);
 
@@ -19,12 +19,12 @@ export default function MobileNav({ links }: { links: Link[] }) {
   return (
     <nav
       aria-label="Snabbnavigation"
-      className={`on-dark fixed inset-x-0 bottom-0 z-40 border-t border-white/15 bg-ink/95 pb-[env(safe-area-inset-bottom)] text-white transition-[opacity,transform] duration-300 md:hidden ${hidden ? "invisible translate-y-full opacity-0" : "visible"}`}
+      className={`glass glass-light fixed inset-x-3 bottom-[calc(.75rem+env(safe-area-inset-bottom))] z-40 p-1 transition-[opacity,transform,background-color] duration-300 md:hidden ${hidden ? "invisible translate-y-[calc(100%+1.5rem)] opacity-0" : "visible"}`}
     >
       <ul className="grid grid-cols-4">
         {links.map((link) => (
           <li key={link.href}>
-            <a href={link.href} className={`flex min-h-14 items-center justify-center px-1 text-sm tracking-[.02em] ${link.href === "#osa" ? "text-dusk" : ""}`}>
+            <a href={link.href} className={`flex min-h-12 items-center justify-center rounded-full px-1 text-sm tracking-[.02em] ${link.href === "#osa" ? "font-semibold" : ""}`}>
               {link.label}
             </a>
           </li>

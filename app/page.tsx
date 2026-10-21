@@ -5,6 +5,7 @@ import { mapLink, SCHEDULE, TOASTMADAME_EMAIL, VENUES, WEDDING } from "@/lib/sit
 import { heroCopy } from "@/lib/invitation-copy";
 import ExternalLink from "./components/external-link";
 import MobileNav from "./components/mobile-nav";
+import SiteHeader from "./components/site-header";
 import RSVPForm from "./components/rsvp-form";
 import ScrollReveal from "./components/scroll-reveal";
 import Shoreline from "./components/shoreline";
@@ -82,6 +83,9 @@ export default async function Home({ searchParams }: HomeProps) {
   const { solo, names, youAll, salutation, intro, ctaLabel } = heroCopy({ guestNames, groupName: invitation?.group_name ?? "", responded, thankYou });
 
   return (
+    <>
+      <SiteHeader links={navLinks} />
+
     <main className="overflow-x-clip">
       <ScrollReveal />
 
@@ -89,14 +93,6 @@ export default async function Home({ searchParams }: HomeProps) {
         <Image src="/photos/hero-vigsel.jpg" alt="Elsa och Joakim håller hand, sedda bakifrån i en ljusupplyst festsal" fill priority sizes="100vw" className="hero-zoom -z-20 object-cover object-[center_18%]" />
         <div className="absolute inset-0 -z-10 bg-gradient-to-b from-ink/45 via-ink/25 to-ink/90" />
         <div className="absolute inset-0 -z-10 bg-gradient-to-r from-ink/45 to-transparent to-60%" />
-        <nav className="relative mx-auto flex w-full max-w-6xl items-center justify-between px-6 py-6 lg:px-10" aria-label="Huvudnavigation">
-          <a className="font-display text-2xl" href="#top" aria-label="Elsa och Joakim, till toppen">E<span className="font-accent text-dusk">&</span>J</a>
-          <ul className="hidden gap-8 text-sm tracking-[.02em] md:flex">
-            {navLinks.map((link) => (
-              <li key={link.href}><a href={link.href} className="underline-offset-[8px] decoration-1 hover:underline">{link.label}</a></li>
-            ))}
-          </ul>
-        </nav>
 
         <div className="relative mx-auto flex w-full max-w-6xl flex-1 flex-col justify-end px-6 pb-16 pt-24 lg:px-10 lg:pb-24">
           <h1 style={delay(150)} className="hero-rise font-display text-[clamp(3.75rem,16vw,6rem)] leading-[.95]">
@@ -134,8 +130,8 @@ export default async function Home({ searchParams }: HomeProps) {
 
       <section className="mx-auto max-w-6xl px-6 py-24 lg:px-10 lg:py-32" aria-labelledby="story-title">
         <div className="grid gap-6 lg:grid-cols-[1fr_1.2fr] lg:items-end">
-          <h2 id="story-title" data-reveal="up" className={`${h2} text-ink`}>Vår historia, i bilder</h2>
-          <p data-reveal="up" style={delay(120)} className="max-w-xl text-lg leading-8 text-ink/75">Vi har firat mycket tillsammans: midsommar, målgångar, solnedgångar och vanliga tisdagar. Nu vill vi fira det största av dem med er.</p>
+          <h2 id="story-title" data-reveal="up" className={`${h2} text-ink`}>Stunder vi delat</h2>
+          <p data-reveal="up" style={delay(120)} className="max-w-xl text-lg leading-8 text-ink/75">Midsomrar, målgångar, solnedgångar och vardagsstunder. Nu vill vi dela en stor dag tillsammans med er<span aria-hidden="true">🩷</span></p>
         </div>
         <ul className="mt-14 grid grid-cols-2 gap-x-4 gap-y-8 md:grid-cols-3 md:gap-x-6 md:gap-y-10">
           {story.map((photo, index) => (
@@ -233,18 +229,6 @@ export default async function Home({ searchParams }: HomeProps) {
           {faqs.map((faq, index) => (
             <li key={faq.title} data-reveal="up" style={delay((index % 3) * 120)} className={faq.featured ? "sm:col-span-2" : undefined}>
               <article className={`faq-card group flex h-full flex-col bg-shell ${faq.featured ? "sm:grid sm:grid-cols-2" : ""}`}>
-                {faq.featured ? (
-                  // Bakgrunden matchar bildens papperston så att den oklippta bilden smälter in.
-                  <div className="relative aspect-[1024/1516] bg-[#f3ece5]">
-                    <Image src={faq.image} alt={faq.alt ?? ""} fill sizes="(min-width: 1152px) 600px, (min-width: 640px) 50vw, 100vw" className="object-contain" />
-                    <span className="absolute left-4 top-3 font-display text-sm tracking-[.08em] text-ink/70" aria-hidden="true">{String(index + 1).padStart(2, "0")}</span>
-                  </div>
-                ) : (
-                  <div className="relative aspect-[4/3] overflow-hidden">
-                    <Image src={faq.image} alt={faq.alt ?? ""} fill sizes="(min-width: 1152px) 540px, (min-width: 640px) 46vw, 100vw" style={{ objectPosition: faq.position }} className="faq-card-image object-cover" />
-                    <span className="absolute left-4 top-3 font-display text-sm tracking-[.08em] text-white/90 [text-shadow:0_1px_8px_rgba(42,38,34,.6)]" aria-hidden="true">{String(index + 1).padStart(2, "0")}</span>
-                  </div>
-                )}
                 <div className={`flex flex-1 flex-col px-6 pb-7 pt-6 ${faq.featured ? "sm:justify-center sm:px-10 lg:px-16" : ""}`}>
                   <h3 className={`font-display leading-tight text-ink ${faq.featured ? "text-4xl sm:text-5xl lg:text-6xl" : "text-3xl"}`}>{faq.title}</h3>
                   <span className="mt-4 block h-px w-10 bg-ink/25 transition-all duration-500 group-hover:w-16" aria-hidden="true" />
@@ -252,20 +236,43 @@ export default async function Home({ searchParams }: HomeProps) {
                     <p key={paragraph} className={`mt-4 text-ink/75 ${faq.featured ? "max-w-md text-lg leading-8" : "leading-7"}`}>{paragraph}</p>
                   ))}
                 </div>
+                {faq.featured ? (
+                  // Bakgrunden matchar bildens papperston så att den oklippta bilden smälter in.
+                  <div className="relative aspect-[1024/1516] bg-[#f3ece5]">
+                    <Image src={faq.image} alt={faq.alt ?? ""} fill sizes="(min-width: 1152px) 600px, (min-width: 640px) 50vw, 100vw" className="object-contain" />
+                  </div>
+                ) : (
+                  <div className="relative aspect-[4/3] overflow-hidden">
+                    <Image src={faq.image} alt={faq.alt ?? ""} fill sizes="(min-width: 1152px) 540px, (min-width: 640px) 46vw, 100vw" style={{ objectPosition: faq.position }} className="faq-card-image object-cover" />
+                  </div>
+                )}
               </article>
             </li>
           ))}
         </ul>
 
-        <div id="boende" className="mt-28 grid scroll-mt-4 items-center gap-10 lg:grid-cols-[1fr_1.2fr] lg:gap-16">
-          <div data-reveal="up">
-            <h3 className="font-display text-4xl text-ink sm:text-5xl">Boende</h3>
-            <p className="mt-6 max-w-xl text-lg leading-8 text-ink/75">För er som reser hit eller bara vill unna er en hotellnatt så övernattar vi på Clarion Hotel Draken i centrala Göteborg. Från Långedrags värdshus är det lätt att nå hotellet med spårvagn 11 eller taxi efter festen.</p>
-            <ExternalLink className="btn-quiet mt-6 text-ink" href="https://www.strawberry.se/hotell/sverige/goteborg/clarion-hotel-draken/">Läs mer och boka på Strawberry</ExternalLink>
+        <div id="boende" data-reveal="up" className="mt-28 scroll-mt-4">
+          <article className="faq-card group flex flex-col bg-shell sm:grid sm:grid-cols-2">
+            <div className="flex flex-col px-6 pb-7 pt-6 sm:justify-center sm:px-10 sm:py-12 lg:px-16">
+              <h3 className="font-display text-4xl leading-tight text-ink sm:text-5xl lg:text-6xl">Boende</h3>
+              <span className="mt-4 block h-px w-10 bg-ink/25 transition-all duration-500 group-hover:w-16" aria-hidden="true" />
+              <p className="mt-4 max-w-md text-lg leading-8 text-ink/75">För er som reser hit eller bara vill unna er en hotellnatt så övernattar vi på Clarion Hotel Draken i centrala Göteborg. Från Långedrags värdshus är det lätt att nå hotellet med spårvagn 11 eller taxi efter festen.</p>
+              <ExternalLink className="btn-quiet mt-6 self-start text-ink" href="https://www.strawberry.se/hotell/sverige/goteborg/clarion-hotel-draken/">Läs mer och boka på Strawberry</ExternalLink>
+            </div>
+            <div className="relative aspect-[16/10] overflow-hidden sm:aspect-auto sm:min-h-[24rem]">
+              <Image src="/photos/draken.jpg" alt="Clarion Hotel Draken, ett högt hotell med guldskimrande fasad vid Göta älv i solnedgång" fill sizes="(min-width: 1152px) 600px, (min-width: 640px) 50vw, 100vw" className="faq-card-image object-cover object-[70%_center]" />
+            </div>
+          </article>
+        </div>
+
+        <div data-reveal="up" className="mt-24 max-w-xl lg:mt-32">
+          <div className="flex items-center gap-4" aria-hidden="true">
+            <span className="h-px w-16 bg-ember/40" />
+            <span className="size-1.5 rotate-45 bg-ember" />
+            <span className="h-px w-16 bg-ember/40" />
           </div>
-          <div data-reveal="image" style={delay(200)} className="relative aspect-[16/10] overflow-hidden">
-            <Image src="/photos/draken.jpg" alt="Clarion Hotel Draken, ett högt hotell med guldskimrande fasad vid Göta älv i solnedgång" fill sizes="(min-width: 1152px) 620px, (min-width: 1024px) 55vw, 100vw" className="object-cover object-[70%_center]" />
-          </div>
+          <h3 className="mt-6 font-display text-4xl leading-tight text-ink sm:text-5xl">Håll er uppdaterade<span className="font-accent text-ember">!</span></h3>
+          <p className="mt-5 text-lg leading-8 text-ink/75">Information på sidan kan ändras fram till dagen. Titta gärna in här igen innan bröllopet, så har ni alltid det senaste.</p>
         </div>
       </section>
 
@@ -305,5 +312,6 @@ export default async function Home({ searchParams }: HomeProps) {
 
       <MobileNav links={navLinks} />
     </main>
+    </>
   );
 }
