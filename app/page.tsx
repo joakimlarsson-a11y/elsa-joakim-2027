@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import { mapLink, SCHEDULE, TOASTMADAME_EMAIL, VENUES, WEDDING } from "@/lib/site";
 import { heroCopy } from "@/lib/invitation-copy";
+import heroVigsel from "@/public/photos/hero-vigsel.jpg";
 import ExternalLink from "./components/external-link";
 import MobileNav from "./components/mobile-nav";
 import SiteHeader from "./components/site-header";
@@ -90,7 +91,7 @@ export default async function Home({ searchParams }: HomeProps) {
       <ScrollReveal />
 
       <section id="top" className="on-dark relative isolate flex min-h-[100svh] flex-col overflow-hidden bg-ink text-white">
-        <Image src="/photos/hero-vigsel.jpg" alt="Elsa och Joakim håller hand, sedda bakifrån i en ljusupplyst festsal" fill priority sizes="100vw" className="hero-zoom -z-20 object-cover object-[center_18%]" />
+        <Image src={heroVigsel} alt="Elsa och Joakim håller hand, sedda bakifrån i en ljusupplyst festsal" fill priority sizes="100vw" className="hero-zoom -z-20 object-cover object-[center_18%]" />
         <div className="absolute inset-0 -z-10 bg-gradient-to-b from-ink/45 via-ink/25 to-ink/90" />
         <div className="absolute inset-0 -z-10 bg-gradient-to-r from-ink/45 to-transparent to-60%" />
 

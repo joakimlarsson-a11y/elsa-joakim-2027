@@ -1,5 +1,6 @@
 import Image from "next/image";
 import { heroCopy } from "@/lib/invitation-copy";
+import heroVigsel from "@/public/photos/hero-vigsel.jpg";
 
 type Props = { guestNames: string[]; groupName: string; personalNote: string };
 
@@ -10,7 +11,7 @@ export default function InvitationPreview({ guestNames, groupName, personalNote 
 
   return (
     <div className="on-dark relative isolate overflow-hidden rounded-2xl bg-ink text-white shadow-soft">
-      <Image src="/photos/hero-vigsel.jpg" alt="" fill sizes="(min-width: 1024px) 560px, 100vw" className="-z-20 object-cover object-[center_18%]" />
+      <Image src={heroVigsel} alt="" fill sizes="(min-width: 1024px) 560px, 100vw" className="-z-20 object-cover object-[center_18%]" />
       <div className="absolute inset-0 -z-10 bg-gradient-to-b from-ink/55 via-ink/45 to-ink/90" />
       <div className="absolute inset-0 -z-10 bg-gradient-to-r from-ink/45 to-transparent to-60%" />
       <div className="px-6 pb-8 pt-16 sm:px-8">
