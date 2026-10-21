@@ -266,13 +266,12 @@ export default async function Home({ searchParams }: HomeProps) {
         </div>
 
         <div data-reveal="up" className="mt-24 max-w-xl lg:mt-32">
-          <div className="flex items-center gap-4" aria-hidden="true">
-            <span className="h-px w-16 bg-ember/40" />
-            <span className="size-1.5 rotate-45 bg-ember" />
-            <span className="h-px w-16 bg-ember/40" />
+          <div className="flex items-center gap-3" aria-hidden="true">
+            <span className="ml-px size-1.5 shrink-0 rotate-45 bg-ember" />
+            <span className="h-px w-24 bg-gradient-to-r from-ember/50 to-transparent" />
           </div>
           <h3 className="mt-6 font-display text-4xl leading-tight text-ink sm:text-5xl">Håll er uppdaterade<span className="font-accent text-ember">!</span></h3>
-          <p className="mt-5 text-lg leading-8 text-ink/75">Information på sidan kan ändras fram till dagen. Titta gärna in här igen innan bröllopet, så har ni alltid det senaste.</p>
+          <p className="mt-5 text-lg leading-8 text-ink/75">Information på sidan kan komma att ändras. Kika gärna in här innan det är dags för den stora dagen.</p>
         </div>
       </section>
 
@@ -304,10 +303,6 @@ export default async function Home({ searchParams }: HomeProps) {
       <footer className="bg-ink px-6 pb-28 pt-16 md:pb-12 text-center text-sm text-white/75">
         <p className="font-display text-3xl text-white">E<span className="font-accent text-dusk">&</span>J</p>
         <p className="mt-3">19 juni 2027 · Ölmevalla & Långedrag</p>
-        <p className="mt-8 text-xs text-white/60">
-          Foto: {VENUES.church.name},{" "}
-          <a href={VENUES.church.image.creditUrl} target="_blank" rel="noreferrer" className="underline decoration-1 underline-offset-2 hover:text-white">Musicus, CC BY-SA 3.0<span className="sr-only"> (öppnas i ny flik)</span></a>
-        </p>
       </footer>
 
       <MobileNav links={navLinks} />
