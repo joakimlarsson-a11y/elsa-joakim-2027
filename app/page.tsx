@@ -256,7 +256,7 @@ export default async function Home({ searchParams }: HomeProps) {
             <div className="flex flex-col px-6 pb-7 pt-6 sm:justify-center sm:px-10 sm:py-12 lg:px-16">
               <h3 className="font-display text-4xl leading-tight text-ink sm:text-5xl lg:text-6xl">Boende</h3>
               <span className="mt-4 block h-px w-10 bg-ink/25 transition-all duration-500 group-hover:w-16" aria-hidden="true" />
-              <p className="mt-4 max-w-md text-lg leading-8 text-ink/75">För er som reser hit eller bara vill unna er en hotellnatt så övernattar vi på Clarion Hotel Draken i centrala Göteborg. Från Långedrags värdshus är det lätt att nå hotellet med spårvagn 11 eller taxi efter festen.</p>
+              <p className="mt-4 max-w-md text-lg leading-8 text-ink/75">För er som reser hit eller bara vill unna er en hotellnatt eller två så övernattar vi på Clarion Hotel Draken i centrala Göteborg. Från Långedrags värdshus är det lätt att nå hotellet med spårvagn 11 eller taxi efter festen.</p>
               <ExternalLink className="btn-quiet mt-6 self-start text-ink" href="https://www.strawberry.se/hotell/sverige/goteborg/clarion-hotel-draken/">Läs mer och boka på Strawberry</ExternalLink>
             </div>
             <div className="relative aspect-[16/10] overflow-hidden sm:aspect-auto sm:min-h-[24rem]">
