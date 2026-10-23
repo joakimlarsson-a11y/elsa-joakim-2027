@@ -136,7 +136,7 @@ export default function GuestTable({ guests, emptyMessage }: Props) {
       {rows.length === 0 ? (
         <p className="mt-4 rounded-2xl bg-shell p-6 text-ink/70">Inga gäster matchar ”{query.trim()}”.</p>
       ) : (
-        <div className="mt-4 overflow-x-auto rounded-2xl bg-white shadow-soft">
+        <div className="relative mt-4 overflow-x-auto rounded-2xl bg-white shadow-soft">
           <table className="w-full min-w-[800px] text-left text-sm">
             <caption className="sr-only">Gästlista, {rows.length} personer. Kolumnrubrikerna är knappar som sorterar tabellen.</caption>
             <thead className="border-b border-ink/10 bg-shell text-xs uppercase tracking-wider text-ink/70">
