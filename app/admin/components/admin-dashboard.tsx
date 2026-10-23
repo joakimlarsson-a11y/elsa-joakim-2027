@@ -1,11 +1,6 @@
 import Link from "next/link";
-import { invitationLink, invitationMessage } from "@/lib/site";
-import ExternalLink from "../../components/external-link";
 import { signOut } from "../actions";
-import CopyButtons from "./copy-buttons";
-import DeleteGuestButton from "./delete-guest-button";
-import InvitationControls from "./invitation-controls";
-import NewInvitationDialog from "./new-invitation-dialog";
+import GuestTable, { type GuestRow } from "./guest-table";
 
 export type Guest = {
   id: string;
@@ -27,26 +22,6 @@ export type InvitationRow = {
 };
 export type OpenRsvp = { id: string | number; name: string; email: string; guests: string | null; attendance: string | null; bus: string | null; allergies: string | null; created_at: string };
 
-type GuestRow = {
-  key: string;
-  source: "invitation" | "open";
-  id: string;
-  name: string;
-  origin: string;
-  detail: string | null;
-  attending: boolean | null;
-  bus: boolean | null;
-  dietary: string | null;
-  message: string | null;
-};
-
-const FILTERS = [
-  { key: "alla", label: "Alla" },
-  { key: "ej-skickade", label: "Inte skickade" },
-  { key: "ej-svarat", label: "Inte svarat" }
-] as const;
-type FilterKey = (typeof FILTERS)[number]["key"];
-
 const GUEST_FILTERS = [
   { key: "alla", label: "Alla" },
   { key: "kommer", label: "Kommer" },
@@ -54,33 +29,20 @@ const GUEST_FILTERS = [
 ] as const;
 type GuestFilterKey = (typeof GUEST_FILTERS)[number]["key"];
 
-function adminHref(basePath: string, filter: FilterKey, guestFilter: GuestFilterKey, hash: string) {
+function adminHref(basePath: string, guestFilter: GuestFilterKey, hash: string) {
   const params = new URLSearchParams();
-  if (filter !== "alla") params.set("filter", filter);
   if (guestFilter !== "alla") params.set("gaster", guestFilter);
   const query = params.toString();
   return `${basePath}${query ? `?${query}` : ""}#${hash}`;
 }
 
-function AnswerLabel({ attending }: { attending: boolean | null }) {
-  return (
-    <span className={attending === true ? "text-sea" : attending === false ? "text-red-800" : "text-ink/60"}>
-      {attending === true ? "Ja" : attending === false ? "Nej" : "Väntar"}
-    </span>
-  );
-}
-
 const pillClass = (active: boolean) => `rounded-full px-4 py-2 text-sm font-semibold ${active ? "bg-sea text-white" : "border border-sea text-sea"}`;
 
-const STATUS_LABEL: Record<InvitationRow["status"], string> = { pending: "Ej skickad", sent: "Skickad", responded: "Svarat" };
-const STATUS_CLASS: Record<InvitationRow["status"], string> = { pending: "bg-white text-ink/70 border border-ink/20", sent: "bg-dusk text-sea", responded: "bg-foam text-ink" };
-
-function StatCard({ label, value, hint }: { label: string; value: number; hint?: string }) {
+function StatCard({ label, value }: { label: string; value: number }) {
   return (
-    <div className="rounded-2xl bg-white p-5 shadow-soft">
-      <p className="eyebrow text-sea">{label}</p>
-      <p className="mt-2 font-display text-5xl text-ink">{value}</p>
-      {hint && <p className="mt-1 text-xs text-ink/60">{hint}</p>}
+    <div className="min-w-0 rounded-xl bg-white px-3 py-2.5 shadow-soft sm:px-4 sm:py-3">
+      <dt className="text-xs font-semibold text-sea sm:font-bold sm:uppercase sm:tracking-[.14em]">{label}</dt>
+      <dd className="mt-0.5 font-display text-3xl leading-tight text-ink sm:text-4xl">{value}</dd>
     </div>
   );
 }
@@ -97,12 +59,10 @@ type AdminDashboardProps = {
   preview?: boolean;
 };
 
-export default function AdminDashboard({ email, origin, invitations, openRsvps, searchParams, loadError, openFormAvailable, basePath, preview = false }: AdminDashboardProps) {
-  const { filter: rawFilter, gaster: rawGuestFilter } = searchParams;
-  const filter: FilterKey = FILTERS.some((item) => item.key === rawFilter) ? (rawFilter as FilterKey) : "alla";
+export default function AdminDashboard({ email, invitations, openRsvps, searchParams, loadError, openFormAvailable, basePath, preview = false }: AdminDashboardProps) {
+  const { gaster: rawGuestFilter } = searchParams;
   const guestFilter: GuestFilterKey = GUEST_FILTERS.some((item) => item.key === rawGuestFilter) ? (rawGuestFilter as GuestFilterKey) : "alla";
 
-  const invitedCount = invitations.reduce((sum, invitation) => sum + invitation.guests.length, 0);
   const guestRows: GuestRow[] = [
     ...invitations.flatMap((invitation) =>
       invitation.guests.map((guest): GuestRow => ({
@@ -130,57 +90,36 @@ export default function AdminDashboard({ email, origin, invitations, openRsvps, 
       dietary: rsvp.allergies,
       message: null
     }))
-  ].sort((a, b) => a.name.localeCompare(b.name, "sv"));
+  ];
 
   const yes = guestRows.filter((guest) => guest.attending === true);
-  const no = guestRows.filter((guest) => guest.attending === false);
-  const waiting = guestRows.filter((guest) => guest.attending === null);
   const bus = yes.filter((guest) => guest.bus === true).length;
   const withDietary = yes.filter((guest) => guest.dietary);
   const invitationEmails = new Set(invitations.map((invitation) => invitation.email).filter(Boolean));
   const duplicates = openRsvps.filter((rsvp) => invitationEmails.has(rsvp.email?.toLowerCase()));
   const visibleGuests = guestFilter === "kommer" ? yes : guestFilter === "allergier" ? withDietary : guestRows;
 
-  const visible = invitations.filter((invitation) =>
-    filter === "ej-skickade" ? invitation.status === "pending" : filter === "ej-svarat" ? invitation.status !== "responded" : true
-  );
-
   return (
     <main className="mx-auto max-w-6xl px-6 py-12 lg:px-10">
-      <header className="flex flex-wrap items-end justify-between gap-4">
-        <div>
-          <p className="eyebrow text-sea">Elsa & Joakim · Admin</p>
-          <h1 className="mt-3 font-display text-5xl text-ink">Gäster & OSA</h1>
-        </div>
-        <div className="flex items-center gap-4 text-sm text-ink/70">
-          <span>{email}</span>
-          {preview ? (
-            <span className="rounded-full bg-dusk px-3 py-1 font-semibold text-sea">Förhandsvisning med testdata</span>
-          ) : (
-            <form action={signOut}><button type="submit" className="font-semibold text-sea underline">Logga ut</button></form>
-          )}
-        </div>
+      <header>
+        <p className="eyebrow text-sea">Elsa & Joakim · Admin</p>
+        <h1 className="mt-3 font-display text-5xl text-ink">Gäster & OSA</h1>
       </header>
 
       {loadError && <p className="mt-6 rounded-lg bg-white p-4 text-sm font-semibold text-red-800" role="alert">Kunde inte läsa inbjudningarna. Kontrollera att SQL-migreringen är körd och att din e-post finns i is_wedding_admin().</p>}
 
-      <section aria-label="Summering" className="mt-10 grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-5">
-        <StatCard label="Kommer" value={yes.length} hint={`varav ${openRsvps.length} via öppna formuläret`} />
-        <StatCard label="Tackat nej" value={no.length} />
-        <StatCard label="Väntar" value={waiting.length} hint={`${invitedCount} inbjudna i ${invitations.length} sällskap`} />
+      <dl aria-label="Summering" className="mt-8 grid max-w-xl grid-cols-3 gap-2 sm:gap-3">
+        <StatCard label="Kommer" value={yes.length} />
         <StatCard label="Buss" value={bus} />
-        <StatCard label="Specialkost" value={withDietary.length} hint="allergier eller specialkost" />
-      </section>
+        <StatCard label="Specialkost" value={withDietary.length} />
+      </dl>
 
       <section aria-labelledby="guests-title" className="mt-14">
         <div className="flex flex-wrap items-end justify-between gap-4">
-          <div>
-            <h2 id="guests-title" className="scroll-mt-8 font-display text-4xl text-ink">Gästlista</h2>
-            <p className="mt-2 text-sm text-ink/70">Alla gäster från inbjudningar och från öppna formuläret.</p>
-          </div>
+          <h2 id="guests-title" className="scroll-mt-8 font-display text-4xl text-ink">Gästlista</h2>
           <nav aria-label="Filtrera gästlistan" className="flex flex-wrap gap-2">
             {GUEST_FILTERS.map((item) => (
-              <Link key={item.key} href={adminHref(basePath, filter, item.key, "guests-title")} aria-current={guestFilter === item.key ? "page" : undefined} className={pillClass(guestFilter === item.key)}>{item.label}</Link>
+              <Link key={item.key} href={adminHref(basePath, item.key, "guests-title")} aria-current={guestFilter === item.key ? "page" : undefined} className={pillClass(guestFilter === item.key)}>{item.label}</Link>
             ))}
           </nav>
         </div>
@@ -190,95 +129,21 @@ export default function AdminDashboard({ email, origin, invitations, openRsvps, 
             <strong>Möjliga dubbletter:</strong> {duplicates.map((rsvp) => `${rsvp.name} (${rsvp.email})`).join(", ")} har samma e-post som en inbjudan.
           </p>
         )}
-        {visibleGuests.length === 0 ? (
-          <p className="mt-6 rounded-2xl bg-shell p-6 text-ink/70">{guestFilter === "allergier" ? "Ingen som kommer har angett allergier eller specialkost." : "Inga gäster att visa."}</p>
-        ) : (
-          <div className="mt-6 overflow-x-auto rounded-2xl bg-white shadow-soft">
-            <table className="w-full min-w-[800px] text-left text-sm">
-              <caption className="sr-only">Gästlista, {visibleGuests.length} personer</caption>
-              <thead className="border-b border-ink/10 bg-shell text-xs uppercase tracking-wider text-ink/70">
-                <tr>
-                  <th scope="col" className="p-4">Namn</th>
-                  <th scope="col" className="p-4">Sällskap</th>
-                  <th scope="col" className="p-4">Kommer</th>
-                  <th scope="col" className="p-4">Buss</th>
-                  <th scope="col" className="p-4">Allergier & specialkost</th>
-                  <th scope="col" className="p-4"><span className="sr-only">Åtgärder</span></th>
-                </tr>
-              </thead>
-              <tbody>
-                {visibleGuests.map((guest) => (
-                  <tr key={guest.key} className="border-b border-ink/10 align-top last:border-0">
-                    <th scope="row" className="p-4 font-semibold">
-                      {guest.name}
-                      {guest.message && <span className="mt-1 block font-normal italic text-ink/70">”{guest.message}”</span>}
-                    </th>
-                    <td className="p-4">{guest.origin}{guest.detail && <span className="block text-ink/60">{guest.detail}</span>}</td>
-                    <td className="p-4"><AnswerLabel attending={guest.attending} /></td>
-                    <td className="p-4">{guest.bus === null ? "–" : guest.bus ? "Ja" : "Nej"}</td>
-                    <td className="p-4">{guest.dietary ?? "–"}</td>
-                    <td className="p-4 text-right"><DeleteGuestButton source={guest.source} id={guest.id} name={guest.name} /></td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        )}
-      </section>
-      <section aria-labelledby="list-title" className="mt-16">
-        <div className="flex flex-wrap items-end justify-between gap-4">
-          <div className="flex flex-wrap items-center gap-4">
-            <h2 id="list-title" className="scroll-mt-8 font-display text-4xl text-ink">Sällskap</h2>
-            <NewInvitationDialog origin={origin} />
-          </div>
-          <nav aria-label="Filtrera sällskap" className="flex flex-wrap gap-2">
-            {FILTERS.map((item) => (
-              <Link key={item.key} href={adminHref(basePath, item.key, guestFilter, "list-title")} aria-current={filter === item.key ? "page" : undefined} className={pillClass(filter === item.key)}>{item.label}</Link>
-            ))}
-          </nav>
-        </div>
-
-        {visible.length === 0 ? (
-          <p className="mt-6 rounded-2xl bg-shell p-6 text-ink/70">Inga sällskap att visa.</p>
-        ) : (
-          <div className="mt-6 overflow-x-auto rounded-2xl bg-white shadow-soft">
-            <table className="w-full min-w-[900px] text-left text-sm">
-              <thead className="border-b border-ink/10 bg-shell text-xs uppercase tracking-wider text-ink/70">
-                <tr>
-                  <th scope="col" className="p-4">Sällskap</th>
-                  <th scope="col" className="p-4">Gäster</th>
-                  <th scope="col" className="p-4">Status</th>
-                  <th scope="col" className="p-4">Inbjudan</th>
-                </tr>
-              </thead>
-              <tbody>
-                {visible.map((invitation) => (
-                  <tr key={invitation.id} className="border-b border-ink/10 align-top last:border-0">
-                    <td className="p-4">
-                      <p className="font-semibold text-ink">{invitation.group_name}</p>
-                      <p className="mt-1 text-ink/60">{invitation.email ?? <em>Ingen e-post</em>}</p>
-                    </td>
-                    <td className="p-4">
-                      <ul className="space-y-1">
-                        {invitation.guests.map((guest) => (
-                          <li key={guest.id}><span className="font-semibold">{guest.name}</span> <AnswerLabel attending={guest.attending} /></li>
-                        ))}
-                      </ul>
-                    </td>
-                    <td className="p-4"><span className={`inline-block whitespace-nowrap rounded-full px-3 py-1 text-xs font-semibold ${STATUS_CLASS[invitation.status]}`}>{STATUS_LABEL[invitation.status]}</span></td>
-                    <td className="space-y-3 p-4">
-                      <CopyButtons id={invitation.id} status={invitation.status} link={invitationLink(origin, invitation.token)} message={invitationMessage(origin, invitation.group_name, invitation.guests.map((guest) => guest.name), invitation.token)} />
-                      <ExternalLink href={invitationLink(origin, invitation.token)} className="inline-block text-sm font-semibold text-sea underline">Visa inbjudan<span className="sr-only"> för {invitation.group_name}</span></ExternalLink>
-                      <InvitationControls id={invitation.id} groupName={invitation.group_name} status={invitation.status} email={invitation.email} personalNote={invitation.personal_note} />
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        )}
+        <GuestTable
+          key={guestFilter}
+          guests={visibleGuests}
+          emptyMessage={guestFilter === "allergier" ? "Ingen som kommer har angett allergier eller specialkost." : "Inga gäster att visa."}
+        />
       </section>
 
+      <footer className="mt-16 flex flex-wrap items-center gap-x-4 gap-y-2 border-t border-ink/10 pt-6 text-sm text-ink/70">
+        <span className="break-all">{email}</span>
+        {preview ? (
+          <span className="rounded-full bg-dusk px-3 py-1 font-semibold text-sea">Förhandsvisning med testdata</span>
+        ) : (
+          <form action={signOut}><button type="submit" className="font-semibold text-sea underline">Logga ut</button></form>
+        )}
+      </footer>
     </main>
   );
 }
