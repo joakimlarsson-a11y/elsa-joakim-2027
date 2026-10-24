@@ -63,9 +63,10 @@ export default function AdminDashboard({ email, invitations, openRsvps, searchPa
   const { gaster: rawGuestFilter } = searchParams;
   const guestFilter: GuestFilterKey = GUEST_FILTERS.some((item) => item.key === rawGuestFilter) ? (rawGuestFilter as GuestFilterKey) : "alla";
 
-  const guestRows: GuestRow[] = [
+  type UnorderedRow = Omit<GuestRow, "order"> & { createdAt: string; tiebreak: number };
+  const unorderedRows: UnorderedRow[] = [
     ...invitations.flatMap((invitation) =>
-      invitation.guests.map((guest): GuestRow => ({
+      invitation.guests.map((guest, index): UnorderedRow => ({
         key: `invitation-${guest.id}`,
         source: "invitation",
         id: guest.id,
@@ -75,10 +76,12 @@ export default function AdminDashboard({ email, invitations, openRsvps, searchPa
         attending: guest.attending,
         bus: guest.attending === true ? guest.needs_bus : null,
         dietary: guest.attending === true ? guest.dietary_info : null,
-        message: guest.message
+        message: guest.message,
+        createdAt: invitation.created_at,
+        tiebreak: index
       }))
     ),
-    ...openRsvps.map((rsvp): GuestRow => ({
+    ...openRsvps.map((rsvp): UnorderedRow => ({
       key: `open-${rsvp.id}`,
       source: "open",
       id: String(rsvp.id),
@@ -88,9 +91,16 @@ export default function AdminDashboard({ email, invitations, openRsvps, searchPa
       attending: rsvp.attendance ? rsvp.attendance === "Kommer" : true,
       bus: rsvp.bus === "Ja" ? true : rsvp.bus === "Nej" ? false : null,
       dietary: rsvp.allergies,
-      message: null
+      message: null,
+      createdAt: rsvp.created_at,
+      tiebreak: Number(rsvp.id) || 0
     }))
   ];
+
+  // Signup order: oldest first, ties (same submission) broken by id / position in the invitation.
+  const guestRows: GuestRow[] = [...unorderedRows]
+    .sort((a, b) => Date.parse(a.createdAt) - Date.parse(b.createdAt) || a.tiebreak - b.tiebreak)
+    .map(({ createdAt: _createdAt, tiebreak: _tiebreak, ...row }, index) => ({ ...row, order: index + 1 }));
 
   const yes = guestRows.filter((guest) => guest.attending === true);
   const bus = yes.filter((guest) => guest.bus === true).length;
