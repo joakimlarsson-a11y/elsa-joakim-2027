@@ -63,10 +63,18 @@ export default function AdminDashboard({ email, invitations, openRsvps, searchPa
   const { gaster: rawGuestFilter } = searchParams;
   const guestFilter: GuestFilterKey = GUEST_FILTERS.some((item) => item.key === rawGuestFilter) ? (rawGuestFilter as GuestFilterKey) : "alla";
 
+  // Signup order applies only to the open form: oldest first, ties (same submission) broken by id.
+  const openOrder = new Map(
+    [...openRsvps]
+      .sort((a, b) => Date.parse(a.created_at) - Date.parse(b.created_at) || (Number(a.id) || 0) - (Number(b.id) || 0))
+      .map((rsvp, index) => [String(rsvp.id), index + 1])
+  );
+
   const guestRows: GuestRow[] = [
     ...invitations.flatMap((invitation) =>
       invitation.guests.map((guest): GuestRow => ({
         key: `invitation-${guest.id}`,
+        order: null,
         source: "invitation",
         id: guest.id,
         name: guest.name,
@@ -80,6 +88,7 @@ export default function AdminDashboard({ email, invitations, openRsvps, searchPa
     ),
     ...openRsvps.map((rsvp): GuestRow => ({
       key: `open-${rsvp.id}`,
+      order: openOrder.get(String(rsvp.id)) ?? null,
       source: "open",
       id: String(rsvp.id),
       name: rsvp.name,

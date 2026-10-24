@@ -5,6 +5,8 @@ import DeleteGuestButton from "./delete-guest-button";
 
 export type GuestRow = {
   key: string;
+  /** 1-based signup order in the open form (oldest first); null for invitation guests. */
+  order: number | null;
   source: "invitation" | "open";
   id: string;
   name: string;
@@ -16,10 +18,11 @@ export type GuestRow = {
   message: string | null;
 };
 
-type SortKey = "name" | "origin" | "attending" | "bus" | "dietary";
+type SortKey = "order" | "name" | "origin" | "attending" | "bus" | "dietary";
 type SortDirection = "ascending" | "descending";
 
 const COLUMNS: { key: SortKey; label: string }[] = [
+  { key: "order", label: "#" },
   { key: "name", label: "Namn" },
   { key: "attending", label: "Kommer" },
   { key: "bus", label: "Buss" },
@@ -33,6 +36,8 @@ const booleanRank = (value: boolean | null) => (value === true ? 0 : value === f
 
 function sortValue(guest: GuestRow, key: SortKey): string | number | null {
   switch (key) {
+    case "order":
+      return guest.order;
     case "name":
       return guest.name;
     case "origin":
@@ -96,7 +101,7 @@ type Props = { guests: GuestRow[]; emptyMessage: string };
 export default function GuestTable({ guests, emptyMessage }: Props) {
   const searchId = useId();
   const [query, setQuery] = useState("");
-  const [sort, setSort] = useState<{ key: SortKey; direction: SortDirection }>({ key: "name", direction: "ascending" });
+  const [sort, setSort] = useState<{ key: SortKey; direction: SortDirection }>({ key: "order", direction: "descending" });
 
   const normalizedQuery = normalize(query.trim());
   const rows = useMemo(() => {
@@ -106,7 +111,7 @@ export default function GuestTable({ guests, emptyMessage }: Props) {
 
   function toggleSort(key: SortKey) {
     setSort((current) =>
-      current.key === key ? { key, direction: current.direction === "ascending" ? "descending" : "ascending" } : { key, direction: "ascending" }
+      current.key === key ? { key, direction: current.direction === "ascending" ? "descending" : "ascending" } : { key, direction: key === "order" ? "descending" : "ascending" }
     );
   }
 
@@ -137,7 +142,7 @@ export default function GuestTable({ guests, emptyMessage }: Props) {
         <p className="mt-4 rounded-2xl bg-shell p-6 text-ink/70">Inga gäster matchar ”{query.trim()}”.</p>
       ) : (
         <div className="relative mt-4 overflow-x-auto rounded-2xl bg-white shadow-soft">
-          <table className="w-full min-w-[800px] text-left text-sm">
+          <table className="w-full min-w-[860px] text-left text-sm">
             <caption className="sr-only">Gästlista, {rows.length} personer. Kolumnrubrikerna är knappar som sorterar tabellen.</caption>
             <thead className="border-b border-ink/10 bg-shell text-xs uppercase tracking-wider text-ink/70">
               <tr>
@@ -162,6 +167,7 @@ export default function GuestTable({ guests, emptyMessage }: Props) {
             <tbody>
               {rows.map((guest) => (
                 <tr key={guest.key} className="border-b border-ink/10 align-top last:border-0">
+                  <td className="p-4 tabular-nums text-ink/60">{guest.order ?? "–"}</td>
                   <th scope="row" className="p-4 font-semibold">
                     {guest.name}
                     {guest.message && <span className="mt-1 block font-normal italic text-ink/70">”{guest.message}”</span>}
