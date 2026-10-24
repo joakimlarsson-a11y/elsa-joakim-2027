@@ -101,7 +101,7 @@ type Props = { guests: GuestRow[]; emptyMessage: string };
 export default function GuestTable({ guests, emptyMessage }: Props) {
   const searchId = useId();
   const [query, setQuery] = useState("");
-  const [sort, setSort] = useState<{ key: SortKey; direction: SortDirection }>({ key: "order", direction: "ascending" });
+  const [sort, setSort] = useState<{ key: SortKey; direction: SortDirection }>({ key: "order", direction: "descending" });
 
   const normalizedQuery = normalize(query.trim());
   const rows = useMemo(() => {
@@ -111,7 +111,7 @@ export default function GuestTable({ guests, emptyMessage }: Props) {
 
   function toggleSort(key: SortKey) {
     setSort((current) =>
-      current.key === key ? { key, direction: current.direction === "ascending" ? "descending" : "ascending" } : { key, direction: "ascending" }
+      current.key === key ? { key, direction: current.direction === "ascending" ? "descending" : "ascending" } : { key, direction: key === "order" ? "descending" : "ascending" }
     );
   }
 
