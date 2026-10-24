@@ -5,8 +5,8 @@ import DeleteGuestButton from "./delete-guest-button";
 
 export type GuestRow = {
   key: string;
-  /** 1-based signup order (oldest first). */
-  order: number;
+  /** 1-based signup order in the open form (oldest first); null for invitation guests. */
+  order: number | null;
   source: "invitation" | "open";
   id: string;
   name: string;
@@ -167,7 +167,7 @@ export default function GuestTable({ guests, emptyMessage }: Props) {
             <tbody>
               {rows.map((guest) => (
                 <tr key={guest.key} className="border-b border-ink/10 align-top last:border-0">
-                  <td className="p-4 tabular-nums text-ink/60">{guest.order}</td>
+                  <td className="p-4 tabular-nums text-ink/60">{guest.order ?? "–"}</td>
                   <th scope="row" className="p-4 font-semibold">
                     {guest.name}
                     {guest.message && <span className="mt-1 block font-normal italic text-ink/70">”{guest.message}”</span>}

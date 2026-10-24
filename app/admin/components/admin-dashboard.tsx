@@ -63,11 +63,18 @@ export default function AdminDashboard({ email, invitations, openRsvps, searchPa
   const { gaster: rawGuestFilter } = searchParams;
   const guestFilter: GuestFilterKey = GUEST_FILTERS.some((item) => item.key === rawGuestFilter) ? (rawGuestFilter as GuestFilterKey) : "alla";
 
-  type UnorderedRow = Omit<GuestRow, "order"> & { createdAt: string; tiebreak: number };
-  const unorderedRows: UnorderedRow[] = [
+  // Signup order applies only to the open form: oldest first, ties (same submission) broken by id.
+  const openOrder = new Map(
+    [...openRsvps]
+      .sort((a, b) => Date.parse(a.created_at) - Date.parse(b.created_at) || (Number(a.id) || 0) - (Number(b.id) || 0))
+      .map((rsvp, index) => [String(rsvp.id), index + 1])
+  );
+
+  const guestRows: GuestRow[] = [
     ...invitations.flatMap((invitation) =>
-      invitation.guests.map((guest, index): UnorderedRow => ({
+      invitation.guests.map((guest): GuestRow => ({
         key: `invitation-${guest.id}`,
+        order: null,
         source: "invitation",
         id: guest.id,
         name: guest.name,
@@ -76,13 +83,12 @@ export default function AdminDashboard({ email, invitations, openRsvps, searchPa
         attending: guest.attending,
         bus: guest.attending === true ? guest.needs_bus : null,
         dietary: guest.attending === true ? guest.dietary_info : null,
-        message: guest.message,
-        createdAt: invitation.created_at,
-        tiebreak: index
+        message: guest.message
       }))
     ),
-    ...openRsvps.map((rsvp): UnorderedRow => ({
+    ...openRsvps.map((rsvp): GuestRow => ({
       key: `open-${rsvp.id}`,
+      order: openOrder.get(String(rsvp.id)) ?? null,
       source: "open",
       id: String(rsvp.id),
       name: rsvp.name,
@@ -91,16 +97,9 @@ export default function AdminDashboard({ email, invitations, openRsvps, searchPa
       attending: rsvp.attendance ? rsvp.attendance === "Kommer" : true,
       bus: rsvp.bus === "Ja" ? true : rsvp.bus === "Nej" ? false : null,
       dietary: rsvp.allergies,
-      message: null,
-      createdAt: rsvp.created_at,
-      tiebreak: Number(rsvp.id) || 0
+      message: null
     }))
   ];
-
-  // Signup order: oldest first, ties (same submission) broken by id / position in the invitation.
-  const guestRows: GuestRow[] = [...unorderedRows]
-    .sort((a, b) => Date.parse(a.createdAt) - Date.parse(b.createdAt) || a.tiebreak - b.tiebreak)
-    .map(({ createdAt: _createdAt, tiebreak: _tiebreak, ...row }, index) => ({ ...row, order: index + 1 }));
 
   const yes = guestRows.filter((guest) => guest.attending === true);
   const bus = yes.filter((guest) => guest.bus === true).length;
