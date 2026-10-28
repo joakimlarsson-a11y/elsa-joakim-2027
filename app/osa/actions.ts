@@ -1,6 +1,6 @@
 "use server";
 
-import { sendInvitationConfirmation } from "@/lib/email";
+import { sendAdminRsvpNotification, sendInvitationConfirmation } from "@/lib/email";
 import { clean, invitationLink, isEmail, SITE_URL, UUID_PATTERN } from "@/lib/site";
 import { createAnonClient, createServiceClient } from "@/lib/supabase/server";
 import { loadInvitation } from "./load-invitation";
@@ -59,20 +59,42 @@ export async function submitInvitationRsvp(token: unknown, rawResponses: unknown
     if (service) {
       const { data: invitation } = await service
         .from("invitations")
-        .select("group_name, email, guests(name, attending, dietary_info, needs_bus)")
+        .select("group_name, email, guests(name, attending, dietary_info, needs_bus, message)")
         .eq("token", token)
         .single();
-      if (invitation?.email) {
-        await sendInvitationConfirmation({
-          to: invitation.email,
-          groupName: invitation.group_name,
-          guests: (invitation.guests ?? []).map((guest) => ({ ...guest, attending: guest.attending === true })),
-          editLink: `${invitationLink(SITE_URL, token)}#osa`
-        });
+      if (invitation) {
+        const guests = (invitation.guests ?? []).map((guest) => ({ ...guest, attending: guest.attending === true }));
+        if (invitation.email) {
+          try {
+            await sendInvitationConfirmation({
+              to: invitation.email,
+              groupName: invitation.group_name,
+              guests,
+              editLink: `${invitationLink(SITE_URL, token)}#osa`
+            });
+          } catch (mailError) {
+            console.error("Confirmation email failed:", mailError);
+          }
+        }
+        try {
+          await sendAdminRsvpNotification({
+            groupName: invitation.group_name,
+            contactEmail: invitation.email,
+            guests: guests.map((guest) => ({
+              name: guest.name,
+              attending: guest.attending,
+              details: guest.attending
+                ? ["Kommer", `Busstransport: ${guest.needs_bus ? "Ja" : "Nej"}`, ...(guest.dietary_info ? [`Specialkost: ${guest.dietary_info}`] : [])]
+                : ["Kommer inte", ...(guest.message ? [`Hälsning: ${guest.message}`] : [])]
+            }))
+          });
+        } catch (mailError) {
+          console.error("Admin notification email failed:", mailError);
+        }
       }
     }
   } catch (mailError) {
-    console.error("Confirmation email failed:", mailError);
+    console.error("RSVP emails failed:", mailError);
   }
 
   return { ok: true };

@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
-import { scheduleLinkHtml, scheduleLinkText, sendEmail } from "@/lib/email";
+import { scheduleLinkHtml, scheduleLinkText, sendAdminRsvpNotification, sendEmail } from "@/lib/email";
 
 type PersonInput = { name?: unknown; email?: unknown; allergies?: unknown; bus?: unknown };
 type RSVPBody = { persons?: unknown };
@@ -82,6 +82,15 @@ export async function POST(request: Request) {
       });
     } catch (mailError) {
       console.error("RSVP confirmation email failed:", mailError);
+    }
+    try {
+      await sendAdminRsvpNotification({
+        groupName: primary.name,
+        contactEmail: primary.email,
+        guests: persons.map((person) => ({ name: person.name, attending: true, details: [`E-post: ${person.email}`, ...details(person)] }))
+      });
+    } catch (mailError) {
+      console.error("Admin notification email failed:", mailError);
     }
 
     return NextResponse.json({ ok: true });

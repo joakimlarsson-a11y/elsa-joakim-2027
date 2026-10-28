@@ -1,4 +1,5 @@
 import { Resend } from "resend";
+import { adminEmails } from "./admin";
 import { escapeHtml, SITE_URL, soloFirstName, WEDDING } from "./site";
 
 const FROM = "Elsa & Joakim <osa@elsajoakim2027.se>";
@@ -12,10 +13,10 @@ export type ConfirmationGuest = {
   needs_bus: boolean;
 };
 
-type EmailContent = { to: string; subject: string; html: string; text: string };
+type EmailContent = { to: string | string[]; subject: string; html: string; text: string; signOff?: boolean };
 
 /** Skickar ett mejl med gemensam avsändare, svarsadress och HTML-ram. */
-export async function sendEmail({ to, subject, html, text }: EmailContent) {
+export async function sendEmail({ to, subject, html, text, signOff = true }: EmailContent) {
   const resendKey = process.env.RESEND_API_KEY;
   if (!resendKey) {
     console.error("Missing RESEND_API_KEY; skipping email.");
@@ -31,7 +32,7 @@ export async function sendEmail({ to, subject, html, text }: EmailContent) {
 <div style="font-family:Arial,sans-serif;max-width:600px;margin:auto;color:#1d2140;line-height:1.6">
   <p style="letter-spacing:2px;text-transform:uppercase;color:#44336d;font-size:12px">19 juni 2027</p>
   ${html}
-  <p>Varma hälsningar,<br>Elsa &amp; Joakim</p>
+  ${signOff ? "<p>Varma hälsningar,<br>Elsa &amp; Joakim</p>" : ""}
 </div></body></html>`
   });
   if (error) throw new Error(`Resend failed: ${error.message}`);
@@ -100,5 +101,38 @@ export async function sendInvitationConfirmation({ to, groupName, guests, editLi
       `${copy.editHint}\n${copy.editButton}: ${editLink}`,
       "Varma hälsningar,\nElsa & Joakim"
     ].join("\n\n")
+  });
+}
+
+export type AdminNotificationGuest = { name: string; attending: boolean; details: string[] };
+
+type AdminNotificationInput = { groupName: string; contactEmail: string | null; guests: AdminNotificationGuest[] };
+
+/** Meddelar admins (ADMIN_EMAILS) att en gäst har OSA:at. */
+export async function sendAdminRsvpNotification({ groupName, contactEmail, guests }: AdminNotificationInput) {
+  const to = adminEmails();
+  if (to.length === 0) {
+    console.error("Missing ADMIN_EMAILS; skipping admin notification.");
+    return;
+  }
+  const attendingCount = guests.filter((guest) => guest.attending).length;
+  const subject = `Ny OSA: ${groupName} (${attendingCount} av ${guests.length} kommer)`;
+  const adminUrl = `${SITE_URL}/admin`;
+  const summaryHtml = guests
+    .map((guest) => `<li><strong>${escapeHtml(guest.name)}</strong><br>${guest.details.map(escapeHtml).join("<br>")}</li>`)
+    .join("");
+  const summaryText = guests.map((guest) => `- ${guest.name}: ${guest.details.join(", ")}`).join("\n");
+
+  await sendEmail({
+    to,
+    subject,
+    signOff: false,
+    html: `<h1 style="font-family:Georgia,serif;font-size:32px;font-weight:500">Ny OSA från ${escapeHtml(groupName)}</h1>
+  ${contactEmail ? `<p>E-post: <a href="mailto:${escapeHtml(contactEmail)}" style="color:#44336d">${escapeHtml(contactEmail)}</a></p>` : ""}
+  <div style="background:#f5f3fa;border-radius:12px;padding:20px;margin:24px 0">
+    <strong>Svar</strong><ul style="margin-bottom:0;padding-left:20px">${summaryHtml}</ul>
+  </div>
+  <p><a href="${adminUrl}" style="color:#44336d">Öppna adminsidan</a></p>`,
+    text: [`Ny OSA från ${groupName}`, ...(contactEmail ? [`E-post: ${contactEmail}`] : []), `Svar:\n${summaryText}`, `Adminsidan: ${adminUrl}`].join("\n\n")
   });
 }
